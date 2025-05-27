@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -17,44 +18,34 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* Kanan - Formulir */}
+      {/* Kanan - Formulir Login */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-10">
         <div className="max-w-md w-full">
-          <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">Daftar Akun</h2>
+          <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">Masuk</h2>
 
           <form className="space-y-4">
-            <div>
-              <label className="block text-sm mb-1">Nama Lengkap</label>
-              <input type="text" placeholder="Masukkan nama lengkap Anda" className="w-full border rounded-md p-2" />
-            </div>
             <div>
               <label className="block text-sm mb-1">NIK</label>
               <input type="text" inputMode="numeric" pattern="[0-9]*" maxLength={16} placeholder="Masukkan NIK Anda" className="w-full border rounded-md p-2" />
             </div>
             <div>
-              <label className="block text-sm mb-1">Nomor Telepon</label>
-              <input type="text" inputMode="numeric" pattern="[0-9]*" maxLength={12} placeholder="Masukkan nomor telepon Anda" className="w-full border rounded-md p-2" />
-            </div>
-            <div>
               <label className="block text-sm mb-1">Password</label>
-              <input type={showPassword ? "text" : "password"} placeholder="Masukkan password unik Anda" className="w-full border rounded-md p-2" />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">Konfirmasi Password</label>
               <input type={showPassword ? "text" : "password"} placeholder="Masukkan password unik Anda" className="w-full border rounded-md p-2" />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-sm mt-1 text-right text-gray-700 underline">
                 {showPassword ? "Sembunyikan" : "Tampilkan"}
               </button>
             </div>
-            <button type="submit" className="w-full bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition">
-              Daftar
-            </button>
+            <Link href="/dashboard">
+              <button type="button" className="w-full bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition">
+                Masuk
+              </button>
+            </Link>
           </form>
 
           <p className="mt-6 text-center text-sm text-gray-600">
-            Sudah punya akun?{" "}
-            <a href="/login" className="text-blue-700 font-medium hover:underline">
-              Masuk
+            Belum punya akun?{" "}
+            <a href="/auth/register" className="text-blue-700 font-medium hover:underline">
+              Daftar
             </a>
           </p>
         </div>
