@@ -44,20 +44,27 @@ export default function RegisterPage() {
         }),
       });
 
-      const result = await response.json();
+      const contentType = response.headers.get("Content-Type");
+      const text = await response.text();
+
+      // Jika respons bukan JSON, tampilkan error
+      if (!contentType || !contentType.includes("application/json")) {
+        console.error("Respons bukan JSON:\n", text);
+        setError("Server tidak mengirimkan respons yang valid.");
+        return;
+      }
+
+      const result = JSON.parse(text);
 
       if (response.ok) {
-        // Simpan registration_token ke localStorage
         localStorage.setItem("registration_token", result.registration_token);
         alert(result.message || "Pendaftaran berhasil!");
-
-        // Redirect ke halaman verifikasi OTP
         router.push("/auth/verifikasiOTP");
       } else {
         setError(result.message || "Terjadi kesalahan saat mendaftar.");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Fetch error:", err);
       setError("Gagal menghubungi server.");
     }
   };
