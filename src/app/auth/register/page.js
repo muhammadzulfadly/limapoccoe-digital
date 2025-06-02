@@ -31,7 +31,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/register`, {
+      const response = await fetch("https://402f-180-252-25-80.ngrok-free.app/api/v1/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
