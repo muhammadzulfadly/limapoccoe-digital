@@ -31,7 +31,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await fetch("https://402f-180-252-25-80.ngrok-free.app/api/v1/register", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,27 +44,20 @@ export default function RegisterPage() {
         }),
       });
 
-      const contentType = response.headers.get("Content-Type");
-      const text = await response.text();
-
-      // Jika respons bukan JSON, tampilkan error
-      if (!contentType || !contentType.includes("application/json")) {
-        console.error("Respons bukan JSON:\n", text);
-        setError("Server tidak mengirimkan respons yang valid.");
-        return;
-      }
-
-      const result = JSON.parse(text);
+      const result = await response.json();
 
       if (response.ok) {
+        // Simpan registration_token ke localStorage
         localStorage.setItem("registration_token", result.registration_token);
         alert(result.message || "Pendaftaran berhasil!");
+
+        // Redirect ke halaman verifikasi OTP
         router.push("/auth/verifikasiOTP");
       } else {
         setError(result.message || "Terjadi kesalahan saat mendaftar.");
       }
     } catch (err) {
-      console.error("Fetch error:", err);
+      console.error(err);
       setError("Gagal menghubungi server.");
     }
   };
