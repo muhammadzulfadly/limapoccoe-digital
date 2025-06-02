@@ -32,7 +32,7 @@ export default function VerifyOtpPage() {
     setError("");
 
     try {
-      const response = await fetch(`${process.env.API_SECRET_URL}/api/v1/verifikasiOTP`, {
+      const response = await fetch(`${process.env.API_SECRET_URL}/api/v1/verify-otp`, {
         method: "POST",
         headers: {
           "Accept": "application/json",
