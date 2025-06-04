@@ -21,15 +21,22 @@ export default function LoginPage() {
       return;
     }
 
-    if (nik.length !== 16) {
+    if (!/^\d{16}$/.test(nik)) {
       setError("NIK harus terdiri dari 16 angka.");
+      return;
+    }
+
+    // Validasi password (sesuai regex backend)
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/;
+    if (!passwordRegex.test(password)) {
+      setError("Password harus terdiri dari huruf besar, huruf kecil, dan angka.");
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/login/masyarakat`, {
         method: "POST",
         headers: {
           "Accept": "application/json",
@@ -41,10 +48,10 @@ export default function LoginPage() {
       const result = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", result.token);
+        localStorage.setItem("token", result.access_token);
         localStorage.setItem("user", JSON.stringify(result.user));
+        alert(result.message || "Login berhasil.");
         router.push("/dashboard");
-
       } else {
         setError(result.message || "Login gagal. Cek NIK dan password Anda.");
       }

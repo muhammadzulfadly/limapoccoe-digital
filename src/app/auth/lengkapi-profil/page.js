@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -8,25 +8,39 @@ export default function LengkapiProfilPage() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    alamat: "",
-    dusun: "",
-    rt_rw: "",
-    tanggal_lahir: "",
     tempat_lahir: "",
+    tanggal_lahir: "",
     jenis_kelamin: "",
-    pekerjaan: "",
+    dusun: "",
+    alamat: "",
   });
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validasi sederhana lokal
+    const requiredFields = ["tempat_lahir", "tanggal_lahir", "jenis_kelamin", "dusun", "alamat"];
+    for (let field of requiredFields) {
+      if (!formData[field]) {
+        setError("Semua field wajib diisi.");
+        return;
+      }
+    }
+
+    setLoading(true);
+    setError("");
+
     try {
-      const token = localStorage.getItem("registration_token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/lengkapi-profil`, {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/profile/lengkapi-profil`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,14 +52,16 @@ export default function LengkapiProfilPage() {
       const result = await response.json();
 
       if (response.ok) {
-        alert("Profil berhasil disimpan!");
-        router.push("/dashboard"); // arahkan sesuai tujuan selanjutnya
+        alert(result.message || "Profil berhasil disimpan.");
+        router.push("/"); // arahkan sesuai kebutuhan
       } else {
-        alert(result.message || "Gagal menyimpan profil.");
+        setError(result.error || result.message || "Gagal menyimpan profil.");
       }
-    } catch (error) {
-      console.error(error);
-      alert("Terjadi kesalahan saat mengirim data.");
+    } catch (err) {
+      console.error(err);
+      setError("Gagal menghubungi server.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,29 +112,30 @@ export default function LengkapiProfilPage() {
             <div className="flex gap-2">
               <div className="w-1/2">
                 <label className="block text-sm mb-1">Dusun</label>
-                <input
-                  type="text"
+                <select
                   name="dusun"
                   value={formData.dusun}
                   onChange={handleChange}
-                  placeholder="Dusun"
                   className="w-full border rounded-md p-2"
-                />
+                  required
+                >
+                  <option value="">Pilih Dusun</option>
+                  {[
+                    "WT.Bengo",
+                    "Barua",
+                    "Mappasaile",
+                    "Kampala",
+                    "Kaluku",
+                    "Jambua",
+                    "Bontopanno",
+                    "Samata",
+                  ].map((dusun) => (
+                    <option key={dusun} value={dusun}>
+                      {dusun}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className="w-1/2">
-                <label className="block text-sm mb-1">RT/RW</label>
-                <input
-                  type="text"
-                  name="rt_rw"
-                  value={formData.rt_rw}
-                  onChange={handleChange}
-                  placeholder="RT/RW"
-                  className="w-full border rounded-md p-2"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-2">
               <div className="w-1/2">
                 <label className="block text-sm mb-1">Tanggal Lahir</label>
                 <input
@@ -127,8 +144,12 @@ export default function LengkapiProfilPage() {
                   value={formData.tanggal_lahir}
                   onChange={handleChange}
                   className="w-full border rounded-md p-2"
+                  required
                 />
               </div>
+            </div>
+
+            <div className="flex gap-2">
               <div className="w-1/2">
                 <label className="block text-sm mb-1">Tempat Lahir</label>
                 <input
@@ -138,50 +159,43 @@ export default function LengkapiProfilPage() {
                   onChange={handleChange}
                   placeholder="Tempat lahir"
                   className="w-full border rounded-md p-2"
+                  required
                 />
+              </div>
+              <div className="w-1/2">
+                <label className="block text-sm mb-1">Jenis Kelamin</label>
+                <select
+                  name="jenis_kelamin"
+                  value={formData.jenis_kelamin}
+                  onChange={handleChange}
+                  className="w-full border rounded-md p-2"
+                  required
+                >
+                  <option value="">Pilih</option>
+                  <option value="Laki-laki">Laki-laki</option>
+                  <option value="Perempuan">Perempuan</option>
+                </select>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm mb-1">Jenis Kelamin</label>
-              <select
-                name="jenis_kelamin"
-                value={formData.jenis_kelamin}
-                onChange={handleChange}
-                className="w-full border rounded-md p-2"
-                required
-              >
-                <option value="">Pilih</option>
-                <option value="Laki-laki">Laki-laki</option>
-                <option value="Perempuan">Perempuan</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm mb-1">Pekerjaan</label>
-              <input
-                type="text"
-                name="pekerjaan"
-                value={formData.pekerjaan}
-                onChange={handleChange}
-                placeholder="Masukkan Pekerjaan Anda"
-                className="w-full border rounded-md p-2"
-              />
-            </div>
+            {error && <p className="text-red-600 text-sm">{error}</p>}
 
             <div className="flex justify-between gap-4 mt-6">
               <button
                 type="button"
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.push("/")}
                 className="w-full border-2 border-green-600 text-green-600 py-2 rounded-md hover:bg-green-50 transition"
               >
                 Lanjutkan nanti?
               </button>
               <button
                 type="submit"
-                className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
+                disabled={loading}
+                className={`w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Simpan
+                {loading ? "Menyimpan..." : "Simpan"}
               </button>
             </div>
           </form>
