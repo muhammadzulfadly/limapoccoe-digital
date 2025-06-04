@@ -53,7 +53,7 @@ export default function LengkapiProfilPage() {
 
       if (response.ok) {
         alert(result.message || "Profil berhasil disimpan.");
-        router.push("/"); // arahkan sesuai kebutuhan
+        router.push("/dashboard"); // arahkan sesuai kebutuhan
       } else {
         setError(result.error || result.message || "Gagal menyimpan profil.");
       }
