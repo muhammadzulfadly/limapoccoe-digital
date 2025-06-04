@@ -23,8 +23,8 @@ export default function VerifyOtpPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (otp.trim().length === 0) {
-      setError("Kode OTP wajib diisi.");
+    if (!/^\d{6}$/.test(otp)) {
+      setError("Kode OTP harus terdiri dari 6 angka.");
       return;
     }
 
@@ -32,35 +32,39 @@ export default function VerifyOtpPage() {
     setError("");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/verify-otp`, {
-        method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          registration_token: registrationToken,
-          code: otp,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/verify-otp`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            registration_token: registrationToken,
+            otp_code: otp,
+          }),
+        }
+      );
 
       const result = await response.json();
 
       if (response.ok) {
         alert(result.message || "Verifikasi berhasil!");
 
-        // Simpan token user untuk sesi login, misal di localStorage
+        // Simpan token user dan data user
         localStorage.removeItem("registration_token");
-        localStorage.setItem("token", result.token);
+        localStorage.setItem("token", result.access_token);
         localStorage.setItem("user", JSON.stringify(result.user));
 
-        router.push("/dashboard"); // ganti sesuai halaman utama setelah login
+        // Redirect ke halaman lengkapi profil
+        router.push("/auth/lengkapi-profil");
       } else {
-        setError(result.message || "Verifikasi gagal. Coba lagi.");
+        setError(result.message || "Verifikasi gagal. Silakan coba lagi.");
       }
     } catch (err) {
-      setError("Gagal menghubungi server..");
       console.error("Fetch error:", err);
+      setError("Gagal menghubungi server.");
     } finally {
       setLoading(false);
     }
@@ -74,12 +78,26 @@ export default function VerifyOtpPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm mb-1">Masukkan Kode OTP</label>
-            <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="Kode OTP" className="w-full border rounded-md p-2" maxLength={6} required />
+            <input
+              type="text"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              placeholder="Kode OTP"
+              className="w-full border rounded-md p-2"
+              maxLength={6}
+              required
+            />
           </div>
 
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
-          <button type="submit" disabled={loading} className={`w-full bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition ${loading ? "opacity-50 cursor-not-allowed" : ""}`}>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
             {loading ? "Memverifikasi..." : "Verifikasi"}
           </button>
         </form>

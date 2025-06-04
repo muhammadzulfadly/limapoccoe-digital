@@ -15,6 +15,7 @@ export default function RegisterPage() {
     password: "",
     password_confirmation: "",
   });
+
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -22,22 +23,49 @@ export default function RegisterPage() {
     setError("");
   };
 
+  const validateForm = () => {
+    const nikRegex = /^[0-9]{16}$/;
+    const waRegex = /^[0-9]{11,}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+    if (!nikRegex.test(formData.nik)) {
+      setError("NIK harus terdiri dari 16 angka.");
+      return false;
+    }
+    if (!waRegex.test(formData.no_whatsapp)) {
+      setError("Nomor WhatsApp harus terdiri dari minimal 11 angka.");
+      return false;
+    }
+    if (formData.password !== formData.password_confirmation) {
+      setError("Password dan konfirmasi password tidak cocok.");
+      return false;
+    }
+    if (!passwordRegex.test(formData.password)) {
+      setError(
+        "Password harus terdiri dari minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol."
+      );
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.password_confirmation) {
-      setError("Password dan konfirmasi password tidak cocok.");
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const result = await response.json();
 
@@ -46,7 +74,12 @@ export default function RegisterPage() {
         alert(result.message || "Pendaftaran berhasil!");
         router.push("/auth/verifikasiOTP");
       } else {
-        setError(result.message || "Terjadi kesalahan saat mendaftar.");
+        if (result.errors) {
+          const firstError = Object.values(result.errors)[0][0];
+          setError(firstError);
+        } else {
+          setError(result.message || "Terjadi kesalahan saat mendaftar.");
+        }
       }
     } catch (err) {
       console.error(err);
@@ -97,6 +130,7 @@ export default function RegisterPage() {
                 required
               />
             </div>
+
             <div>
               <label className="block text-sm mb-1">NIK</label>
               <input
@@ -112,6 +146,7 @@ export default function RegisterPage() {
                 required
               />
             </div>
+
             <div>
               <label className="block text-sm mb-1">Nomor WhatsApp</label>
               <input
@@ -127,6 +162,7 @@ export default function RegisterPage() {
                 required
               />
             </div>
+
             <div>
               <label className="block text-sm mb-1">Password</label>
               <input
@@ -139,6 +175,7 @@ export default function RegisterPage() {
                 required
               />
             </div>
+
             <div>
               <label className="block text-sm mb-1">Konfirmasi Password</label>
               <input

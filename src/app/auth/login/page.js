@@ -43,12 +43,8 @@ export default function LoginPage() {
       if (response.ok) {
         localStorage.setItem("token", result.token);
         localStorage.setItem("user", JSON.stringify(result.user));
+        router.push("/dashboard");
 
-        if (result.user.is_profile_complete) {
-          router.push("/dashboard");
-        } else {
-          router.push("/auth/lengkapi-profil");
-        }
       } else {
         setError(result.message || "Login gagal. Cek NIK dan password Anda.");
       }
