@@ -9,11 +9,11 @@ export default function RegisterPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    nama: "",
+    name: "",
     nik: "",
-    telepon: "",
+    no_whatsapp: "",
     password: "",
-    konfirmasiPassword: "",
+    password_confirmation: "",
   });
   const [error, setError] = useState("");
 
@@ -25,7 +25,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.konfirmasiPassword) {
+    if (formData.password !== formData.password_confirmation) {
       setError("Password dan konfirmasi password tidak cocok.");
       return;
     }
@@ -36,22 +36,14 @@ export default function RegisterPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          name: formData.nama,
-          nik: formData.nik,
-          no_whatsapp: formData.telepon,
-          password: formData.password,
-        }),
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        // Simpan registration_token ke localStorage
         localStorage.setItem("registration_token", result.registration_token);
         alert(result.message || "Pendaftaran berhasil!");
-
-        // Redirect ke halaman verifikasi OTP
         router.push("/auth/verifikasiOTP");
       } else {
         setError(result.message || "Terjadi kesalahan saat mendaftar.");
@@ -97,8 +89,8 @@ export default function RegisterPage() {
               <label className="block text-sm mb-1">Nama Lengkap</label>
               <input
                 type="text"
-                name="nama"
-                value={formData.nama}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 placeholder="Masukkan nama lengkap Anda"
                 className="w-full border rounded-md p-2"
@@ -124,11 +116,11 @@ export default function RegisterPage() {
               <label className="block text-sm mb-1">Nomor WhatsApp</label>
               <input
                 type="text"
-                name="telepon"
+                name="no_whatsapp"
                 inputMode="numeric"
                 pattern="[0-9]*"
                 maxLength={13}
-                value={formData.telepon}
+                value={formData.no_whatsapp}
                 onChange={handleChange}
                 placeholder="Masukkan nomor WhatsApp Anda"
                 className="w-full border rounded-md p-2"
@@ -151,8 +143,8 @@ export default function RegisterPage() {
               <label className="block text-sm mb-1">Konfirmasi Password</label>
               <input
                 type={showPassword ? "text" : "password"}
-                name="konfirmasiPassword"
-                value={formData.konfirmasiPassword}
+                name="password_confirmation"
+                value={formData.password_confirmation}
                 onChange={handleChange}
                 placeholder="Ulangi password Anda"
                 className="w-full border rounded-md p-2"
