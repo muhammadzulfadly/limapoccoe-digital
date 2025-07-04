@@ -49,11 +49,11 @@ export default function BerandaLayout({ children }) {
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            <Link href="/auth/masuk-akun" className="text-white text-sm hover:underline">
+            <Link href="/auth/masuk" className="text-white text-sm hover:underline">
               Masuk
             </Link>
             <Link
-              href="/auth/daftar-akun"
+              href="/auth/daftar"
               className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition"
             >
               Daftar
