@@ -30,7 +30,7 @@ export default function BerandaLayout({ children }) {
   return (
     <>
       {/* Header */}
-      <header className="bg-[#27AE60] fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-3 shadow">
+      <header className="bg-[#2DB567] fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-3 shadow">
         {/* Kiri: Logo dan Nama */}
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -75,7 +75,7 @@ export default function BerandaLayout({ children }) {
       </header>
 
       {/* Isi halaman */}
-      <main className="pt-16 min-h-screen">{children}</main>
+      <main className="flex-1 pt-16">{children}</main>
 
       {/* Footer */}
       <footer className="bg-[#1E844A] text-white text-center py-4 text-base">
