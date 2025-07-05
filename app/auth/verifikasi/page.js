@@ -11,8 +11,8 @@ export default function OTPPage() {
   const [timeLeft, setTimeLeft] = useState(300); // 5 menit
   const [registrationToken, setRegistrationToken] = useState(null);
   const [noWhatsapp, setNoWhatsapp] = useState("");
-
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const blurNumber = (num) => {
     return num.replace(/^(\d{3})\d+(?=\d{3})/, "$1xxxxxxx");
@@ -68,14 +68,15 @@ export default function OTPPage() {
         localStorage.removeItem("no_whatsapp");
         localStorage.setItem("token", result.access_token);
         localStorage.setItem("user", JSON.stringify(result.user));
-        alert(result.message || "Verifikasi berhasil!");
-        router.push("/auth/lengkapi-profil");
+        setShowSuccess(true);
+        setTimeout(() => {
+          router.push("/auth/lengkapi-profil");
+        }, 2500);
       } else {
-        setError(result.message || "Verifikasi gagal. Silakan coba lagi.");
+        setError(true);
       }
     } catch (err) {
-      console.error("Fetch error:", err);
-      setError("Gagal menghubungi server.");
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -106,7 +107,6 @@ export default function OTPPage() {
       const result = await res.json();
 
       if (res.ok) {
-        alert(result.message || "Kode OTP baru telah dikirim.");
         setOtp(new Array(6).fill(""));
         setTimeLeft(300); // reset waktu OTP jika diperlukan
         setResendCooldown(60); // 🔒 mulai cooldown 60 detik
@@ -132,16 +132,12 @@ export default function OTPPage() {
   useEffect(() => {
     const token = localStorage.getItem("registration_token");
     if (!token) {
-      alert("Token registrasi tidak ditemukan. Silakan daftar ulang.");
-      router.push("/auth/daftar-akun");
+        setError(true);
     } else {
       setRegistrationToken(token);
     }
-
     const storedNoWA = localStorage.getItem("no_whatsapp");
-    if (storedNoWA) {
-      setNoWhatsapp(storedNoWA);
-    }
+    if (storedNoWA) setNoWhatsapp(storedNoWA);
   }, [router]);
 
   useEffect(() => {
@@ -163,7 +159,7 @@ export default function OTPPage() {
       <button onClick={() => router.back()} className="absolute top-6 left-6 text-2xl">
         ←
       </button>
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">VERIFIKASI OTP</h2>
+      <h2 className="text-4xl font-bold mb-6 text-center text-[#27AE60]">VERIFIKASI OTP</h2>
       <p className="text-center text-gray-600 mb-2">
         Masukkan kode OTP yang dikirim ke nomor <br />
         <span className="font-bold">{noWhatsapp ? blurNumber(noWhatsapp) : "Anda"}</span>
@@ -184,21 +180,42 @@ export default function OTPPage() {
           ))}
         </div>
 
-        <div className={`text-center mt-4 ${timeLeft > 0 ? "text-green-600" : "text-red-600"}`}>{timeLeft > 0 ? formatTime(timeLeft) : "Kode OTP kadaluarsa. Silakan daftar ulang."}</div>
+        <div className={`text-center mt-4 ${timeLeft > 0 ? "text-green-600" : "text-red-600"}`}>{timeLeft > 0 ? formatTime(timeLeft) : "Kode OTP kadaluarsa"}</div>
 
         <p className="text-right text-sm mt-2">
           Tidak dapat kode OTP?{" "}
-          <button type="button" onClick={handleResendOtp} disabled={loading || resendCooldown > 0} className="text-sm hover:underline text-black disabled:opacity-50">
+          <button type="button" onClick={handleResendOtp} disabled={loading || resendCooldown > 0} className="text-sm hover:underline text-[#27AE60] disabled:opacity-50">
             {resendCooldown > 0 ? `Kirim ulang (${resendCooldown})` : "Kirim ulang kode"}
           </button>
         </p>
 
         <div className="flex justify-center mt-6">
-          <button type="submit" disabled={loading} className="bg-green-500 text-white px-6 py-2 rounded-md">
+          <button type="submit" disabled={loading} className="bg-[#27AE60] px-20 text-white py-2 rounded-md">
             {loading ? "Memverifikasi..." : "Verifikasi"}
           </button>
         </div>
       </form>
+
+      {showSuccess && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[290px] text-center animate-fade-in">
+            <h3 className="text-[#27AE60] text-2xl font-bold mb-3">Berhasil!</h3>
+            <p className="text-sm text-[#141414] leading-relaxed">Kode OTP berhasil diverifikasi. Silakan lengkapi informasi profil Anda untuk melanjutkan proses.</p>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-12 w-[260px] text-center animate-fade-in">
+            <h3 className="text-[#E74C3C] text-2xl font-bold mb-6 leading-snug">Verifikasi Gagal!</h3>
+            <p className="text-sm text-[#141414] leading-relaxed mb-6">Tidak ditemukan kode OTP untuk nomor Anda. Silakan lakukan pendaftaran ulang.</p>
+            <button onClick={() => router.push("/auth/daftar")} className="bg-[#E74C3C] text-white text-sm py-2 px-6 rounded-md hover:bg-red-600">
+              Daftar Ulang
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

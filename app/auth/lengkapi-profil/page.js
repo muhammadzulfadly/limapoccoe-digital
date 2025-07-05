@@ -14,11 +14,18 @@ import Pekerjaan, { validatePekerjaan } from "@/components/form/Pekerjaan";
 export default function LengkapiProfilPage() {
   const router = useRouter();
   const [form, setForm] = useState({
-    alamat: "", dusun: "", rt_rw: "", tanggal_lahir: "",
-    tempat_lahir: "", jenis_kelamin: "", pekerjaan: ""
+    alamat: "",
+    dusun: "",
+    rt_rw: "",
+    tanggal_lahir: "",
+    tempat_lahir: "",
+    jenis_kelamin: "",
+    pekerjaan: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleChange = ({ name, value }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -73,13 +80,15 @@ export default function LengkapiProfilPage() {
       if (res.ok) {
         localStorage.setItem("user", JSON.stringify(result.user_data));
         localStorage.setItem("profile", JSON.stringify(result.profile));
-        alert(result.message || "Profil berhasil disimpan.");
-        router.push("/dashboard");
+        setShowSuccess(true);
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 2500);
       } else {
-        alert(result.message || "Gagal menyimpan profil.");
+        setShowError(true);
       }
     } catch {
-      alert("Gagal menghubungi server.");
+      setShowError(true);
     } finally {
       setLoading(false);
     }
@@ -87,8 +96,10 @@ export default function LengkapiProfilPage() {
 
   return (
     <div className="w-full max-w-md">
-      <button onClick={() => router.back()} className="absolute top-6 left-6 text-2xl">←</button>
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">PROFIL</h2>
+      <button onClick={() => router.back()} className="absolute top-6 left-6 text-2xl">
+        ←
+      </button>
+      <h2 className="text-4xl font-bold mb-6 text-center text-[#27AE60]">LENGKAPI PROFIL</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Alamat value={form.alamat} onChange={handleChange} error={errors.alamat} />
@@ -100,6 +111,7 @@ export default function LengkapiProfilPage() {
             <RtRw value={form.rt_rw} onChange={handleChange} error={errors.rt_rw} />
           </div>
         </div>
+        <div className="border-y border-gray-400 my-10" />
         <div className="flex gap-4">
           <div className="w-1/2">
             <TanggalLahir value={form.tanggal_lahir} onChange={handleChange} error={errors.tanggal_lahir} />
@@ -111,23 +123,35 @@ export default function LengkapiProfilPage() {
         <JenisKelamin value={form.jenis_kelamin} onChange={handleChange} error={errors.jenis_kelamin} />
         <Pekerjaan value={form.pekerjaan} onChange={handleChange} error={errors.pekerjaan} />
 
-        <div className="flex justify-between mt-6">
-          <button
-            type="button"
-            onClick={() => router.push("/dashboard")}
-            className="border border-green-600 text-green-600 rounded px-6 py-2 hover:bg-green-50"
-          >
+        <div className="flex justify-between mt-8">
+          <button type="button" onClick={() => router.push("/dashboard")} className="border border-[#27AE60] text-[#27AE60] rounded px-6 py-2 hover:bg-green-50">
             Lanjutkan nanti
           </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-green-600 text-white rounded px-6 py-2 hover:bg-green-700 disabled:opacity-50"
-          >
+          <button type="submit" disabled={loading} className="bg-[#27AE60] text-white rounded px-14 py-2 hover:bg-green-700 disabled:opacity-50">
             {loading ? "Menyimpan..." : "Simpan"}
           </button>
         </div>
       </form>
+
+      {showSuccess && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[280px] text-center animate-fade-in">
+            <h3 className="text-[#27AE60] text-2xl font-bold mb-4">Berhasil!</h3>
+            <p className="text-sm text-[#141414] leading-relaxed">Profil Anda berhasil disimpan. Terima kasih telah melengkapi data diri Anda.</p>
+          </div>
+        </div>
+      )}
+      {showError && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[320px] text-center animate-fade-in">
+            <h3 className="text-[#EB5757] text-2xl font-bold mb-4">Gagal menyimpan!</h3>
+            <p className="text-sm text-[#141414] leading-relaxed mb-4">Maaf, terjadi kesalahan saat menyimpan data. Silakan lanjutkan nanti atau periksa koneksi internet Anda.</p>
+            <button onClick={() => setShowError(false)} className="bg-[#EB5757] hover:bg-[#d84747] text-white rounded px-6 py-2 text-sm font-semibold">
+              Kembali
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -22,6 +22,9 @@ export default function Page() {
   });
 
   const [errors, setErrors] = useState({});
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleFieldChange = ({ name, value }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -50,7 +53,6 @@ export default function Page() {
       newErrors.password_confirmation = "Konfirmasi Kata Sandi tidak cocok.";
     }
 
-    // Hapus error yang kosong
     Object.keys(newErrors).forEach((key) => {
       if (!newErrors[key]) delete newErrors[key];
     });
@@ -62,7 +64,7 @@ export default function Page() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateAll()) return;
-
+    setLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -79,16 +81,21 @@ export default function Page() {
             newErrors[key] = result.errors[key][0];
           }
         }
-        newErrors.general = result?.message || "Terjadi kesalahan saat mendaftar.";
         setErrors(newErrors);
+        setShowError(true);
         return;
       }
+
       localStorage.setItem("registration_token", result.registration_token);
       localStorage.setItem("no_whatsapp", form.no_whatsapp);
-      router.push("/auth/verifikasi-otp");
+      setShowSuccess(true);
+      setTimeout(() => {
+        router.push("/auth/verifikasi");
+      }, 2500);
     } catch (err) {
-      console.error(err);
-      setErrors({ general: "Gagal menghubungi server." });
+      setShowError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,32 +104,54 @@ export default function Page() {
       <button onClick={() => router.back()} className="absolute top-6 left-6 text-2xl">
         ←
       </button>
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">DAFTAR AKUN</h2>
+      <h2 className="text-4xl font-bold mb-6 text-center text-[#27AE60]">DAFTAR AKUN</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Nik value={form.nik} onChange={handleFieldChange} error={errors.nik} />
         <NamaLengkap value={form.name} onChange={handleFieldChange} error={errors.name} />
         <NomorTelepon value={form.no_whatsapp} onChange={handleFieldChange} error={errors.no_whatsapp} />
+        <div className="border-y border-gray-400 my-10" />
+
         <KataSandi value={form.password} onChange={handleFieldChange} error={errors.password} />
-        <KonfirmasiSandi
-          value={form.password_confirmation}
-          onChange={handleFieldChange}
-          error={errors.password_confirmation}
-        />
+        <KonfirmasiSandi value={form.password_confirmation} onChange={handleFieldChange} error={errors.password_confirmation} />
 
-        {errors.general && <p className="text-red-500 text-sm text-center">{errors.general}</p>}
-
-        <button type="submit" className="w-full bg-green-500 text-white py-2 rounded text-sm font-semibold mt-4">
-          Daftar
-        </button>
+        <div className="flex justify-center">
+          <button type="submit" disabled={loading} className="px-20 bg-[#27AE60] text-white py-2 rounded text-base mt-4 mb-8 disabled:opacity-50 hover:bg-green-600">
+            {loading ? "Memproses..." : "Daftar"}
+          </button>
+        </div>
 
         <p className="text-center mt-4 text-sm">
           Sudah punya akun?{" "}
-          <Link href="/auth/masuk" className="text-green-600 font-semibold hover:underline">
+          <Link href="/auth/masuk" className="text-[#27AE60] hover:underline">
             Masuk
           </Link>
         </p>
       </form>
+
+      {showSuccess && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-8 w-[280px] text-center animate-fade-in">
+            <h3 className="text-[#27AE60] text-2xl font-bold mb-3">Berhasil!</h3>
+            <p className="text-sm text-[#141414] leading-relaxed">Kode OTP berhasil dikirim ke nomor WhatsApp Anda. Silakan periksa pesan masuk.</p>
+          </div>
+        </div>
+      )}
+
+      {showError && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-8 py-8 w-[250px] text-center animate-fade-in">
+            <h3 className="text-[#E74C3C] text-2xl font-bold mb-4 px-6 py-2">Daftar Akun Gagal!</h3>
+            <p className="text-sm text-[#141414] leading-relaxed mb-6">
+              Maaf, terjadi kesalahan saat membuat akun. <br />
+              Silakan coba lagi atau periksa koneksi internet Anda.
+            </p>
+            <button onClick={() => setShowError(false)} className="bg-[#E74C3C] hover:bg-red-600 text-white text-sm px-11 py-2 rounded">
+              Kembali
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -7,15 +7,15 @@ export default function KataSandi({ value, onChange, error }) {
 
   return (
     <div>
-      <label className="text-xs font-semibold text-gray-600">Kata Sandi</label>
+      <label className="text-sm font-semibold text-gray-500">Kata Sandi<span className="text-red-500 ml-0.5">*</span></label>
       <div className="relative">
         <input
           type={visible ? "text" : "password"}
           name="password"
           value={value}
           onChange={(e) => onChange({ name: "password", value: e.target.value })}
-          placeholder="Masukkan Kata Sandi"
-          className={`w-full border ${error ? "border-red-500" : "border-gray-300"} rounded p-2 mt-1 text-sm pr-10`}
+          placeholder="Masukkan Kata Sandi Anda"
+          className={`w-full border ${error ? "border-red-500" : "border-gray-300"} rounded px-4 py-2 mt-1 text-sm pr-10`}
         />
         <button
           type="button"

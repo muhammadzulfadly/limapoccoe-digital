@@ -7,16 +7,16 @@ const pilihanDusun = ["WT.Bengo", "Barua", "Mappasaile", "Kampala", "Kaluku", "J
 export default function Dusun({ value, onChange, error }) {
   return (
     <div className="relative">
-      <label className="text-sm font-semibold">Dusun</label>
+      <label className="text-sm font-semibold text-gray-500">Dusun<span className="text-red-500 ml-0.5">*</span></label>
       <select
         name="dusun"
         value={value}
         onChange={(e) => onChange({ name: "dusun", value: e.target.value })}
-        className={`mt-1 appearance-none w-full rounded-lg border bg-white px-4 py-3 text-sm outline-none ${
+        className={`mt-1 appearance-none w-full rounded-lg border bg-white px-4 py-2 text-sm outline-none ${
           error ? "border-red-500" : "border-gray-300"
         }`}
       >
-        <option value="">Pilih Dusun</option>
+        <option value="">Pilih</option>
         {pilihanDusun.map((d) => (
           <option key={d} value={d}>
             {d}
