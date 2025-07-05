@@ -1,7 +1,7 @@
 "use client";
 import InputField from "./InputField";
 
-export default function Nik({ value, onChange, error }) {
+export default function Nik({ value, onChange, error, disabled = false}) {
   return (
     <InputField
       label="NIK"
@@ -10,6 +10,7 @@ export default function Nik({ value, onChange, error }) {
       maxLength={16}
       onChange={(e) => onChange({ name: "nik", value: e.target.value.replace(/\D/g, "") })}
       error={error}
+      disabled={disabled}
     />
   );
 }

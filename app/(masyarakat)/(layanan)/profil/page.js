@@ -15,6 +15,7 @@ import RtRw from "@/components/form/RtRw";
 
 export default function ProfilePage() {
   const router = useRouter();
+  const [isEditable, setIsEditable] = useState(false);
   const [form, setForm] = useState({
     nama: "",
     tempat_lahir: "",
@@ -101,17 +102,24 @@ export default function ProfilePage() {
 
       localStorage.removeItem("user");
       localStorage.removeItem("token");
-      alert("Berhasil logout.");
+      //pop up berhasil
       router.push("/");
     } catch (err) {
       console.error("Logout error:", err);
-      alert(err.message || "Gagal logout. Silakan coba lagi.");
+      //pop up gagal
     }
+  };
+
+  const handleToggleEdit = () => {
+    if (isEditable) {
+      // TODO: simpan ke API
+    }
+    setIsEditable(!isEditable);
   };
 
   return (
     <div className="min-h-screen bg-[#f1f4f9] px-4 py-10 md:px-20">
-      <h1 className="text-xl font-bold text-black mb-4">Profile</h1>
+      <h1 className="text-xl font-bold text-black mb-4">Profil</h1>
       <div className="bg-white rounded-lg p-6 shadow relative">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
@@ -120,30 +128,35 @@ export default function ProfilePage() {
             </div>
             <p className="font-semibold text-black">{form.nama}</p>
           </div>
-          <button className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded">
-            Ubah Profile
+          <button
+            onClick={handleToggleEdit}
+            className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded"
+          >
+            {isEditable ? "Simpan" : "Ubah Profil"}
           </button>
         </div>
 
         <form className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
-          <NamaLengkap value={form.nama} onChange={handleChange} error={""} />
-          <TempatLahir value={form.tempat_lahir} onChange={handleChange} />
-          <TanggalLahir value={form.tanggal_lahir} onChange={handleChange} />
-          <JenisKelamin value={form.jenis_kelamin} onChange={handleChange} />
-          <Alamat value={form.alamat} onChange={handleChange} />
-          <Pekerjaan value={form.pekerjaan} onChange={handleChange} />
-          <Dusun value={form.dusun} onChange={handleChange} />
-          <RtRw value={form.rt_rw} onChange={handleChange} />
+          <NamaLengkap value={form.nama} onChange={handleChange} error={""} disabled={!isEditable} />
+          <TempatLahir value={form.tempat_lahir} onChange={handleChange} disabled={!isEditable} />
+          <TanggalLahir value={form.tanggal_lahir} onChange={handleChange} disabled={!isEditable} />
+          <JenisKelamin value={form.jenis_kelamin} onChange={handleChange} disabled={!isEditable} />
+          <Alamat value={form.alamat} onChange={handleChange} disabled={!isEditable} />
+          <Pekerjaan value={form.pekerjaan} onChange={handleChange} disabled={!isEditable} />
+          <Dusun value={form.dusun} onChange={handleChange} disabled={!isEditable} />
+          <RtRw value={form.rt_rw} onChange={handleChange} disabled={!isEditable} />
         </form>
 
-        <div className="flex justify-end mt-8">
-          <button
-            onClick={handleLogout}
-            className="bg-[#E74C3C] hover:bg-[#c0392b] text-white text-sm font-medium px-5 py-2 rounded"
-          >
-            Logout
-          </button>
-        </div>
+        {!isEditable && (
+          <div className="flex justify-end mt-8">
+            <button
+              onClick={handleLogout}
+              className="bg-[#E74C3C] hover:bg-[#c0392b] text-white text-sm font-medium px-5 py-2 rounded"
+            >
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-export default function KonfirmasiSandi({ value, onChange, error }) {
+export default function KonfirmasiSandi({ value, onChange, error, disabled = false}) {
   const [visible, setVisible] = useState(false);
 
   return (
@@ -13,6 +13,7 @@ export default function KonfirmasiSandi({ value, onChange, error }) {
           type={visible ? "text" : "password"}
           name="password_confirmation"
           value={value}
+          disabled={disabled}
           onChange={(e) => onChange({ name: "password_confirmation", value: e.target.value })}
           placeholder="Ulangi Kata Sandi Anda"
           className={`w-full border ${error ? "border-red-500" : "border-gray-300"} rounded px-4 py-2 mt-1 text-sm pr-10`}

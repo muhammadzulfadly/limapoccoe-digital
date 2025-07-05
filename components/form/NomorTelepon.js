@@ -1,7 +1,7 @@
 "use client";
 import InputField from "./InputField";
 
-export default function NomorTelepon({ value, onChange, error }) {
+export default function NomorTelepon({ value, onChange, error, disabled = false }) {
   return (
     <InputField
       label="Nomor Telepon"
@@ -10,6 +10,7 @@ export default function NomorTelepon({ value, onChange, error }) {
       maxLength={13}
       onChange={(e) => onChange({ name: "no_whatsapp", value: e.target.value.replace(/\D/g, "") })}
       error={error}
+      disabled={disabled}
     />
   );
 }

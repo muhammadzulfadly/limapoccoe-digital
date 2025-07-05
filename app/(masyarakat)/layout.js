@@ -16,8 +16,10 @@ export default function BerandaLayout({ children }) {
     if (storedUser && storedToken) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setUserName(parsedUser?.name || "");
+        const name = parsedUser?.user?.name || parsedUser?.name || "";
+        setUserName(name);
       } catch (error) {
+        console.error("Gagal parsing user dari localStorage:", error);
         setUserName("");
       }
     } else {
@@ -31,17 +33,27 @@ export default function BerandaLayout({ children }) {
       <header className="bg-[#27AE60] fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-3 shadow">
         {/* Kiri: Logo dan Nama */}
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Logo Desa Limmapocoe" width={45} height={45} priority />
-          <span className="text-white font-bold text-lg md:text-xl">Desa Limapocoe</span>
+          <Image
+            src="/logo.png"
+            alt="Logo Desa Limmapocoe"
+            width={45}
+            height={45}
+            priority
+          />
+          <span className="text-white font-bold text-lg md:text-xl">
+            Desa Limapocoe
+          </span>
         </Link>
 
         {/* Kanan: Login vs Dashboard */}
         {userName ? (
           <div className="flex items-center gap-4">
             <User size={18} className="text-white" />
-            <Link href="auth/profil" className="text-white text-sm hover:underline">{userName}</Link>
+            <Link href="/profil" className="text-white text-sm hover:underline">
+              {userName}
+            </Link>
             <Link
-              href="/masyarakat/dashboard"
+              href="/dashboard"
               className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition"
             >
               Dashboard

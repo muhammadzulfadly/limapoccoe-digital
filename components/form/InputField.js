@@ -1,6 +1,6 @@
 "use client";
 
-export default function InputField({ label, name, value, onChange, error, required = true, ...props }) {
+export default function InputField({ label, name, value, onChange, error, required = true, disabled = false, ...props }) {
   return (
     <div>
       <label className="text-sm font-semibold text-gray-500">
@@ -11,6 +11,7 @@ export default function InputField({ label, name, value, onChange, error, requir
         name={name}
         value={value}
         onChange={onChange}
+        disabled={disabled}
         placeholder={`Masukkan ${label} Anda`}
         className={`w-full border ${error ? "border-red-500" : "border-gray-300"} rounded px-4 py-2 mt-1 text-sm`}
         {...props}

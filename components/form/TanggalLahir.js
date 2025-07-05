@@ -1,6 +1,6 @@
 "use client";
 
-export default function TanggalLahir({ value, onChange, error }) {
+export default function TanggalLahir({ value, onChange, error, disabled = false}) {
   return (
     <div>
       <label className="text-sm font-semibold text-gray-500">Tanggal Lahir<span className="text-red-500 ml-0.5">*</span></label>
@@ -8,6 +8,7 @@ export default function TanggalLahir({ value, onChange, error }) {
         type="date"
         name="tanggal_lahir"
         value={value}
+        disabled={disabled}
         onChange={(e) => onChange({ name: "tanggal_lahir", value: e.target.value })}
         className={`w-full border rounded px-4 py-2 mt-1 text-sm ${error ? "border-red-500" : "border-gray-300"}`}
       />

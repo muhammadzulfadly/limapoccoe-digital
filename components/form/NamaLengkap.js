@@ -1,7 +1,7 @@
 "use client";
 import InputField from "./InputField";
 
-export default function NamaLengkap({ value, onChange, error }) {
+export default function NamaLengkap({ value, onChange, error, disabled = false }) {
   return (
     <InputField
       label="Nama Lengkap"
@@ -9,6 +9,7 @@ export default function NamaLengkap({ value, onChange, error }) {
       value={value}
       onChange={(e) => onChange({ name: "name", value: e.target.value })}
       error={error}
+      disabled={disabled}
     />
   );
 }
