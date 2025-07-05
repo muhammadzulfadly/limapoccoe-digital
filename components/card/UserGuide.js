@@ -1,13 +1,16 @@
 import { FileText } from "lucide-react";
+import Link from "next/link";
 
 export default function UserGuideCard() {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm w-full p-4 flex justify-between items-start">
-      <div className="flex flex-col gap-1">
-        <span className="text-sm text-gray-800">User Guid</span>
-        <span className="text-sm text-gray-800">Lihat panduan</span>
+    <Link href="#" className="bg-white rounded-xl border border-gray-200 shadow-sm w-full p-4 flex item-center justify-between">
+      <div>
+        <div className="text-xl font-semibold">User Guid</div>
+        <div className="text-sm text-gray-400">
+          Lihat panduan
+        </div>
       </div>
-      <FileText className="text-gray-800" />
-    </div>
+      <FileText size={50} className="text-gray-800" />
+    </Link>
   );
 }

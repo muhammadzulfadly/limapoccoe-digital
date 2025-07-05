@@ -5,7 +5,7 @@ import SelesaiCard from "@/components/card/Selesai";
 import MenungguCard from "@/components/card/Menunggu";
 import DiterimaCard from "@/components/card/DiTerima";
 import UserGuideCard from "@/components/card/UserGuide";
-import Link from "next/link";
+
 
 export const dynamic = "force-dynamic";
 
@@ -38,9 +38,9 @@ export default function DashboardPage() {
 
         <section>
           <h2 className="font-semibold text-2xl mb-4">Panduan Pengguna</h2>
-          <Link href="#" className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <UserGuideCard />
-          </Link>
+          </div>
         </section>
       </div>
     </div>
