@@ -75,13 +75,17 @@ export default function Page() {
       const result = await res.json().catch(() => null);
 
       if (!res.ok) {
-        const newErrors = {};
-        if (result?.errors) {
+        // Error validasi (misalnya 422 Unprocessable Entity)
+        if (res.status === 422 && result?.errors) {
+          const newErrors = {};
           for (const key in result.errors) {
             newErrors[key] = result.errors[key][0];
           }
+          setErrors(newErrors);
+          return;
         }
-        setErrors(newErrors);
+
+        // Error dari server atau yang tidak diketahui
         setShowError(true);
         return;
       }

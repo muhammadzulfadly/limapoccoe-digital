@@ -41,18 +41,34 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const result = await res.json();
-      if (res.ok) {
+
+      // Coba parse JSON, tapi jika gagal, tangani di bawah
+      const result = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 400) {
+          // Kredensial salah, tapi server masih OK
+          setErrors({ general: "NIK atau Kata Sandi Anda tidak valid." });
+        } else {
+          // Error lain (500, dsb)
+          setShowLoginError(true);
+        }
+        return;
+      }
+      // Sukses login
+      if (result?.access_token && result?.user) {
+        const expiresAt = Date.now() + 60 * 60 * 1000; // 1 jam dari sekarang
         localStorage.setItem("token", result.access_token);
         localStorage.setItem("user", JSON.stringify(result.user));
+        localStorage.setItem("expiresAt", expiresAt.toString());
         router.push("/dashboard");
       } else {
+        // Jika respons 200 tapi tidak lengkap
         setShowLoginError(true);
-        setErrors({ general: result.message || "Login gagal. Cek kembali NIK dan kata sandi Anda." });
       }
-    } catch {
+    } catch (err) {
+      // Server tidak bisa dihubungi / fetch error
       setShowLoginError(true);
-      setErrors({ general: result.message || "Login gagal. Cek kembali NIK dan kata sandi Anda." });
     } finally {
       setLoading(false);
     }

@@ -54,7 +54,7 @@ export default function PengaduanPage() {
             })}
           </div>
 
-          <hr className="border-gray-400 mb-6" />
+        <hr className="border-gray-300 border-y mb-6" />
 
           <div className="flex justify-between items-center mb-6">
             <Link href="/pengaduan/buat">

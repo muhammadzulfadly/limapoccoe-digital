@@ -10,21 +10,31 @@ export default function BerandaLayout({ children }) {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
+    const updateUser = () => {
+      const storedUser = localStorage.getItem("user");
+      const storedToken = localStorage.getItem("token");
 
-    if (storedUser && storedToken) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        const name = parsedUser?.user?.name || parsedUser?.name || "";
-        setUserName(name);
-      } catch (error) {
-        console.error("Gagal parsing user dari localStorage:", error);
+      if (storedUser && storedToken) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          const name = parsedUser?.user?.name || parsedUser?.name || "";
+          setUserName(name);
+        } catch (error) {
+          console.error("Gagal parsing user dari localStorage:", error);
+          setUserName("");
+        }
+      } else {
         setUserName("");
       }
-    } else {
-      setUserName("");
-    }
+    };
+
+    updateUser();
+
+    window.addEventListener("storage", updateUser);
+
+    return () => {
+      window.removeEventListener("storage", updateUser);
+    };
   }, []);
 
   return (
@@ -33,16 +43,8 @@ export default function BerandaLayout({ children }) {
       <header className="bg-[#2DB567] fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-3 shadow">
         {/* Kiri: Logo dan Nama */}
         <Link href="/" className="flex items-center gap-3">
-          <Image
-            src="/logo.png"
-            alt="Logo Desa Limmapocoe"
-            width={45}
-            height={45}
-            priority
-          />
-          <span className="text-white font-bold text-lg md:text-xl">
-            Desa Limapocoe
-          </span>
+          <Image src="/logo.png" alt="Logo Desa Limmapocoe" width={45} height={45} priority />
+          <span className="text-white font-bold text-lg md:text-xl">Desa Limapocoe</span>
         </Link>
 
         {/* Kanan: Login vs Dashboard */}
@@ -52,10 +54,7 @@ export default function BerandaLayout({ children }) {
             <Link href="/profil" className="text-white text-sm hover:underline">
               {userName}
             </Link>
-            <Link
-              href="/dashboard"
-              className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition"
-            >
+            <Link href="/dashboard" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
               Dashboard
             </Link>
           </div>
@@ -64,10 +63,7 @@ export default function BerandaLayout({ children }) {
             <Link href="/auth/masuk" className="text-white text-sm hover:underline">
               Masuk
             </Link>
-            <Link
-              href="/auth/daftar"
-              className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition"
-            >
+            <Link href="/auth/daftar" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
               Daftar
             </Link>
           </div>
@@ -78,9 +74,7 @@ export default function BerandaLayout({ children }) {
       <main className="flex-1 pt-16">{children}</main>
 
       {/* Footer */}
-      <footer className="bg-[#1E844A] text-white text-center py-4 text-base">
-        © 2025 Desa Limapocoe - dikelola oleh Tim IT Desa
-      </footer>
+      <footer className="bg-[#1E844A] text-white text-center py-4 text-base">© 2025 Desa Limapocoe - dikelola oleh Tim IT Desa</footer>
     </>
   );
 }

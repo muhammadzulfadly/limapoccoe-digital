@@ -102,8 +102,10 @@ export default function ProfilePage() {
 
       localStorage.removeItem("user");
       localStorage.removeItem("token");
+      localStorage.removeItem("expiresAt");
+      window.dispatchEvent(new Event("storage"));
       //pop up berhasil
-      router.push("/");
+      router.push("/beranda");
     } catch (err) {
       console.error("Logout error:", err);
       //pop up gagal
@@ -128,10 +130,7 @@ export default function ProfilePage() {
             </div>
             <p className="font-semibold text-black">{form.nama}</p>
           </div>
-          <button
-            onClick={handleToggleEdit}
-            className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded"
-          >
+          <button onClick={handleToggleEdit} className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded">
             {isEditable ? "Simpan" : "Ubah Profil"}
           </button>
         </div>
@@ -149,10 +148,7 @@ export default function ProfilePage() {
 
         {!isEditable && (
           <div className="flex justify-end mt-8">
-            <button
-              onClick={handleLogout}
-              className="bg-[#E74C3C] hover:bg-[#c0392b] text-white text-sm font-medium px-5 py-2 rounded"
-            >
+            <button onClick={handleLogout} className="bg-[#E74C3C] hover:bg-[#c0392b] text-white text-sm font-medium px-5 py-2 rounded">
               Logout
             </button>
           </div>

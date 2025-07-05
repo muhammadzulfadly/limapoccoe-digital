@@ -14,11 +14,26 @@ export default function MasyarakatLayout({ children }) {
   const [isOpen, setIsOpen] = useState(isPengajuanSuratActive);
   const [jenisSurat, setJenisSurat] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showSessionExpired, setShowSessionExpired] = useState(false);
 
   useEffect(() => {
     setIsOpen(isPengajuanSuratActive);
   }, [isPengajuanSuratActive]);
 
+  // ✅ Cek token kadaluarsa
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const expiresAt = localStorage.getItem("expiresAt");
+
+    if (!token || !expiresAt || Date.now() > parseInt(expiresAt)) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("expiresAt");
+      setShowSessionExpired(true);
+    }
+  }, []);
+
+  // ✅ Ambil jenis surat jika token valid
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -42,7 +57,8 @@ export default function MasyarakatLayout({ children }) {
 
   const isActive = (path) => pathname === path || pathname.startsWith(`${path}/`);
 
-  const linkClass = (path) => `${isActive(path) ? "text-green-500 font-medium" : "text-black"} hover:text-green-600 flex items-center gap-2`;
+  const linkClass = (path) =>
+    `${isActive(path) ? "text-green-500 font-medium" : "text-black"} hover:text-green-600 flex items-center gap-2`;
 
   return (
     <div className="flex min-h-screen">
@@ -68,15 +84,24 @@ export default function MasyarakatLayout({ children }) {
               Pengaduan
             </Link>
           </li>
-
           <li>
             <div className="flex items-center gap-5">
-              <Link href="/pengajuan-surat" className={`flex items-center gap-2 font-medium hover:text-green-600 ${isPengajuanSuratActive ? "text-green-500" : "text-black"}`}>
+              <Link
+                href="/pengajuan-surat"
+                className={`flex items-center gap-2 font-medium hover:text-green-600 ${
+                  isPengajuanSuratActive ? "text-green-500" : "text-black"
+                }`}
+              >
                 <FileEdit size={18} />
                 Pengajuan Surat
               </Link>
               <button onClick={() => setIsOpen(!isOpen)} className="ml-1 focus:outline-none">
-                <ChevronDown size={16} className={`transition-transform duration-300 ${isOpen ? "rotate-180 text-green-500" : "text-black"}`} />
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform duration-300 ${
+                    isOpen ? "rotate-180 text-green-500" : "text-black"
+                  }`}
+                />
               </button>
             </div>
 
@@ -87,7 +112,12 @@ export default function MasyarakatLayout({ children }) {
                 ) : (
                   jenisSurat.map((item) => (
                     <li key={item.id}>
-                      <Link href={`/pengajuan-surat/${item.id}`} className={`${isActive(`/pengajuan-surat/${item.id}`) ? "text-green-500 font-medium" : "text-black"} hover:text-green-600 block max-w-[120px] break-words`}>
+                      <Link
+                        href={`/pengajuan-surat/${item.id}`}
+                        className={`${
+                          isActive(`/pengajuan-surat/${item.id}`) ? "text-green-500 font-medium" : "text-black"
+                        } hover:text-green-600 block max-w-[120px] break-words`}
+                      >
                         {item.nama_surat}
                       </Link>
                     </li>
@@ -101,6 +131,27 @@ export default function MasyarakatLayout({ children }) {
 
       {/* Main Content */}
       <main className="flex-1">{children}</main>
+
+      {/* 🔴 Popup Sesi Berakhir */}
+      {showSessionExpired && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-8 w-[280px] text-center animate-fade-in">
+            <h3 className="text-[#EB5757] text-2xl font-bold mb-4">Sesi Berakhir</h3>
+            <p className="text-sm text-[#141414] leading-relaxed mb-6">
+              Sesi Anda telah berakhir. Silakan masuk kembali untuk melanjutkan.
+            </p>
+            <button
+              onClick={() => {
+                setShowSessionExpired(false);
+                router.push("/auth/masuk");
+              }}
+              className="bg-[#EB5757] hover:bg-[#c94444] text-white rounded px-6 py-2 text-sm"
+            >
+              Masuk Ulang
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

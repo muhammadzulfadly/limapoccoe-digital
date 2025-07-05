@@ -57,7 +57,7 @@ export default function HomePage() {
           <div className="max-w-xs text-center">
             <Image src="/icons/surat.png" alt="Ikon Surat" width={150} height={150} className="mx-auto" />
 
-            <Link href="/masyarakat/pengajuan-surat">
+            <Link href="/pengajuan-surat">
               <button className="mt-6 bg-green-500 text-white px-6 py-2 rounded-full shadow-md font-medium hover:bg-green-600 transition">Pengajuan Surat</button>
             </Link>
 
@@ -68,7 +68,7 @@ export default function HomePage() {
           <div className="max-w-xs text-center">
             <Image src="/icons/pengaduan.png" alt="Ikon Pengaduan" width={150} height={150} className="mx-auto" />
 
-            <Link href="/masyarakat/pengaduan-masyarakat">
+            <Link href="/pengaduan">
               <button className="mt-6 bg-green-500 text-white px-6 py-2 rounded-full shadow-md font-medium hover:bg-green-600 transition">Pengaduan</button>
             </Link>
 

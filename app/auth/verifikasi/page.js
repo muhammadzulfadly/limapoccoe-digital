@@ -66,8 +66,10 @@ export default function OTPPage() {
       if (res.ok) {
         localStorage.removeItem("registration_token");
         localStorage.removeItem("no_whatsapp");
+        const expiresAt = Date.now() + 60 * 60 * 1000; // 1 jam dari sekarang
         localStorage.setItem("token", result.access_token);
         localStorage.setItem("user", JSON.stringify(result.user));
+        localStorage.setItem("expiresAt", expiresAt.toString());
         setShowSuccess(true);
         setTimeout(() => {
           router.push("/auth/lengkapi-profil");
