@@ -83,7 +83,7 @@ export default function LengkapiProfilPage() {
         setShowSuccess(true);
         setTimeout(() => {
           router.push("/dashboard");
-        }, 2500);
+        }, 1800);
       } else {
         setShowError(true);
       }

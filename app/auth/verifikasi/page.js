@@ -73,7 +73,7 @@ export default function OTPPage() {
         setShowSuccess(true);
         setTimeout(() => {
           router.push("/auth/lengkapi-profil");
-        }, 2500);
+        }, 1800);
       } else {
         setError(true);
       }

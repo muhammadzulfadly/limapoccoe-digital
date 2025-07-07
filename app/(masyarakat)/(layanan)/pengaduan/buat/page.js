@@ -98,7 +98,7 @@ export default function BuatPengaduanPage() {
         setShowSuccessModal(true);
         setTimeout(() => {
           router.push("/pengaduan");
-        }, 2500);
+        }, 1800);
       } else {
         setShowErrorModal(true);
       }
