@@ -78,8 +78,6 @@ export default function LengkapiProfilPage() {
       });
       const result = await res.json();
       if (res.ok) {
-        localStorage.setItem("user", JSON.stringify(result.user_data));
-        localStorage.setItem("profile", JSON.stringify(result.profile));
         setShowSuccess(true);
         setTimeout(() => {
           router.push("/dashboard");
