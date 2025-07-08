@@ -4,7 +4,8 @@ export async function GET(request, { params }) {
   const { filename } = params;
 
   try {
-    const res = await fetch(`${process.env.API_SECRET_URL}/storage/${filename}`);
+    const imageUrl = `${process.env.API_SECRET_URL}/storage/aduan/evidence/${filename}`;
+    const res = await fetch(imageUrl);
 
     if (!res.ok) {
       return new NextResponse("Gambar tidak ditemukan", { status: 404 });
@@ -18,6 +19,7 @@ export async function GET(request, { params }) {
       headers: {
         "Content-Type": contentType,
         "Content-Disposition": `inline; filename="${filename}"`,
+        "Cache-Control": "public, max-age=3600",
       },
     });
   } catch (error) {

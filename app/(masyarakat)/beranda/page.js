@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const slides = [
   {
@@ -15,13 +16,29 @@ const slides = [
 ];
 
 export default function HomePage() {
+  const [showSessionExpired, setShowSessionExpired] = useState(false);
   const [current, setCurrent] = useState(0);
   const total = slides.length;
+  const router = useRouter();
 
   const nextSlide = () => setCurrent((prev) => (prev + 1) % total);
   const prevSlide = () => setCurrent((prev) => (prev - 1 + total) % total);
 
   const slide = slides[current];
+
+  const handleLogin = (target) => {
+    const token = localStorage.getItem("token");
+    const expiresAt = localStorage.getItem("expiresAt");
+
+    if (!token || !expiresAt || Date.now() > parseInt(expiresAt)) {
+      setShowSessionExpired(true);
+      setTimeout(() => {
+        router.push("/auth/masuk");
+      }, 1800);
+    } else {
+      router.push(target);
+    }
+  };
 
   return (
     <>
@@ -57,9 +74,9 @@ export default function HomePage() {
           <div className="max-w-xs text-center">
             <Image src="/icons/surat.png" alt="Ikon Surat" width={150} height={150} className="mx-auto" />
 
-            <Link href="/pengajuan-surat">
-              <button className="mt-6 bg-green-500 text-white px-6 py-2 rounded-full shadow-md font-medium hover:bg-green-600 transition">Pengajuan Surat</button>
-            </Link>
+            <button onClick={() => handleLogin("/pengajuan-surat")} className="mt-6 bg-green-500 text-white px-6 py-2 rounded-full shadow-md font-medium hover:bg-green-600 transition">
+              Pengajuan Surat
+            </button>
 
             <p className="mt-4 text-gray-600 text-sm">Ajukan berbagai jenis surat secara online, mudah dan tanpa antre.</p>
           </div>
@@ -68,9 +85,9 @@ export default function HomePage() {
           <div className="max-w-xs text-center">
             <Image src="/icons/pengaduan.png" alt="Ikon Pengaduan" width={150} height={150} className="mx-auto" />
 
-            <Link href="/pengaduan">
-              <button className="mt-6 bg-green-500 text-white px-6 py-2 rounded-full shadow-md font-medium hover:bg-green-600 transition">Pengaduan</button>
-            </Link>
+            <button onClick={() => handleLogin("/pengaduan")} className="mt-6 bg-green-500 text-white px-6 py-2 rounded-full shadow-md font-medium hover:bg-green-600 transition">
+              Pengaduan
+            </button>
 
             <p className="mt-4 text-gray-600 text-sm">Sampaikan keluhan atau aspirasi Anda langsung ke pihak desa, cepat dan praktis.</p>
           </div>
@@ -299,13 +316,19 @@ export default function HomePage() {
             <h4 className="text-lg font-semibold mb-2">Jelajahi</h4>
             <ul className="space-y-1 text-base">
               <li>
-                <Link className="hover:underline" href="#">Berita desa</Link>
+                <Link className="hover:underline" href="#">
+                  Berita desa
+                </Link>
               </li>
               <li>
-                <Link  className="hover:underline" href="#">Wisata desa</Link>
+                <Link className="hover:underline" href="#">
+                  Wisata desa
+                </Link>
               </li>
               <li>
-                <Link  className="hover:underline" href="#">Galeri desa</Link>
+                <Link className="hover:underline" href="#">
+                  Galeri desa
+                </Link>
               </li>
             </ul>
           </div>
@@ -322,6 +345,16 @@ export default function HomePage() {
         <Image src="/icons/whatsapp.svg" alt="WhatsApp" width={20} height={20} />
         <span className="text-lg font-medium">Chat</span>
       </a>
+
+      {/* 🔴 Popup Belum Masuk */}
+      {showSessionExpired && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-8 w-[280px] text-center animate-fade-in">
+            <h3 className="text-[#EB5757] text-2xl font-bold mb-4">Anda Belum Masuk ke Akun Anda</h3>
+            <p className="text-sm text-[#141414] leading-relaxed mb-6">Silakan masuk ke Akun untuk melanjutkan.</p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
