@@ -106,7 +106,7 @@ export default function MasyarakatLayout({ children }) {
             </div>
 
             {isOpen && (
-              <ul className="pl-9 mt-4 space-y-3 text-sm">
+              <ul className="pl-7 mt-4 space-y-3 text-sm">
                 {loading ? (
                   <li className="italic text-gray-500">Memuat...</li>
                 ) : (

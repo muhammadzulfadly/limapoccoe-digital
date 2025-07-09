@@ -105,7 +105,7 @@ export default function BuatSuratBaru() {
       }
 
       alert("✅ Pengajuan berhasil dikirim!");
-      router.push(`/masyarakat/pengajuan-surat/${jenisSurat}`);
+      router.push(`/pengajuan-surat/${jenisSurat}`);
     } catch (err) {
       console.error("Gagal submit:", err);
       alert("Gagal mengirim pengajuan.");

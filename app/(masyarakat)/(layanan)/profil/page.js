@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 
+import Nik from "@/components/form/Nik";
 import NamaLengkap from "@/components/form/NamaLengkap";
 import TempatLahir from "@/components/form/TempatLahir";
 import TanggalLahir from "@/components/form/TanggalLahir";
@@ -17,7 +18,8 @@ export default function ProfilePage() {
   const router = useRouter();
   const [isEditable, setIsEditable] = useState(false);
   const [form, setForm] = useState({
-    nama: "",
+    nik: "",
+    name: "",
     tempat_lahir: "",
     tanggal_lahir: "",
     jenis_kelamin: "",
@@ -32,7 +34,8 @@ export default function ProfilePage() {
       const userStr = localStorage.getItem("user");
       if (userStr) {
         const user = JSON.parse(userStr);
-        setForm((prev) => ({ ...prev, nama: user?.user?.name || "" }));
+        setForm((prev) => ({ ...prev, name: user?.user?.name || "" }));
+        setForm((prev) => ({ ...prev, nik: user?.user?.nik || "" }));
       }
     } catch (err) {
       console.error("Gagal mengambil nama dari localStorage:", err);
@@ -56,7 +59,8 @@ export default function ProfilePage() {
 
       const data = await res.json();
       setForm({
-        nama: data.user?.name || "",
+        nik: data.user?.nik || "",
+        name: data.user?.name || "",
         tempat_lahir: data.profile?.tempat_lahir || "",
         tanggal_lahir: data.profile?.tanggal_lahir || "",
         jenis_kelamin: data.profile?.jenis_kelamin || "",
@@ -128,7 +132,7 @@ export default function ProfilePage() {
             <div className="w-12 h-12 rounded-full bg-[#2DB567] flex items-center justify-center">
               <User className="text-white" size={24} />
             </div>
-            <p className="font-semibold text-black">{form.nama}</p>
+            <p className="font-semibold text-black">{form.name}</p>
           </div>
           <button onClick={handleToggleEdit} className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded">
             {isEditable ? "Simpan" : "Ubah Profil"}
@@ -136,7 +140,8 @@ export default function ProfilePage() {
         </div>
 
         <form className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
-          <NamaLengkap value={form.nama} onChange={handleChange} error={""} disabled={!isEditable} />
+          <Nik value={form.nik} onChange={handleChange} error={""} disabled={!isEditable} />
+          <NamaLengkap value={form.name} onChange={handleChange} error={""} disabled={!isEditable} />
           <TempatLahir value={form.tempat_lahir} onChange={handleChange} disabled={!isEditable} />
           <TanggalLahir value={form.tanggal_lahir} onChange={handleChange} disabled={!isEditable} />
           <JenisKelamin value={form.jenis_kelamin} onChange={handleChange} disabled={!isEditable} />

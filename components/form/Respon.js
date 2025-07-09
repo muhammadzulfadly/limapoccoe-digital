@@ -9,7 +9,7 @@ export default function ResponPengaduan({
     <div>
       {!hideLabel && (
         <label className="text-sm font-semibold text-gray-500">
-          Tanggapan Staff Desa
+          Tanggapan Staff Desa<span className="text-red-500 ml-0.5">*</span>
         </label>
       )}
       <textarea

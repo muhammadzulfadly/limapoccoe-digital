@@ -52,6 +52,7 @@ export default function DetailAjuanSuratPage() {
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
         const json = await res.json();
+        console.log(json);
         setAjuan(json.pengajuan_surat);
       } catch (err) {
         console.error("⚠️ Gagal fetch detail ajuan:", err);
@@ -73,28 +74,37 @@ export default function DetailAjuanSuratPage() {
           <div className="mb-6 p-4 bg-gray-50 rounded border">
             <h3 className="font-semibold mb-2">👤 Data Pengaju:</h3>
             <ul className="text-sm text-gray-800 list-inside list-disc">
-              <li><strong>Nama:</strong> {ajuan.user?.name || "-"}</li>
-              <li><strong>NIK:</strong> {ajuan.user?.nik || "-"}</li>
-              <li><strong>Tempat/Tanggal Lahir:</strong> {ajuan.user?.profile_masyarakat?.tempat_lahir || "-"} / {ajuan.user?.profile_masyarakat?.tanggal_lahir || "-"}</li>
-              <li><strong>Jenis Kelamin:</strong> {ajuan.user?.profile_masyarakat?.jenis_kelamin || "-"}</li>
-              <li><strong>Alamat:</strong> {ajuan.user?.profile_masyarakat?.alamat || "-"}</li>
+              <li>
+                <strong>Nama:</strong> {ajuan.user?.name || "-"}
+              </li>
+              <li>
+                <strong>NIK:</strong> {ajuan.user?.nik || "-"}
+              </li>
+              <li>
+                <strong>Tempat/Tanggal Lahir:</strong> {ajuan.user?.profile_masyarakat?.tempat_lahir || "-"} / {ajuan.user?.profile_masyarakat?.tanggal_lahir || "-"}
+              </li>
+              <li>
+                <strong>Jenis Kelamin:</strong> {ajuan.user?.profile_masyarakat?.jenis_kelamin || "-"}
+              </li>
+              <li>
+                <strong>Alamat:</strong> {ajuan.user?.profile_masyarakat?.alamat || "-"}
+              </li>
             </ul>
           </div>
 
           {/* 📝 Info Ajuan */}
           <div className="mb-6">
-            <p className="mb-2"><strong>Status:</strong> {ajuan.status}</p>
-            <p className="mb-2"><strong>Nomor Surat:</strong> {ajuan.nomor_surat || "-"}</p>
+            <p className="mb-2">
+              <strong>Status:</strong> {ajuan.status}
+            </p>
+            <p className="mb-2">
+              <strong>Nomor Surat:</strong> {ajuan.nomor_surat || "-"}
+            </p>
             <p className="mb-2">
               <strong>Lampiran:</strong>{" "}
               {Array.isArray(ajuan.lampiran) && ajuan.lampiran.length > 0
                 ? ajuan.lampiran.map((file, idx) => (
-                    <a
-                      key={idx}
-                      href={`/api/file/${file}`}
-                      className="text-blue-600 underline mr-2"
-                      target="_blank"
-                    >
+                    <a key={idx} href={`/api/file/${file}`} className="text-blue-600 underline mr-2" target="_blank">
                       File {idx + 1}
                     </a>
                   ))
@@ -106,8 +116,10 @@ export default function DetailAjuanSuratPage() {
           <div className="mb-6">
             <h3 className="font-semibold text-lg mb-2">📋 Data Formulir Pengajuan:</h3>
             <ul className="list-disc list-inside text-sm text-gray-800">
-              {Object.entries(JSON.parse(ajuan.data_surat || "{}")).map(([key, value]) => (
-                <li key={key}><strong>{key.replaceAll("_", " ")}:</strong> {value}</li>
+              {Object.entries(ajuan.data_surat || {}).map(([key, value]) => (
+                <li key={key}>
+                  <strong>{key.replaceAll("_", " ")}:</strong> {value}
+                </li>
               ))}
             </ul>
           </div>
