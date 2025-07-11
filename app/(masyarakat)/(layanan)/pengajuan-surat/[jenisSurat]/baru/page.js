@@ -249,9 +249,13 @@ export default function BuatSuratBaru() {
     if (!token) return alert("Token tidak tersedia.");
 
     const data = new FormData();
-    dataFields.forEach(({ name }) => {
-      data.append(`data_surat[${name}]`, formData[name]);
-    });
+    if (dataFields.length === 0) {
+      data.append("data_surat", "");
+    } else {
+      dataFields.forEach(({ name }) => {
+        data.append(`data_surat[${name}]`, formData[name] ?? "");
+      });
+    }
 
     try {
       const res = await fetch(`/api/letter/${suratSlug}`, {

@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  FileDown,
-  Search,
-  Plus,
-  Info,
-  SlidersHorizontal,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
+import { FileDown, Search, Plus, Info, SlidersHorizontal, ChevronsLeft, ChevronsRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -23,7 +15,9 @@ export default function Page() {
   const [namaSurat, setNamaSurat] = useState("Memuat...");
   const [suratSlug, setSuratSlug] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
+  const [suratList, setSuratList] = useState([]);
+  const [suratDetail, setSuratDetail] = useState(null);
 
   const statusMap = {
     processed: "Sedang Proses",
@@ -63,6 +57,7 @@ export default function Page() {
         } else {
           setNamaSurat("Jenis Surat Tidak Dikenal");
         }
+        setSuratList(data.jenis_surat || []);
       })
       .catch((err) => {
         console.error("Gagal mengambil nama surat:", err);
@@ -84,9 +79,7 @@ export default function Page() {
         });
 
         const data = await res.json();
-        const sorted = [...(data.pengajuan_surat || [])].sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
+        const sorted = [...(data.pengajuan_surat || [])].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         setAjuanList(sorted);
       } catch (error) {
         console.error("Gagal memuat data:", error);
@@ -99,10 +92,7 @@ export default function Page() {
   }, [suratSlug]);
 
   const totalPages = Math.ceil(ajuanList.length / itemsPerPage);
-  const paginatedData = ajuanList.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedData = ajuanList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="flex h-full">
@@ -122,7 +112,11 @@ export default function Page() {
                 </button>
               </Link>
               <button
-                onClick={() => setShowModal(true)}
+                onClick={() => {
+                  const detail = suratList.find((item) => item.slug === jenisSurat);
+                  setSuratDetail(detail);
+                  setShowModal(true);
+                }}
                 className="flex items-center gap-1 px-4 py-2 bg-green-100 text-sm rounded-md text-gray"
               >
                 <Info className="w-4 h-4" />
@@ -132,11 +126,7 @@ export default function Page() {
 
             <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 transition-colors">
               <Search className="w-5 h-5 mr-3" />
-              <input
-                type="text"
-                placeholder="Cari"
-                className="outline-none text-sm w-28 bg-white placeholder-gray-500"
-              />
+              <input type="text" placeholder="Cari" className="outline-none text-sm w-28 bg-white placeholder-gray-500" />
               <SlidersHorizontal className="w-4 h-4 ml-1" />
             </div>
           </div>
@@ -172,23 +162,12 @@ export default function Page() {
 
                   return (
                     <tr key={item.id} className="text-center">
-                      <td className="border border-black p-2">
-                        {new Date(item.created_at).toLocaleDateString("id-ID")}
-                      </td>
-                      <td className="border border-black p-2">
-                        {item.surat?.nama_surat || namaSurat}
-                      </td>
-                      <td className={`border border-black p-2 ${statusClass}`}>
-                        {statusLabel}
-                      </td>
+                      <td className="border border-black p-2">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
+                      <td className="border border-black p-2">{item.surat?.nama_surat || namaSurat}</td>
+                      <td className={`border border-black p-2 ${statusClass}`}>{statusLabel}</td>
                       <td className="border border-black p-2">
                         <div className="flex justify-center items-center gap-1">
-                          <button
-                            onClick={() =>
-                              router.push(`/pengajuan-surat/${jenisSurat}/${item.id}`)
-                            }
-                            className="flex items-center gap-1 text-sm text-black hover:underline"
-                          >
+                          <button onClick={() => router.push(`/pengajuan-surat/${jenisSurat}/${item.id}`)} className="flex items-center gap-1 text-sm text-black hover:underline">
                             {iconStyle(item.status)}
                             <span>{item.status === "approved" ? "Unduh" : "Buka"}</span>
                           </button>
@@ -202,43 +181,46 @@ export default function Page() {
           </table>
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex justify-center mt-6">
-              <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
-                <button
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="px-3 py-1 disabled:opacity-50"
-                >
-                  <ChevronsLeft className="w-4 h-4" />
-                </button>
+          <div className="flex justify-center mt-6">
+            <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
+              <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 disabled:opacity-50">
+                <ChevronsLeft className="w-4 h-4" />
+              </button>
 
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentPage(i + 1)}
-                    className={`px-3 py-1 ${
-                      currentPage === i + 1
-                        ? "bg-slate-800 text-white"
-                        : "hover:bg-slate-100"
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-
-                <button
-                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                  className="px-3 py-1 disabled:opacity-50"
-                >
-                  <ChevronsRight className="w-4 h-4" />
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button key={i} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 ${currentPage === i + 1 ? "bg-green-700 text-white" : "hover:bg-slate-100"}`}>
+                  {i + 1}
                 </button>
-              </div>
+              ))}
+
+              <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1 disabled:opacity-50">
+                <ChevronsRight className="w-4 h-4" />
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
+      {showModal && suratDetail && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-md p-6 w-[90%] max-w-2xl shadow-lg space-y-4">
+            <h2 className="text-xl font-bold">{suratDetail.nama_surat}</h2>
+            <p className="text-justify">{suratDetail.deskripsi}</p>
+
+            <h3 className="text-lg font-semibold mt-4">Persyaratan yang Harus Dibawa</h3>
+            <ul className="list-disc pl-5 space-y-1">
+              {(suratDetail.syarat_ketentuan || "").split(",").map((item, idx) => (
+                <li key={idx}>{item.trim()}</li>
+              ))}
+            </ul>
+
+            <div className="flex justify-end pt-4">
+              <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                kembali
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

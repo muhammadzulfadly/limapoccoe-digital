@@ -102,7 +102,7 @@ export default function DetailAjuanSuratPage() {
             <p className="text-gray-600">🔄 Memuat data ajuan...</p>
           ) : (
             <>
-              {/* Info Pengajuan */}
+              {/* Informasi Pengajuan Surat*/}
               <div className="pt-4 mb-6">
                 <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Pengajuan Surat</p>
                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
@@ -111,7 +111,7 @@ export default function DetailAjuanSuratPage() {
                 </div>
               </div>
 
-              {/* Data Pribadi */}
+              {/* Informasi Pribadi */}
               <legend className="pt-4 text-xl text-start font-semibold text-gray-700">Informasi Pribadi</legend>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-6">
                 <Nik value={user?.nik || ""} disabled />
@@ -125,17 +125,19 @@ export default function DetailAjuanSuratPage() {
                 <RtRw value={profile?.rt_rw || ""} disabled />
               </div>
 
-              {/* Data Formulir */}
-              <div className="pt-4 mt-6">
-                <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Tambahan</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {Object.entries(ajuan.data_surat || {}).map(([key, value]) => (
-                    <div key={key} className="capitalize">
-                      <NamaLengkap value={value} disabled label={key.replaceAll("_", " ")} />
-                    </div>
-                  ))}
+              {/* Informasi Tambahan */}
+              {ajuan.data_surat && Object.keys(ajuan.data_surat).length > 0 && (
+                <div className="pt-4 mt-6">
+                  <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Tambahan</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {Object.entries(ajuan.data_surat).map(([key, value]) => (
+                      <div key={key} className="capitalize">
+                        <NamaLengkap value={value} disabled label={key.replaceAll("_", " ")} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           )}
         </div>
