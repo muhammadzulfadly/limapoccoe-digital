@@ -22,8 +22,28 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [namaSurat, setNamaSurat] = useState("Memuat...");
   const [suratSlug, setSuratSlug] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  // Ambil nama surat & slug dari ID via route internal
+  const statusMap = {
+    processed: "Sedang Proses",
+    confirmed: "Butuh Konfirmasi",
+    rejected: "Ditolak",
+    approved: "Selesai",
+  };
+
+  const statusStyle = {
+    "Sedang Proses": "text-gray-500 font-semibold",
+    "Butuh Konfirmasi": "text-blue-600 font-semibold",
+    Ditolak: "text-red-600 font-semibold",
+    Selesai: "text-green-600 font-semibold",
+  };
+
+  const iconStyle = (status) => {
+    if (status === "approved") return <FileDown className="text-green-600" />;
+    return <Search className="text-blue-600" />;
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token || !jenisSurat) return;
@@ -36,9 +56,7 @@ export default function Page() {
     })
       .then((res) => res.json())
       .then((data) => {
-        const surat = data.jenis_surat?.find(
-          (item) => item.id.toString() === jenisSurat
-        );
+        const surat = data.jenis_surat?.find((item) => item.slug === jenisSurat);
         if (surat) {
           setNamaSurat(surat.nama_surat);
           setSuratSlug(surat.slug);
@@ -52,7 +70,6 @@ export default function Page() {
       });
   }, [jenisSurat]);
 
-  // Ambil daftar pengajuan via internal route
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!suratSlug || !token) return;
@@ -67,7 +84,10 @@ export default function Page() {
         });
 
         const data = await res.json();
-        setAjuanList(data.pengajuan_surat || []);
+        const sorted = [...(data.pengajuan_surat || [])].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+        setAjuanList(sorted);
       } catch (error) {
         console.error("Gagal memuat data:", error);
       } finally {
@@ -78,39 +98,17 @@ export default function Page() {
     fetchData();
   }, [suratSlug]);
 
-  const formatTanggal = (dateStr) => {
-    if (!dateStr) return "-";
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  };
-
-  const statusStyle = {
-    selesai: "text-green-600 font-semibold",
-    "butuh konfirmasi": "text-blue-600 font-semibold",
-    ditolak: "text-red-600 font-semibold",
-    "sedang proses": "text-gray-500 font-semibold",
-    processed: "text-gray-500 font-semibold",
-  };
-
-  const iconStyle = (status) => {
-    if (status === "selesai") return <FileDown className="text-green-600" />;
-    return <Search className="text-blue-600" />;
-  };
-
-  const disabledStyle = (status) =>
-    ["sedang proses", "butuh konfirmasi", "processed"].includes(status)
-      ? "opacity-50"
-      : "";
+  const totalPages = Math.ceil(ajuanList.length / itemsPerPage);
+  const paginatedData = ajuanList.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="flex h-full">
       <div className="flex-1 bg-gray-100 p-8">
         <h1 className="text-xl font-semibold mb-6">
-          Pengajuan Surat / <span className="font-bold">{namaSurat}</span>
+          Pengajuan Surat / <span className="font-semibold">{namaSurat}</span>
         </h1>
 
         <div className="bg-white rounded-md shadow-sm p-8">
@@ -160,27 +158,30 @@ export default function Page() {
                     Memuat data...
                   </td>
                 </tr>
-              ) : ajuanList.length === 0 ? (
+              ) : paginatedData.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="text-center text-black py-4">
                     Belum ada proses pengajuan surat
                   </td>
                 </tr>
               ) : (
-                ajuanList.map((item) => {
+                paginatedData.map((item) => {
                   const status = item.status.toLowerCase();
+                  const statusLabel = statusMap[status] || item.status;
+                  const statusClass = statusStyle[statusLabel] || "";
+
                   return (
                     <tr key={item.id} className="text-center">
                       <td className="border border-black p-2">
-                        {formatTanggal(item.created_at)}
+                        {new Date(item.created_at).toLocaleDateString("id-ID")}
                       </td>
                       <td className="border border-black p-2">
                         {item.surat?.nama_surat || namaSurat}
                       </td>
-                      <td className={`border border-black p-2 ${statusStyle[status] || ""}`}>
-                        {item.status}
+                      <td className={`border border-black p-2 ${statusClass}`}>
+                        {statusLabel}
                       </td>
-                      <td className={`border border-black p-2 ${disabledStyle(status)}`}>
+                      <td className="border border-black p-2">
                         <div className="flex justify-center items-center gap-1">
                           <button
                             onClick={() =>
@@ -188,8 +189,8 @@ export default function Page() {
                             }
                             className="flex items-center gap-1 text-sm text-black hover:underline"
                           >
-                            {iconStyle(status)}
-                            <span>{status === "selesai" ? "Unduh" : "Buka"}</span>
+                            {iconStyle(item.status)}
+                            <span>{item.status === "approved" ? "Unduh" : "Buka"}</span>
                           </button>
                         </div>
                       </td>
@@ -200,19 +201,42 @@ export default function Page() {
             </tbody>
           </table>
 
-          {/* Pagination (dummy) */}
-          <div className="flex justify-center mt-6">
-            <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm">
-              <button className="px-3 py-1">
-                <ChevronsLeft className="w-4 h-4" />
-              </button>
-              <button className="px-3 py-1">1</button>
-              <button className="px-3 py-1">2</button>
-              <button className="px-3 py-1">
-                <ChevronsRight className="w-4 h-4" />
-              </button>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-6">
+              <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 disabled:opacity-50"
+                >
+                  <ChevronsLeft className="w-4 h-4" />
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`px-3 py-1 ${
+                      currentPage === i + 1
+                        ? "bg-slate-800 text-white"
+                        : "hover:bg-slate-100"
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 disabled:opacity-50"
+                >
+                  <ChevronsRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

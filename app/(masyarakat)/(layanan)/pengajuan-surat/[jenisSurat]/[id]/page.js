@@ -2,14 +2,34 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ChevronLeft } from "lucide-react";
+
+import Nik from "@/components/form/Nik";
+import NamaLengkap from "@/components/form/NamaLengkap";
+import TempatLahir from "@/components/form/TempatLahir";
+import TanggalLahir from "@/components/form/TanggalLahir";
+import JenisKelamin from "@/components/form/JenisKelamin";
+import Alamat from "@/components/form/Alamat";
+import Pekerjaan from "@/components/form/Pekerjaan";
+import Dusun from "@/components/form/Dusun";
+import RtRw from "@/components/form/RtRw";
+import Tanggal from "@/components/form/Tanggal";
+import NomorDokumen from "@/components/form/NomorDokumen";
 
 export default function DetailAjuanSuratPage() {
   const { jenisSurat, id } = useParams();
   const router = useRouter();
   const [ajuan, setAjuan] = useState(null);
   const [slug, setSlug] = useState(null);
+  const [surat, setSurat] = useState(null);
 
-  // Ambil slug dari ID surat via internal API
+  const statusMap = {
+    processed: "Sedang Proses",
+    confirmed: "Butuh Konfirmasi",
+    rejected: "Ditolak",
+    approved: "Selesai",
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token || !jenisSurat) return;
@@ -24,9 +44,11 @@ export default function DetailAjuanSuratPage() {
         });
 
         const data = await res.json();
-        const found = data.jenis_surat?.find((item) => item.id.toString() === jenisSurat);
-        if (found) setSlug(found.slug);
-        else throw new Error("Surat tidak ditemukan");
+        const found = data.jenis_surat?.find((item) => item.slug.toString() === jenisSurat);
+        if (found) {
+          setSlug(found.slug);
+          setSurat(found);
+        } else throw new Error("Surat tidak ditemukan");
       } catch (err) {
         console.error("⚠️ Gagal mendapatkan slug:", err);
       }
@@ -35,7 +57,6 @@ export default function DetailAjuanSuratPage() {
     fetchSlug();
   }, [jenisSurat]);
 
-  // Fetch detail pengajuan setelah slug tersedia
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!slug || !id) return;
@@ -50,7 +71,6 @@ export default function DetailAjuanSuratPage() {
         });
 
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
         const json = await res.json();
         console.log(json);
         setAjuan(json.pengajuan_surat);
@@ -62,75 +82,64 @@ export default function DetailAjuanSuratPage() {
     fetchDetailAjuan();
   }, [slug, id]);
 
+  const user = ajuan?.user;
+  const profile = user?.profile_masyarakat;
+
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold mb-4">📄 Detail Pengajuan Surat</h2>
+    <div className="flex h-full">
+      <div className="flex-1 bg-gray-100 p-8">
+        <h1 className="text-xl font-semibold mb-6">
+          Detail Pengajuan Surat / {surat?.nama_surat} / {statusMap[ajuan?.status]}
+        </h1>
 
-      {!ajuan ? (
-        <p>🔄 Memuat data ajuan...</p>
-      ) : (
-        <>
-          {/* 👤 Informasi Pengaju */}
-          <div className="mb-6 p-4 bg-gray-50 rounded border">
-            <h3 className="font-semibold mb-2">👤 Data Pengaju:</h3>
-            <ul className="text-sm text-gray-800 list-inside list-disc">
-              <li>
-                <strong>Nama:</strong> {ajuan.user?.name || "-"}
-              </li>
-              <li>
-                <strong>NIK:</strong> {ajuan.user?.nik || "-"}
-              </li>
-              <li>
-                <strong>Tempat/Tanggal Lahir:</strong> {ajuan.user?.profile_masyarakat?.tempat_lahir || "-"} / {ajuan.user?.profile_masyarakat?.tanggal_lahir || "-"}
-              </li>
-              <li>
-                <strong>Jenis Kelamin:</strong> {ajuan.user?.profile_masyarakat?.jenis_kelamin || "-"}
-              </li>
-              <li>
-                <strong>Alamat:</strong> {ajuan.user?.profile_masyarakat?.alamat || "-"}
-              </li>
-            </ul>
-          </div>
+        <div className="bg-white rounded-md shadow-sm p-8">
+          <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
+            <ChevronLeft size={30} className="mr-1" />
+            Kembali
+          </button>
 
-          {/* 📝 Info Ajuan */}
-          <div className="mb-6">
-            <p className="mb-2">
-              <strong>Status:</strong> {ajuan.status}
-            </p>
-            <p className="mb-2">
-              <strong>Nomor Surat:</strong> {ajuan.nomor_surat || "-"}
-            </p>
-            <p className="mb-2">
-              <strong>Lampiran:</strong>{" "}
-              {Array.isArray(ajuan.lampiran) && ajuan.lampiran.length > 0
-                ? ajuan.lampiran.map((file, idx) => (
-                    <a key={idx} href={`/api/file/${file}`} className="text-blue-600 underline mr-2" target="_blank">
-                      File {idx + 1}
-                    </a>
-                  ))
-                : "-"}
-            </p>
-          </div>
+          {!ajuan ? (
+            <p className="text-gray-600">🔄 Memuat data ajuan...</p>
+          ) : (
+            <>
+              {/* Info Pengajuan */}
+              <div className="pt-4 mb-6">
+                <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Pengajuan Surat</p>
+                <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
+                  <NomorDokumen value={ajuan.nomor_surat || "-"} disabled />
+                  <Tanggal value={ajuan.created_at?.split("T")[0] || "-"} disabled />
+                </div>
+              </div>
 
-          {/* 📋 Formulir */}
-          <div className="mb-6">
-            <h3 className="font-semibold text-lg mb-2">📋 Data Formulir Pengajuan:</h3>
-            <ul className="list-disc list-inside text-sm text-gray-800">
-              {Object.entries(ajuan.data_surat || {}).map(([key, value]) => (
-                <li key={key}>
-                  <strong>{key.replaceAll("_", " ")}:</strong> {value}
-                </li>
-              ))}
-            </ul>
-          </div>
+              {/* Data Pribadi */}
+              <legend className="pt-4 text-xl text-start font-semibold text-gray-700">Informasi Pribadi</legend>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-6">
+                <Nik value={user?.nik || ""} disabled />
+                <NamaLengkap value={user?.name || ""} disabled />
+                <TempatLahir value={profile?.tempat_lahir || ""} disabled />
+                <TanggalLahir value={profile?.tanggal_lahir || ""} disabled />
+                <JenisKelamin value={profile?.jenis_kelamin || ""} disabled />
+                <Alamat value={profile?.alamat || ""} disabled />
+                <Pekerjaan value={profile?.pekerjaan || ""} disabled />
+                <Dusun value={profile?.dusun || ""} disabled />
+                <RtRw value={profile?.rt_rw || ""} disabled />
+              </div>
 
-          <div className="mt-4">
-            <button onClick={() => router.back()} className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
-              ⬅️ Kembali
-            </button>
-          </div>
-        </>
-      )}
+              {/* Data Formulir */}
+              <div className="pt-4 mt-6">
+                <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Tambahan</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {Object.entries(ajuan.data_surat || {}).map(([key, value]) => (
+                    <div key={key} className="capitalize">
+                      <NamaLengkap value={value} disabled label={key.replaceAll("_", " ")} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

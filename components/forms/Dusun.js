@@ -4,10 +4,10 @@ import { ChevronDown } from "lucide-react";
 
 const pilihanDusun = ["WT.Bengo", "Barua", "Mappasaile", "Kampala", "Kaluku", "Jambua", "Bontopanno", "Samata"];
 
-export default function Dusun({ name="dusun", value, onChange, error, disabled = false }) {
+export default function Dusun({ label="Dusun", name="dusun", value, onChange, error, disabled = false }) {
   return (
     <div className="relative">
-      <label className="text-sm font-semibold text-gray-500">Dusun<span className="text-red-500 ml-0.5">*</span></label>
+      <label className="text-sm font-semibold text-gray-500">{label}<span className="text-red-500 ml-0.5">*</span></label>
       <select
         name={name}
         value={value}

@@ -1,6 +1,6 @@
 "use client";
 
-export default function DeskripsiPengaduan({ label="Deskripsi Pengaduan", name="description", value, onChange, error, disabled = false }) {
+export default function Deskripsi({ label="Deskripsi", name="description", value, onChange, error, disabled = false }) {
   return (
     <div>
       <label className="text-sm font-semibold text-gray-500">
@@ -22,7 +22,7 @@ export default function DeskripsiPengaduan({ label="Deskripsi Pengaduan", name="
 
 export function validateDeskripsi(value) {
   if (!value || value.length < 1) {
-    return "Deskripsi tidak boleh kosong.";
+    return "Form tidak boleh kosong.";
   }
   return "";
 }

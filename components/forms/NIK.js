@@ -1,10 +1,10 @@
 "use client";
 import InputField from "./InputField";
 
-export default function Nik({ name="nik", value, onChange, error, disabled = false}) {
+export default function Nik({ label="NIK", name="nik", value, onChange, error, disabled = false}) {
   return (
     <InputField
-      label="NIK"
+      label={label}
       name={name}
       value={value}
       maxLength={16}

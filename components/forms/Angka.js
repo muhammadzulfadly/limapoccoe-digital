@@ -1,10 +1,10 @@
 "use client";
 import InputField from "./InputField";
 
-export default function Nik({ name="nik", value, onChange, error, disabled = false}) {
+export default function Angka({ label="Angka", name="angka", value, onChange, error, disabled = false}) {
   return (
     <InputField
-      label="NIK"
+      label={label}
       name={name}
       value={value}
       maxLength={16}
@@ -16,8 +16,8 @@ export default function Nik({ name="nik", value, onChange, error, disabled = fal
 }
 
 export function validateNik(value) {
-  if (!/^\d{16}$/.test(value)) {
-    return "NIK harus terdiri dari 16 digit angka.";
+  if (!value || value.length < 1) {
+    return "Form tidak boleh kosong dan hanya berisi angka";
   }
   return "";
 }

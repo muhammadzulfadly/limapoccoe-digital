@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Search, SlidersHorizontal } from "lucide-react";
+import {
+  Plus,
+  Search,
+  SlidersHorizontal,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import Link from "next/link";
 import MenungguCard from "@/components/card/Menunggu";
 import DiterimaCard from "@/components/card/DiTerima";
@@ -21,6 +27,8 @@ const statusColor = {
 
 export default function PengaduanPage() {
   const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchAduan = async () => {
@@ -31,11 +39,30 @@ export default function PengaduanPage() {
         },
       });
       const result = await res.json();
-      setData(result.aduan || []);
+      const sorted = [...(result.aduan || [])].sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+      setData(sorted);
     };
 
     fetchAduan();
   }, []);
+
+  const jumlahMenunggu = data.filter(
+    (item) => statusMap[item.status] === "Menunggu"
+  ).length;
+  const jumlahDiterima = data.filter(
+    (item) => statusMap[item.status] === "Diterima"
+  ).length;
+  const jumlahSelesai = data.filter(
+    (item) => statusMap[item.status] === "Selesai"
+  ).length;
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const paginatedData = data.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="flex h-full">
@@ -43,18 +70,12 @@ export default function PengaduanPage() {
         <section>
           <h2 className="font-semibold text-2xl mb-4">Pengaduan</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {Object.values(statusMap).map((status) => {
-              const jumlah = data.filter((item) => statusMap[item.status] === status).length;
-              const Icon = status === "Menunggu" ? MenungguCard : status === "Diterima" ? DiterimaCard : SelesaiCard;
-              return (
-                <div key={status}>
-                  <Icon count={jumlah} />
-                </div>
-              );
-            })}
+            <MenungguCard count={jumlahMenunggu} />
+            <DiterimaCard count={jumlahDiterima} />
+            <SelesaiCard count={jumlahSelesai} />
           </div>
 
-        <hr className="border-gray-300 border-y mb-6" />
+          <hr className="border-gray-300 border-y mb-6" />
 
           <div className="flex justify-between items-center mb-6">
             <Link href="/pengaduan/buat">
@@ -86,18 +107,31 @@ export default function PengaduanPage() {
               </tr>
             </thead>
             <tbody>
-              {data.map((item, index) => {
+              {paginatedData.map((item, index) => {
                 const readableStatus = statusMap[item.status] || item.status;
                 return (
                   <tr key={index} className="bg-white text-center">
-                    <td className="border border-black p-2">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
+                    <td className="border border-black p-2">
+                      {new Date(item.created_at).toLocaleDateString("id-ID")}
+                    </td>
                     <td className="border border-black p-2">{item.title}</td>
                     <td className="border border-black p-2">{item.category}</td>
-                    <td className={`border border-black p-2 ${statusColor[readableStatus] || ""}`}>{readableStatus}</td>
+                    <td
+                      className={`border border-black p-2 ${
+                        statusColor[readableStatus] || ""
+                      }`}
+                    >
+                      {readableStatus}
+                    </td>
                     <td className="border border-black p-2">
-                      <Link href={`/pengaduan/${item.id}`} className="flex justify-center items-center gap-1">
+                      <Link
+                        href={`/pengaduan/${item.id}`}
+                        className="flex justify-center items-center gap-1"
+                      >
                         <Search className="text-blue-400" />
-                        <span className="text-sm text-black hover:underline">Buka</span>
+                        <span className="text-sm text-black hover:underline">
+                          Buka
+                        </span>
                       </Link>
                     </td>
                   </tr>
@@ -105,13 +139,53 @@ export default function PengaduanPage() {
               })}
               {data.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="bg-white text-center text-black py-4">
+                  <td
+                    colSpan={5}
+                    className="bg-white text-center text-black py-4"
+                  >
                     Belum ada proses pengaduan
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-6">
+              <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 disabled:opacity-50"
+                >
+                  <ChevronsLeft className="w-4 h-4" />
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`px-3 py-1 ${
+                      currentPage === i + 1
+                        ? "bg-green-600 text-white"
+                        : "hover:bg-slate-100"
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 disabled:opacity-50"
+                >
+                  <ChevronsRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
         </section>
       </div>
     </div>

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, UploadCloud } from "lucide-react";
 
-import Link from "next/link";
 import NamaLengkap, { validateNama } from "@/components/form/NamaLengkap";
 import JudulPengaduan, { validateJudul } from "@/components/form/JudulPengaduan";
 import LokasiKejadian, { validateLokasi } from "@/components/form/LokasiKejadian";

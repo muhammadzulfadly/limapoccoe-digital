@@ -10,7 +10,7 @@ export default function TanggalPengaduan({ value }) {
 
   return (
     <InputField
-      label="Tanggal Pengaduan"
+      label="Tanggal"
       name="created_at"
       value={formattedValue}
       disabled={true}

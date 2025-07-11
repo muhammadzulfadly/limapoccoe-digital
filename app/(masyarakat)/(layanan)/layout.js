@@ -57,8 +57,7 @@ export default function MasyarakatLayout({ children }) {
 
   const isActive = (path) => pathname === path || pathname.startsWith(`${path}/`);
 
-  const linkClass = (path) =>
-    `${isActive(path) ? "text-green-500 font-medium" : "text-black"} hover:text-green-600 flex items-center gap-2`;
+  const linkClass = (path) => `${isActive(path) ? "text-green-500" : "text-black"} hover:text-green-600 flex items-center gap-2`;
 
   return (
     <div className="flex min-h-screen">
@@ -86,22 +85,12 @@ export default function MasyarakatLayout({ children }) {
           </li>
           <li>
             <div className="flex items-center gap-5">
-              <Link
-                href="/pengajuan-surat"
-                className={`flex items-center gap-2 font-medium hover:text-green-600 ${
-                  isPengajuanSuratActive ? "text-green-500" : "text-black"
-                }`}
-              >
+              <Link href="/pengajuan-surat" className={`flex items-center gap-2 hover:text-green-600 ${isPengajuanSuratActive ? "text-green-500" : "text-black"}`}>
                 <FileEdit size={18} />
                 Pengajuan Surat
               </Link>
               <button onClick={() => setIsOpen(!isOpen)} className="ml-1 focus:outline-none">
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform duration-300 ${
-                    isOpen ? "rotate-180 text-green-500" : "text-black"
-                  }`}
-                />
+                <ChevronDown size={16} className={`transition-transform duration-300 ${isOpen ? "rotate-180 text-green-500" : "text-black"}`} />
               </button>
             </div>
 
@@ -111,13 +100,8 @@ export default function MasyarakatLayout({ children }) {
                   <li className="italic text-gray-500">Memuat...</li>
                 ) : (
                   jenisSurat.map((item) => (
-                    <li key={item.id}>
-                      <Link
-                        href={`/pengajuan-surat/${item.id}`}
-                        className={`${
-                          isActive(`/pengajuan-surat/${item.id}`) ? "text-green-500 font-medium" : "text-black"
-                        } hover:text-green-600 block max-w-[120px] break-words`}
-                      >
+                    <li key={item.slug}>
+                      <Link href={`/pengajuan-surat/${item.slug}`} className={`${isActive(`/pengajuan-surat/${item.slug}`) ? "text-green-500" : "text-black"} hover:text-green-600 block max-w-[120px] break-words`}>
                         {item.nama_surat}
                       </Link>
                     </li>
@@ -137,9 +121,7 @@ export default function MasyarakatLayout({ children }) {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg px-6 py-8 w-[280px] text-center animate-fade-in">
             <h3 className="text-[#EB5757] text-2xl font-bold mb-4">Sesi Berakhir</h3>
-            <p className="text-sm text-[#141414] leading-relaxed mb-6">
-              Sesi Anda telah berakhir. Silakan masuk kembali untuk melanjutkan.
-            </p>
+            <p className="text-sm text-[#141414] leading-relaxed mb-6">Sesi Anda telah berakhir. Silakan masuk kembali untuk melanjutkan.</p>
             <button
               onClick={() => {
                 setShowSessionExpired(false);

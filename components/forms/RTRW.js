@@ -1,13 +1,13 @@
 "use client";
 
-export default function Pekerjaan({ name="pekerjaan", value, onChange, error , disabled = false}) {
+export default function RtRw({ label="RT/RW (opsional)", name="rt_rw", value, onChange, error, disabled = false}) {
   return (
     <div>
-      <label className="text-sm font-semibold text-gray-500">Pekerjaan<span className="text-red-500 ml-0.5">*</span></label>
+      <label className="text-sm font-semibold text-gray-500">{label}</label>
       <input
         name={name}
         value={value}
-        placeholder="Masukkan Pekerjaan"
+        placeholder="Contoh: 001/002"
         disabled={disabled}
         onChange={(e) => onChange({ name, value: e.target.value })}
         className={`w-full border rounded px-4 py-2 mt-1 text-sm ${error ? "border-red-500" : "border-gray-300"}`}
@@ -17,7 +17,7 @@ export default function Pekerjaan({ name="pekerjaan", value, onChange, error , d
   );
 }
 
-export function validatePekerjaan(value) {
-  if (!/^[A-Za-z\s]+$/.test(value)) return "Pekerjaan hanya huruf dan spasi.";
+export function validateRtRw(value) {
+  if (value && !/^\d{3}\/\d{3}$/.test(value)) return "Format RT/RW tidak valid. Contoh: 005/003.";
   return "";
 }

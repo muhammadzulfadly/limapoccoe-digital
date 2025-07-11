@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 
-import Nik from "@/components/form/Nik";
-import NamaLengkap from "@/components/form/NamaLengkap";
-import TempatLahir from "@/components/form/TempatLahir";
-import TanggalLahir from "@/components/form/TanggalLahir";
-import JenisKelamin from "@/components/form/JenisKelamin";
-import Alamat from "@/components/form/Alamat";
-import Pekerjaan from "@/components/form/Pekerjaan";
-import Dusun from "@/components/form/Dusun";
-import RtRw from "@/components/form/RtRw";
+import NIK from "@/components/forms/NIK";
+import Huruf from "@/components/forms/Huruf";
+import Tanggal from "@/components/forms/Tanggal";
+import RTRW from "@/components/forms/RTRW";
+import Dusun from "@/components/forms/Dusun";
+import AngkaHuruf from "@/components/forms/AngkaHuruf";
+import JenisKelamin from "@/components/forms/JenisKelamin";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -140,15 +138,15 @@ export default function ProfilePage() {
         </div>
 
         <form className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
-          <Nik value={form.nik} onChange={handleChange} error={""} disabled={!isEditable} />
-          <NamaLengkap value={form.name} onChange={handleChange} error={""} disabled={!isEditable} />
-          <TempatLahir value={form.tempat_lahir} onChange={handleChange} disabled={!isEditable} />
-          <TanggalLahir value={form.tanggal_lahir} onChange={handleChange} disabled={!isEditable} />
-          <JenisKelamin value={form.jenis_kelamin} onChange={handleChange} disabled={!isEditable} />
-          <Alamat value={form.alamat} onChange={handleChange} disabled={!isEditable} />
-          <Pekerjaan value={form.pekerjaan} onChange={handleChange} disabled={!isEditable} />
-          <Dusun value={form.dusun} onChange={handleChange} disabled={!isEditable} />
-          <RtRw value={form.rt_rw} onChange={handleChange} disabled={!isEditable} />
+          <NIK name="nik" value={form.nik} onChange={handleChange} error={""} disabled={true} label="NIK"/>
+          <Huruf name="name" value={form.name} onChange={handleChange} error={""} disabled={true} label="Nama Lengkap"/>
+          <Huruf name="tempat_lahir" value={form.tempat_lahir} onChange={handleChange} disabled={!isEditable} label="Tempat lahir"/>
+          <Tanggal name="tanggal_lahir" value={form.tanggal_lahir} onChange={handleChange} disabled={!isEditable} label="Tanggal Lahir"/>
+          <JenisKelamin name="jenis_kelamin" value={form.jenis_kelamin} onChange={handleChange} disabled={!isEditable} label="Jenis Kelamin"/>
+          <AngkaHuruf name="alamat" value={form.alamat} onChange={handleChange} disabled={!isEditable} label="Alamat"/>
+          <Huruf name="pekerjaan" value={form.pekerjaan} onChange={handleChange} disabled={!isEditable} label="Pekerjaan"/>
+          <Dusun name="dusun" value={form.dusun} onChange={handleChange} disabled={!isEditable} label="Dusun"/>
+          <RTRW name="rt_rw" value={form.rt_rw} onChange={handleChange} disabled={!isEditable} label="RT/RW (opsional)"/>
         </form>
 
         {!isEditable && (

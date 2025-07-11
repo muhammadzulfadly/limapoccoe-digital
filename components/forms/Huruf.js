@@ -1,9 +1,9 @@
 "use client";
 import InputField from "./InputField";
 
-export default function NamaLengkap({ 
-  label = "Nama Lengkap", // default
-  name = "name", 
+export default function Huruf({ 
+  label = "Huruf",
+  name = "huruf", 
   value, 
   onChange, 
   error, 
@@ -22,8 +22,8 @@ export default function NamaLengkap({
 }
 
 export function validateNama(value) {
-  if (!/^[a-zA-Z\s]{3,}$/.test(value)) {
-    return "Nama harus terdiri dari minimal 3 huruf dan hanya huruf/spasi.";
+  if (!/^[a-zA-Z\s]{1,}$/.test(value)) {
+    return "Form tidak boleh kosong dan hanya huruf/spasi.";
   }
   return "";
 }

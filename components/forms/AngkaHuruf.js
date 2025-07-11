@@ -1,7 +1,7 @@
 "use client";
 import InputField from "./InputField";
 
-export default function JudulPengaduan({ label="Judul Pengaduan", name="title", value, onChange, error, disabled = false }) {
+export default function AngkaHuruf({ label="AngkaHuruf", name="angkahuruf", value, onChange, error, disabled = false }) {
   return (
     <InputField
       label={label}
@@ -14,9 +14,9 @@ export default function JudulPengaduan({ label="Judul Pengaduan", name="title", 
   );
 }
 
-export function validateJudul(value) {
+export function validateLokasi(value) {
   if (!value || value.length < 1) {
-    return "Judul pengaduan tidak boleh kosong.";
+    return "Form tidak boleh kosong.";
   }
   return "";
 }

@@ -2,12 +2,12 @@
 
 import { ChevronDown } from "lucide-react";
 
-const pilihanDusun = ["WT.Bengo", "Barua", "Mappasaile", "Kampala", "Kaluku", "Jambua", "Bontopanno", "Samata"];
+const pilihanDusun = ['Kepala Keluarga', 'Istri', 'Anak', 'Cucu', 'Famili Lain', 'Saudara', 'Orang Tua'];
 
-export default function Dusun({ name="dusun", value, onChange, error, disabled = false }) {
+export default function Dusun({ label="Status Hubungan", name="statushubungan", value, onChange, error, disabled = false }) {
   return (
     <div className="relative">
-      <label className="text-sm font-semibold text-gray-500">Dusun<span className="text-red-500 ml-0.5">*</span></label>
+      <label className="text-sm font-semibold text-gray-500">{label}<span className="text-red-500 ml-0.5">*</span></label>
       <select
         name={name}
         value={value}
@@ -31,6 +31,6 @@ export default function Dusun({ name="dusun", value, onChange, error, disabled =
 }
 
 export function validateDusun(value) {
-  if (!value) return "Dusun wajib dipilih.";
+  if (!value) return "Status Hubungan wajib dipilih.";
   return "";
 }

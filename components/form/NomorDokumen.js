@@ -1,14 +1,14 @@
 "use client";
 import InputField from "./InputField";
 
-export default function NomorKk({ value, onChange, error, disabled = false}) {
+export default function NomorKk({ name="nomor", value, onChange, error, disabled = false}) {
   return (
     <InputField
-      label="No. KK"
-      name="nomorKk"
+      label="Nomor Surat"
+      name={name}
       value={value}
       maxLength={16}
-      onChange={(e) => onChange({ name: "nomorKk", value: e.target.value.replace(/\D/g, "") })}
+      onChange={(e) => onChange({ name, value: e.target.value.replace(/\D/g, "") })}
       error={error}
       disabled={disabled}
     />
