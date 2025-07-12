@@ -2,7 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 
-const pilihanDusun = ["< 1 Juta", "1 - 5 juta", "5 - 10 juta", "10 - 20 juta", "> 20 juta"];
+const pilihanDusun = ["< Rp1 Juta", "Rp1-5 juta", "Rp5-10 juta", "Rp10-20 juta", "> Rp20 juta"];
 
 export default function Dusun({ label="Penghasilan per bulan", name="penghasilan", value, onChange, error, disabled = false }) {
   return (

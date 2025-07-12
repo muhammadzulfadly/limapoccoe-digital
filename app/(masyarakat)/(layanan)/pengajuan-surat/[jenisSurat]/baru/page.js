@@ -156,6 +156,9 @@ export default function BuatSuratBaru() {
   const [surat, setSurat] = useState(null);
   const [suratSlug, setSuratSlug] = useState(null);
   const [profileInfo, setProfileInfo] = useState({});
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFailed, setShowFailed] = useState(false);
 
   const fields = formSchemaBySuratKode[formKey] || [];
   const dataFields = fields.filter((f) => f.name && f.Component);
@@ -241,12 +244,12 @@ export default function BuatSuratBaru() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-
+  const submitSurat = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return alert("Token tidak tersedia.");
+    if (!token) {
+      setShowFailed(true);
+      return;
+    }
 
     const data = new FormData();
     if (dataFields.length === 0) {
@@ -273,12 +276,22 @@ export default function BuatSuratBaru() {
         return alert(`Gagal: ${result.message || "Terjadi kesalahan."}`);
       }
 
-      alert("✅ Pengajuan berhasil dikirim!");
-      router.push(`/pengajuan-surat/${jenisSurat}`);
+      setShowConfirm(false);
+      setShowSuccess(true);
+      setTimeout(() => {
+        router.push(`/pengajuan-surat/${jenisSurat}`);
+      }, 1800);
     } catch (err) {
       console.error("Gagal submit:", err);
-      alert("Gagal mengirim pengajuan.");
+      setShowConfirm(false);
+      setShowFailed(true);
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setShowConfirm(true);
   };
 
   return (
@@ -336,6 +349,41 @@ export default function BuatSuratBaru() {
           </form>
         </div>
       </div>
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-8 w-[300px] text-center space-y-4 animate-fade-in">
+            <h3 className="text-green-600 text-xl font-bold">Konfirmasi Pengajuan Surat!</h3>
+            <p className="text-sm text-gray-700">Pastikan seluruh informasi yang Anda isi sudah benar.</p>
+            <button onClick={submitSurat} className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded font-semibold">
+              Ajukan surat
+            </button>
+            <button onClick={() => setShowConfirm(false)} className="text-gray-500 hover:underline text-sm">
+              Periksa Ulang
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showSuccess && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[300px] text-center animate-fade-in">
+            <h3 className="text-green-600 text-xl font-bold mb-2">Surat Berhasil Diajukan!</h3>
+            <p className="text-sm text-gray-800 leading-relaxed">Mohon tunggu proses verifikasi dari pihak desa. Info lebih lanjut akan dikirim via WhatsApp.</p>
+          </div>
+        </div>
+      )}
+
+      {showFailed && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[300px] text-center animate-fade-in">
+            <h3 className="text-red-600 text-xl font-bold mb-2">Pengajuan Gagal!</h3>
+            <p className="text-sm text-gray-800 leading-relaxed mb-4">Maaf, pengajuan surat Anda tidak berhasil diproses. Silakan coba lagi nanti atau periksa koneksi Anda.</p>
+            <button onClick={() => setShowFailed(false)} className="bg-red-500 hover:bg-red-600 text-white w-full py-2 rounded font-semibold">
+              Kembali
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

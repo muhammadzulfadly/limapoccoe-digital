@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import Alamat, { validateAlamat } from "@/components/form/Alamat";
@@ -13,6 +14,14 @@ import Pekerjaan, { validatePekerjaan } from "@/components/form/Pekerjaan";
 
 export default function LengkapiProfilPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.replace("/auth/masuk");
+    }
+  }, []);
+
   const [form, setForm] = useState({
     alamat: "",
     dusun: "",
