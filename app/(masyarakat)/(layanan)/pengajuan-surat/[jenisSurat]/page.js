@@ -155,6 +155,25 @@ export default function Page() {
     }
   };
 
+  const getPaginationRange = () => {
+    const delta = 2;
+    const range = [];
+    const left = Math.max(2, currentPage - delta);
+    const right = Math.min(totalPages - 1, currentPage + delta);
+
+    range.push(1);
+    if (left > 2) range.push("...");
+
+    for (let i = left; i <= right; i++) {
+      range.push(i);
+    }
+
+    if (right < totalPages - 1) range.push("...");
+    if (totalPages > 1) range.push(totalPages);
+
+    return range;
+  };
+
   return (
     <>
       {isDownloading && (
@@ -264,23 +283,23 @@ export default function Page() {
             </table>
 
             {/* Pagination */}
-              <div className="flex justify-center mt-6">
-                <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
-                  <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 disabled:opacity-50">
-                    <ChevronsLeft className="w-4 h-4" />
-                  </button>
+            <div className="flex justify-center mt-6">
+              <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
+                <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 disabled:opacity-50">
+                  <ChevronsLeft className="w-4 h-4" />
+                </button>
 
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <button key={i} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 ${currentPage === i + 1 ? "bg-green-700 text-white" : "hover:bg-slate-100"}`}>
-                      {i + 1}
-                    </button>
-                  ))}
-
-                  <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1 disabled:opacity-50">
-                    <ChevronsRight className="w-4 h-4" />
+                {getPaginationRange().map((page, i) => (
+                  <button key={i} onClick={() => typeof page === "number" && setCurrentPage(page)} disabled={typeof page !== "number"} className={`px-3 py-1 ${page === currentPage ? "bg-green-700 text-white" : "hover:bg-slate-100"}`}>
+                    {page === "..." ? <MoreHorizontal className="w-4 h-4" /> : page}
                   </button>
-                </div>
+                ))}
+
+                <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1 disabled:opacity-50">
+                  <ChevronsRight className="w-4 h-4" />
+                </button>
               </div>
+            </div>
           </div>
         </div>
 
