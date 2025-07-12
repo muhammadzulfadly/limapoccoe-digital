@@ -153,7 +153,6 @@ export default function PengaduanPage() {
           </table>
 
           {/* Pagination */}
-          {totalPages > 1 && (
             <div className="flex justify-center mt-6">
               <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
                 <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 disabled:opacity-50">
@@ -171,7 +170,6 @@ export default function PengaduanPage() {
                 </button>
               </div>
             </div>
-          )}
         </section>
       </div>
     </div>

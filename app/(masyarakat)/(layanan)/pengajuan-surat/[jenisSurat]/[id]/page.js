@@ -106,7 +106,7 @@ export default function DetailAjuanSuratPage() {
               <div className="pt-4 mb-6">
                 <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Pengajuan Surat</p>
                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
-                  <NomorDokumen value={ajuan.nomor_surat || "-"} disabled />
+                  <NomorDokumen value={ajuan.nomor_surat_tersimpan || "-"} disabled />
                   <Tanggal value={ajuan.created_at?.split("T")[0] || "-"} disabled />
                 </div>
               </div>

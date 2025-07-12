@@ -12,6 +12,7 @@ import DeskripsiPengaduan, { validateDeskripsi } from "@/components/form/Deskrip
 
 export default function BuatPengaduanPage() {
   const router = useRouter();
+  const [tooManyRequestsMessage, setTooManyRequestsMessage] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -98,6 +99,8 @@ export default function BuatPengaduanPage() {
         setTimeout(() => {
           router.push("/pengaduan");
         }, 1800);
+      } else if (res.status === 429) {
+        setTooManyRequestsMessage(result.error || "Terlalu banyak permintaan. Silakan coba lagi nanti.");
       } else {
         setShowErrorModal(true);
       }
@@ -178,6 +181,17 @@ export default function BuatPengaduanPage() {
           </form>
         </div>
       </div>
+      {tooManyRequestsMessage && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 text-center w-full max-w-sm min-h-[200px] shadow-lg">
+            <h2 className="text-yellow-600 text-2xl font-bold mb-2">Terlalu Banyak Permintaan!</h2>
+            <p className="text-sm text-gray-700 mb-4">{tooManyRequestsMessage}</p>
+            <button className="bg-yellow-500 text-white px-4 py-2 text-sm rounded hover:bg-yellow-600" onClick={() => setTooManyRequestsMessage("")}>
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
