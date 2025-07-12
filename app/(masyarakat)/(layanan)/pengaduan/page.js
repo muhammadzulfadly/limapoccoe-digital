@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Search, SlidersHorizontal, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Plus, Search, SlidersHorizontal, ChevronsLeft, ChevronsRight, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import MenungguCard from "@/components/card/Menunggu";
 import DiterimaCard from "@/components/card/DiTerima";
