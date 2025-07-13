@@ -147,7 +147,7 @@ export default function Page() {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const handleDownload = async (id) => {
+  const handleDownload = async (id, namaSurat) => {
     try {
       setIsDownloading(true);
       const token = localStorage.getItem("token");
@@ -163,7 +163,7 @@ export default function Page() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `Surat-${id}.pdf`;
+      a.download = `${namaSurat}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -298,7 +298,7 @@ export default function Page() {
                         <td className="border border-black p-2">
                           <div className="flex justify-center items-center gap-1">
                             <button
-                              onClick={() => (item.status.toLowerCase() === "approved" ? handleDownload(item.id) : router.push(`/pengajuan-surat/${jenisSurat}/${item.id}`))}
+                              onClick={() => (item.status.toLowerCase() === "approved" ? handleDownload(item.id, `${namaSurat}`) : router.push(`/pengajuan-surat/${jenisSurat}/${item.id}`))}
                               className="flex items-center gap-1 text-sm text-black hover:underline"
                             >
                               {iconStyle(item.status)}
