@@ -263,6 +263,7 @@ export default function Page() {
             <table className="w-full table-fixed border border-black">
               <thead>
                 <tr className="bg-green-700 text-white">
+                  <th className="border border-black p-2 w-[5%]">No.</th>
                   <th className="border border-black p-2 w-1/5">Tanggal</th>
                   <th className="border border-black p-2 w-1/5">Jenis surat</th>
                   <th className="border border-black p-2 w-1/5">Status</th>
@@ -283,13 +284,14 @@ export default function Page() {
                     </td>
                   </tr>
                 ) : (
-                  paginatedData.map((item) => {
+                  paginatedData.map((item, index) => {
                     const status = item.status.toLowerCase();
                     const statusLabel = statusMap[status] || item.status;
                     const statusClass = statusStyle[statusLabel] || "";
 
                     return (
                       <tr key={item.id} className="text-center">
+                        <td className="border border-black p-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                         <td className="border border-black p-2">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
                         <td className="border border-black p-2">{item.surat?.nama_surat || namaSurat}</td>
                         <td className={`border border-black p-2 ${statusClass}`}>{statusLabel}</td>

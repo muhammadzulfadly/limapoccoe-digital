@@ -155,6 +155,7 @@ export default function PengaduanPage() {
           <table className="w-full table-fixed border border-black">
             <thead>
               <tr className="bg-green-600 text-white">
+                <th className="border border-black p-2 w-[5%]">No.</th>
                 <th className="border border-black p-2 w-1/6">Tanggal</th>
                 <th className="border border-black p-2 w-1/6">Judul Pengaduan</th>
                 <th className="border border-black p-2 w-1/6">Kategori</th>
@@ -168,6 +169,7 @@ export default function PengaduanPage() {
                   const readableStatus = statusMap[item.status] || item.status;
                   return (
                     <tr key={index} className="bg-white text-center">
+                      <td className="border border-black p-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                       <td className="border border-black p-2">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
                       <td className="border border-black p-2">{item.title}</td>
                       <td className="border border-black p-2">{item.category}</td>
