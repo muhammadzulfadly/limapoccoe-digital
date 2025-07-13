@@ -1,6 +1,6 @@
 "use client";
 
-import { FileDown, Search, Plus, Info, SlidersHorizontal, ChevronsLeft, ChevronsRight, MoreHorizontal } from "lucide-react";
+import { FileDown, Search, Plus, Info, SlidersHorizontal, ChevronsLeft, ChevronsRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -19,6 +19,8 @@ export default function Page() {
   const [suratList, setSuratList] = useState([]);
   const [suratDetail, setSuratDetail] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [profilLengkap, setProfilLengkap] = useState(true);
+  const [showProfilModal, setShowProfilModal] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilter, setShowFilter] = useState(false);
@@ -76,6 +78,25 @@ export default function Page() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!suratSlug || !token) return;
+
+    fetch("/api/auth/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        const profil = res.profile || {};
+        const requiredFields = ["alamat", "dusun", "tanggal_lahir", "tempat_lahir", "jenis_kelamin", "pekerjaan"];
+        const lengkap = requiredFields.every((field) => !!profil[field]);
+        setProfilLengkap(lengkap);
+      })
+
+      .catch((err) => {
+        console.error("Gagal memuat profil:", err);
+        setProfilLengkap(false);
+      });
 
     const fetchData = async () => {
       try {
@@ -195,12 +216,20 @@ export default function Page() {
             {/* Tombol aksi */}
             <div className="flex justify-between items-center mb-6">
               <div className="flex gap-6">
-                <Link href={`/pengajuan-surat/${jenisSurat}/baru`}>
-                  <button className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition">
-                    <Plus className="w-5 h-5" strokeWidth={3} />
-                    Buat Pengajuan Surat
-                  </button>
-                </Link>
+                <button
+                  onClick={() => {
+                    if (profilLengkap) {
+                      router.push(`/pengajuan-surat/${jenisSurat}/baru`);
+                    } else {
+                      setShowProfilModal(true);
+                    }
+                  }}
+                  className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition"
+                >
+                  <Plus className="w-5 h-5" strokeWidth={3} />
+                  Buat Pengajuan Surat
+                </button>
+
                 <button
                   onClick={() => {
                     const detail = suratList.find((item) => item.slug === jenisSurat);
@@ -291,7 +320,7 @@ export default function Page() {
 
                 {getPaginationRange().map((page, i) => (
                   <button key={i} onClick={() => typeof page === "number" && setCurrentPage(page)} disabled={typeof page !== "number"} className={`px-3 py-1 ${page === currentPage ? "bg-green-700 text-white" : "hover:bg-slate-100"}`}>
-                    {page === "..." ? <MoreHorizontal className="w-4 h-4" /> : page}
+                    {page === "..." ? "..." : page}
                   </button>
                 ))}
 
@@ -319,6 +348,23 @@ export default function Page() {
               <div className="flex justify-end pt-4">
                 <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
                   Kembali
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showProfilModal && (
+          <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded shadow-md text-center w-[300px]">
+              <h3 className="text-lg font-semibold text-[#EB5757] mb-3">Lengkapi Profil</h3>
+              <p className="text-sm text-gray-700 mb-4">Anda harus melengkapi profil sebelum membuat pengajuan surat.</p>
+              <div className="flex justify-center gap-4">
+                <button onClick={() => setShowProfilModal(false)} className="px-4 py-1 text-sm border border-gray-400 rounded hover:bg-gray-100">
+                  Nanti
+                </button>
+                <button onClick={() => router.push("/auth/lengkapi-profil")} className="px-4 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">
+                  Lengkapi Sekarang
                 </button>
               </div>
             </div>

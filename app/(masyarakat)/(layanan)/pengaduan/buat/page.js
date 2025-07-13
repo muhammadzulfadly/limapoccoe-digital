@@ -29,11 +29,27 @@ export default function BuatPengaduanPage() {
   const [showErrorModal, setShowErrorModal] = useState(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setForm((prev) => ({ ...prev, name: user?.name || "" }));
-    }
+    const fetchProfileName = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("/api/auth/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
+
+        if (!res.ok) throw new Error("Gagal memuat profil");
+
+        const data = await res.json();
+        const nameFromProfile = data.user?.name || "";
+        setForm((prev) => ({ ...prev, name: nameFromProfile }));
+      } catch (err) {
+        console.error("Gagal mengambil nama dari profil:", err);
+      }
+    };
+
+    fetchProfileName();
   }, []);
 
   const handleChange = ({ name, value }) => {

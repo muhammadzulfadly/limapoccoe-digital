@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Search, SlidersHorizontal, ChevronsLeft, ChevronsRight, MoreHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Plus, Search, SlidersHorizontal, ChevronsLeft, ChevronsRight } from "lucide-react";
 import Link from "next/link";
 import MenungguCard from "@/components/card/Menunggu";
 import DiterimaCard from "@/components/card/DiTerima";
@@ -30,21 +31,33 @@ export default function PengaduanPage() {
     date: "",
   });
   const itemsPerPage = 5;
+  const router = useRouter();
+  const [profilLengkap, setProfilLengkap] = useState(true);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   useEffect(() => {
-    const fetchAduan = async () => {
+    const fetchAduanAndProfile = async () => {
       const token = localStorage.getItem("token");
-      const res = await fetch("/api/complaint", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const result = await res.json();
-      const sorted = [...(result.aduan || [])].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      const [aduanRes, profilRes] = await Promise.all([
+        fetch("/api/complaint", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch("/api/auth/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
+      const aduanData = await aduanRes.json();
+      const sorted = [...(aduanData.aduan || [])].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       setData(sorted);
+
+      const profil = await profilRes.json();
+      const fields = ["alamat", "dusun", "tanggal_lahir", "tempat_lahir", "jenis_kelamin", "pekerjaan"];
+      const isComplete = fields.every((field) => !!profil.profile?.[field]);
+      setProfilLengkap(isComplete);
     };
 
-    fetchAduan();
+    fetchAduanAndProfile();
   }, []);
 
   const jumlahMenunggu = data.filter((item) => statusMap[item.status] === "Menunggu").length;
@@ -107,12 +120,19 @@ export default function PengaduanPage() {
           <hr className="border-gray-300 border-y mb-6" />
 
           <div className="flex justify-between items-center mb-6">
-            <Link href="/pengaduan/buat">
-              <button className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition">
-                <Plus className="w-5 h-5" strokeWidth={3} />
-                Buat Pengaduan
-              </button>
-            </Link>
+            <button
+              className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition"
+              onClick={() => {
+                if (profilLengkap) {
+                  router.push("/pengaduan/buat");
+                } else {
+                  setShowProfileModal(true);
+                }
+              }}
+            >
+              <Plus className="w-5 h-5" strokeWidth={3} />
+              Buat Pengaduan
+            </button>
 
             <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500">
               <Search className="w-5 h-5 mr-2" />
@@ -180,7 +200,7 @@ export default function PengaduanPage() {
 
               {getPaginationRange().map((page, i) => (
                 <button key={i} onClick={() => typeof page === "number" && setCurrentPage(page)} disabled={typeof page !== "number"} className={`px-3 py-1 ${page === currentPage ? "bg-green-700 text-white" : "hover:bg-slate-100"}`}>
-                  {page === "..." ? <MoreHorizontal className="w-4 h-4" /> : page}
+                  {page === "..." ? "..." : page}
                 </button>
               ))}
 
@@ -191,6 +211,22 @@ export default function PengaduanPage() {
           </div>
         </section>
       </div>
+      {showProfileModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded shadow-md text-center w-[300px]">
+            <h3 className="text-lg font-semibold text-[#EB5757] mb-3">Lengkapi Profil</h3>
+            <p className="text-sm text-gray-700 mb-4">Anda perlu melengkapi profil sebelum membuat pengaduan.</p>
+            <div className="flex justify-center gap-4">
+              <button onClick={() => setShowProfileModal(false)} className="px-4 py-1 text-sm border border-gray-400 rounded hover:bg-gray-100">
+                Nanti
+              </button>
+              <button onClick={() => router.push("/auth/lengkapi-profil")} className="px-4 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">
+                Lengkapi Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

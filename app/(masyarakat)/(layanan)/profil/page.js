@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { User } from "lucide-react";
+import { User, ChevronLeft } from "lucide-react";
 
 import NIK from "@/components/forms/NIK";
 import Huruf from "@/components/forms/Huruf";
@@ -30,21 +30,9 @@ export default function ProfilePage() {
     rt_rw: "",
   });
 
-  const fetchNamaFromLocal = () => {
-    try {
-      const userStr = localStorage.getItem("user");
-      if (userStr) {
-        const user = JSON.parse(userStr);
-        setForm((prev) => ({
-          ...prev,
-          name: user?.user?.name || "",
-          nik: user?.user?.nik || "",
-        }));
-      }
-    } catch (err) {
-      console.error("Gagal mengambil nama dari localStorage:", err);
-    }
-  };
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const fetchUser = async () => {
     try {
@@ -73,17 +61,10 @@ export default function ProfilePage() {
         dusun: data.profile?.dusun || "",
         rt_rw: data.profile?.rt_rw || "",
       });
-
-      localStorage.setItem("user", JSON.stringify(data));
     } catch (error) {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    fetchNamaFromLocal();
-    fetchUser();
-  }, []);
 
   const handleChange = ({ name, value }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -108,7 +89,6 @@ export default function ProfilePage() {
         throw new Error(errorData.message || "Logout gagal.");
       }
 
-      localStorage.removeItem("user");
       localStorage.removeItem("token");
       localStorage.removeItem("expiresAt");
       window.dispatchEvent(new Event("storage"));
@@ -125,7 +105,7 @@ export default function ProfilePage() {
 
   const handleToggleEdit = () => {
     if (isEditable) {
-      // TODO: simpan ke API
+      // TODO: Kirim data form ke API untuk menyimpan perubahan
     }
     setIsEditable(!isEditable);
   };
@@ -134,6 +114,11 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#f1f4f9] px-4 py-10 md:px-20">
       <h1 className="text-xl font-bold text-black mb-4">Profil</h1>
       <div className="bg-white rounded-lg p-6 shadow relative">
+        <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
+          <ChevronLeft size={30} className="mr-1" />
+          Kembali
+        </button>
+
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-[#2DB567] flex items-center justify-center">
