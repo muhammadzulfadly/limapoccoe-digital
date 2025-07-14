@@ -95,7 +95,7 @@ export default function BerandaLayout({ children }) {
 
       {/* Footer */}
       <footer className="bg-[#1E844A] text-white text-center py-4 text-base">
-        © 2025 Desa Limapocoe - dikelola oleh Tim IT Desa
+        © 2025 Pemerintah Desa Limapocoe - dikelola oleh Tim IT Desa
       </footer>
     </>
   );

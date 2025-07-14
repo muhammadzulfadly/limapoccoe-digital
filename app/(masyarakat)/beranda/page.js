@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Phone } from "lucide-react";
+import { Mail, Phone, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const slides = [
@@ -43,12 +43,12 @@ export default function HomePage() {
   return (
     <>
       {/* Banner */}
-      <div className="relative w-full h-[450px] overflow-hidden bg-black">
+      <div className="relative w-full aspect-[1440/689] overflow-hidden bg-white">
         {/* Gambar tampil utuh */}
-        <Image src={slide.image} alt="Banner Slide" fill className="object-cover" priority />
+        <Image src={slide.image} alt="Banner Slide" fill className="object-contain" priority />
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40 z-10" />
+        <div className="absolute inset-0  z-10" />
 
         {/* Tombol Panah */}
         <div className="absolute inset-0 flex items-center justify-between px-2 sm:px-6 z-20">
@@ -62,7 +62,7 @@ export default function HomePage() {
       </div>
 
       {/* LAYANAN KAMI */}
-      <section className="py-20 px-4 bg-[#F6F6F6] text-center">
+      <section className="py-20 px-4 bg-white text-center">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">LAYANAN KAMI</h2>
         <p className="max-w-3xl mx-auto text-gray-600 text-sm sm:text-base">
           Kami menyediakan platform digital untuk mempermudah masyarakat dalam mengajukan permohonan surat serta menyampaikan pengaduan secara online. Tanpa perlu datang ke kantor desa, semua layanan kini dapat diakses dengan cepat, mudah,
@@ -96,15 +96,16 @@ export default function HomePage() {
 
       {/* Tentang Desa */}
       <section className="bg-[#F0FFF6] py-16 px-4">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div className="max-w-7xl mx-auto ">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Tentang Desa Limmapocoe</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Kiri: Gambar */}
-          <div className="rounded-xl overflow-hidden border-4 border-blue-100">
+          <div className="">
             <Image src="/images/tentang-desa.png" alt="Tentang Desa Limmapocoe" width={700} height={400} className="w-full h-auto object-cover" />
           </div>
 
           {/* Kanan: Teks */}
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Tentang Desa Limmapocoe</h2>
             <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6">
               <strong>Sekilas tentang desa.</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nunc et convallis placerat, ex nisi volutpat sapien, vel eleifend elit libero a erat. Sed nec augue at urna
               vehicula pretium sit amet vel odio. Praesent ac orci eu tortor vehicula.
@@ -114,35 +115,21 @@ export default function HomePage() {
               {/* Kepala Desa */}
               <div className="flex items-center gap-4">
                 <div className="bg-green-500 text-white p-3 rounded-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.21 0 4.29.534 6.121 1.476M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                  <User className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">Sugeng Raharjo</p>
+                  <p className="font-bold text-gray-900">H A Abu Bakri</p>
                   <p className="text-sm text-gray-600">Kepala Desa Limmapocoe</p>
                 </div>
               </div>
-
-              {/* Wakil Desa */}
-              <div className="flex items-center gap-4">
-                <div className="bg-green-500 text-white p-3 rounded-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.21 0 4.29.534 6.121 1.476M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Hendra Gunawan</p>
-                  <p className="text-sm text-gray-600">Wakil Desa Limmapocoe</p>
-                </div>
-              </div>
             </div>
+          </div>
           </div>
         </div>
       </section>
 
       {/* Berita Desa Limmapocoe */}
-      <section className="bg-[#F6F6F6] py-20 px-4">
+      <section className="bg-white py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Berita Desa Limmapocoe</h2>
           <p className="text-gray-600 mb-10 text-sm sm:text-base max-w-2xl">Berita Desa Limmapocoe menyajikan informasi terbaru seputar kegiatan, pengumuman, dan perkembangan di lingkungan Desa Limmapocoe.</p>
@@ -193,7 +180,7 @@ export default function HomePage() {
       </section>
 
       {/* Galeri Desa Limmapocoe */}
-      <section className="bg-[#F6F6F6] py-20 px-4">
+      <section className="bg-white py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Galeri Desa Limmapocoe</h2>
           <p className="text-gray-600 mb-10 text-sm sm:text-base max-w-2xl">Galeri Desa Limmapocoe menampilkan dokumentasi foto kegiatan yang berlangsung di desa Limapoccoe.</p>
@@ -229,7 +216,7 @@ export default function HomePage() {
       </section>
 
       {/* Jumlah Penduduk Desa Limmapocoe */}
-      <section className="bg-[#F6F6F6] py-20 px-4">
+      <section className="bg-white py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Jumlah Penduduk Desa Limmapocoe</h2>
           <p className="text-gray-700 mb-10 text-sm sm:text-base max-w-3xl">Jumlah Penduduk dan Kepala Keluarga Desa Limapoccoe mencerminkan data demografis terkini yang digunakan sebagai dasar perencanaan dan pelayanan publik desa.</p>

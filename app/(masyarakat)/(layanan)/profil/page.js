@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, ChevronLeft } from "lucide-react";
+import { User, ChevronLeft, LogOut } from "lucide-react";
 
 import NIK from "@/components/forms/NIK";
 import Huruf from "@/components/forms/Huruf";
@@ -17,6 +17,7 @@ export default function ProfilePage() {
   const [isEditable, setIsEditable] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showSuccessLogout, setShowSuccessLogout] = useState(false);
+  const [showSuccessEdit, setShowSuccessEdit] = useState(false);
 
   const [form, setForm] = useState({
     nik: "",
@@ -106,6 +107,11 @@ export default function ProfilePage() {
   const handleToggleEdit = () => {
     if (isEditable) {
       // TODO: Kirim data form ke API untuk menyimpan perubahan
+
+      setShowSuccessEdit(true);
+      setTimeout(() => {
+        setShowSuccessEdit(false);
+      }, 1800);
     }
     setIsEditable(!isEditable);
   };
@@ -126,12 +132,17 @@ export default function ProfilePage() {
             </div>
             <p className="font-semibold text-black">{form.name}</p>
           </div>
-          <button
-            onClick={handleToggleEdit}
-            className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded"
-          >
-            {isEditable ? "Simpan" : "Ubah Profil"}
-          </button>
+          <div className="flex items-center gap-4">
+            <button onClick={handleToggleEdit} className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded">
+              {isEditable ? "Simpan" : "Ubah Profil"}
+            </button>
+            {!isEditable && (
+              <button onClick={() => setShowLogoutConfirm(true)} className="bg-[#E74C3C] hover:bg-[#c0392b] text-white text-sm font-medium px-4 py-1.5 rounded flex items-center gap-2">
+                <LogOut size={16} />
+                Logout
+              </button>
+            )}
+          </div>
         </div>
 
         <form className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
@@ -145,17 +156,6 @@ export default function ProfilePage() {
           <Dusun name="dusun" value={form.dusun} onChange={handleChange} disabled={!isEditable} label="Dusun" />
           <RTRW name="rt_rw" value={form.rt_rw} onChange={handleChange} disabled={!isEditable} label="RT/RW (opsional)" />
         </form>
-
-        {!isEditable && (
-          <div className="flex justify-end mt-8">
-            <button
-              onClick={() => setShowLogoutConfirm(true)}
-              className="bg-[#E74C3C] hover:bg-[#c0392b] text-white text-sm font-medium px-5 py-2 rounded"
-            >
-              Logout
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Konfirmasi Logout */}
@@ -168,16 +168,10 @@ export default function ProfilePage() {
             <h3 className="text-xl font-bold text-black">Logout akun</h3>
             <p className="text-gray-700 text-sm">Apakah anda yakin ingin logout?</p>
             <div className="flex justify-between gap-4 mt-4">
-              <button
-                onClick={() => setShowLogoutConfirm(false)}
-                className="w-1/2 border border-red-500 text-red-500 py-1.5 rounded hover:bg-red-50"
-              >
+              <button onClick={() => setShowLogoutConfirm(false)} className="w-1/2 border border-red-500 text-red-500 py-1.5 rounded hover:bg-red-50">
                 kembali
               </button>
-              <button
-                onClick={handleLogout}
-                className="w-1/2 bg-red-500 text-white py-1.5 rounded hover:bg-red-600"
-              >
+              <button onClick={handleLogout} className="w-1/2 bg-red-500 text-white py-1.5 rounded hover:bg-red-600">
                 Ya logout
               </button>
             </div>
@@ -191,6 +185,16 @@ export default function ProfilePage() {
           <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[280px] text-center animate-fade-in">
             <h3 className="text-green-600 text-2xl font-bold mb-2">Berhasil Logout</h3>
             <p className="text-sm text-gray-800">Anda sudah berhasil logout.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Pop-up berhasil ubah data */}
+      {showSuccessEdit && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[280px] text-center animate-fade-in">
+            <h3 className="text-green-600 text-2xl font-bold mb-2">Berhasil!</h3>
+            <p className="text-sm text-gray-800">Anda telah berhasil merubah profil.</p>
           </div>
         </div>
       )}
