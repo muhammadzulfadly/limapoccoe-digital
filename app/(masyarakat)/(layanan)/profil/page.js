@@ -125,19 +125,24 @@ export default function ProfilePage() {
           Kembali
         </button>
 
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+          {/* Icon + Nama */}
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 text-center md:text-left">
             <div className="w-12 h-12 rounded-full bg-[#2DB567] flex items-center justify-center">
               <User className="text-white" size={24} />
             </div>
             <p className="font-semibold text-black">{form.name}</p>
           </div>
-          <div className="flex items-center gap-4">
-            <button onClick={handleToggleEdit} className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded">
+
+          {/* Tombol Aksi */}
+          {/* Tombol Aksi */}
+          <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:items-center sm:gap-4 sm:w-auto">
+            <button onClick={handleToggleEdit} className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded w-full">
               {isEditable ? "Simpan" : "Ubah Profil"}
             </button>
+
             {!isEditable && (
-              <button onClick={() => setShowLogoutConfirm(true)} className="bg-[#E74C3C] hover:bg-[#c0392b] text-white text-sm font-medium px-4 py-1.5 rounded flex items-center gap-2">
+              <button onClick={() => setShowLogoutConfirm(true)} className="bg-[#E74C3C] hover:bg-[#c0392b] text-white text-sm font-medium px-4 py-1.5 rounded flex items-center justify-center gap-2 w-full">
                 <LogOut size={16} />
                 Logout
               </button>

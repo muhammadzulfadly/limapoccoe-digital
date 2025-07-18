@@ -63,23 +63,24 @@ export default function DashboardPage() {
   const jumlahApproved = countByStatus("approved");
 
   return (
-    <div className="flex h-full">
-      <div className="flex-1 p-8 space-y-8 bg-[#EDF0F5]">
-        <section>
-          <h2 className="font-semibold text-2xl mb-4">Pengajuan Surat</h2>
+<div className="flex flex-col min-h-screen bg-[#EDF0F5]">
+    {/* Konten utama */}
+    <div className="flex-1 p-8 space-y-8">
+      <section>
+        <h2 className="font-semibold text-2xl mb-4">Pengajuan Surat</h2>
 
-          {loading ? (
-            <p className="text-gray-500 italic">Memuat data...</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <SedangProsesCard count={jumlahProcessed} />
-              <ButuhKonfirmasiCard count={jumlahConfirmed} />
-              <DitolakCard count={jumlahRejected} />
-              <SelesaiCard count={jumlahApproved} />
-            </div>
-          )}
-        </section>
-      </div>
+        {loading ? (
+          <p className="text-gray-500 italic">Memuat data...</p>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            <SedangProsesCard count={jumlahProcessed} />
+            <ButuhKonfirmasiCard count={jumlahConfirmed} />
+            <DitolakCard count={jumlahRejected} />
+            <SelesaiCard count={jumlahApproved} />
+          </div>
+        )}
+      </section>
+    </div>
     </div>
   );
 }

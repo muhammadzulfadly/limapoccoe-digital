@@ -111,7 +111,7 @@ export default function PengaduanPage() {
       <div className="flex-1 p-8 space-y-8 bg-[#EDF0F5]">
         <section>
           <h2 className="font-semibold text-2xl mb-4">Pengaduan</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
             <MenungguCard count={jumlahMenunggu} />
             <DiterimaCard count={jumlahDiterima} />
             <SelesaiCard count={jumlahSelesai} />
@@ -119,9 +119,9 @@ export default function PengaduanPage() {
 
           <hr className="border-gray-300 border-y mb-6" />
 
-          <div className="flex justify-between items-center mb-6">
+          <div className="grid grid-cols-2 sm:flex sm:justify-between sm:items-center gap-4 mb-6">
             <button
-              className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition"
+              className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition w-full sm:w-auto"
               onClick={() => {
                 if (profilLengkap) {
                   router.push("/pengaduan/buat");
@@ -134,9 +134,10 @@ export default function PengaduanPage() {
               Buat Pengaduan
             </button>
 
-            <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500">
+            {/* Tambahkan min-w-0 agar flex child (input) tidak overflow */}
+            <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 w-full sm:w-auto min-w-0">
               <Search className="w-5 h-5 mr-2" />
-              <input type="text" placeholder="Cari" className="flex-1 outline-none text-sm bg-white placeholder-gray-500" value={searchFilters.title} onChange={(e) => handleFilterChange("title", e.target.value)} />
+              <input type="text" placeholder="Cari" className="flex-1 outline-none text-sm bg-white placeholder-gray-500 min-w-0" value={searchFilters.title} onChange={(e) => handleFilterChange("title", e.target.value)} />
               <button onClick={() => setShowFilter(!showFilter)}>
                 <SlidersHorizontal className={`w-4 h-4 ml-2 cursor-pointer transition-colors ${showFilter ? "text-green-600" : "text-gray-500"}`} />
               </button>

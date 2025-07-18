@@ -15,6 +15,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const [jenisSurat, setJenisSurat] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showSessionExpired, setShowSessionExpired] = useState(false);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   useEffect(() => {
     setIsOpenDropdown(isPengajuanSuratActive);
@@ -22,13 +23,21 @@ export default function Sidebar({ isOpen, onClose }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
     const expiresAt = localStorage.getItem("expiresAt");
 
-    if (!token || !expiresAt || Date.now() > parseInt(expiresAt)) {
+    const expired = !expiresAt || Date.now() > parseInt(expiresAt);
+    const isLoggedIn = !!token && !!user && !expired;
+
+    setUserLoggedIn(isLoggedIn);
+
+    if (!isLoggedIn) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("expiresAt");
-      setShowSessionExpired(true);
+      if (!pathname.startsWith("/beranda")) {
+        setShowSessionExpired(expired);
+      }
     }
   }, []);
 
@@ -67,62 +76,74 @@ export default function Sidebar({ isOpen, onClose }) {
       >
         <aside className="p-6 h-full overflow-y-auto">
           <h2 className="font-semibold text-base mb-4">PELAYANAN DESA</h2>
-          <ul className="space-y-3 text-sm pl-1">
-            <li>
-              <Link href="/profil" className={`${linkClass("/profil")} block md:hidden`}>
-                <User size={18} />
-                Profil
-              </Link>
-            </li>
-            <li>
-              <Link href="/dashboard" className={linkClass("/dashboard")}>
-                <LayoutDashboard size={18} />
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link href="/beranda" className={linkClass("/beranda")}>
-                <Home size={18} />
-                Beranda
-              </Link>
-            </li>
-            <li>
-              <Link href="/pengaduan" className={linkClass("/pengaduan")}>
-                <FileText size={18} />
-                Pengaduan
-              </Link>
-            </li>
-            <li>
-              <div className="flex items-center gap-5">
-                <Link href="/pengajuan-surat" className={`flex items-center gap-2 hover:text-green-600 ${isPengajuanSuratActive ? "text-green-500" : "text-black"}`}>
-                  <FileEdit size={18} />
-                  Pengajuan surat
-                </Link>
-                <button onClick={() => setIsOpenDropdown(!isOpenDropdown)} className="ml-1 focus:outline-none">
-                  <ChevronDown size={16} className={`transition-transform duration-300 ${isOpenDropdown ? "rotate-180 text-green-500" : "text-black"}`} />
-                </button>
-              </div>
 
-              {isOpenDropdown && (
-                <ul className="pl-7 mt-4 space-y-3 text-sm">
-                  {loading ? (
-                    <li className="italic text-gray-500">Memuat...</li>
-                  ) : (
-                    jenisSurat.map((item) => (
-                      <li key={item.slug}>
-                        <Link
-                          href={`/pengajuan-surat/${item.slug}`}
-                          className={`${isActive(`/pengajuan-surat/${item.slug}`) ? "text-green-500" : "text-black"} hover:text-green-600 block break-words border-b border-gray-200 md:border-none py-1 max-w-[120px]`}
-                        >
-                          {item.nama_surat}
-                        </Link>
-                      </li>
-                    ))
-                  )}
-                </ul>
-              )}
-            </li>
-          </ul>
+          {userLoggedIn ? (
+            <ul className="space-y-3 text-sm pl-1">
+              <li>
+                <Link href="/profil" onClick={onClose} className={`${linkClass("/profil")} block md:hidden`}>
+                  <User size={18} />
+                  Profil
+                </Link>
+              </li>
+              <li>
+                <Link href="/dashboard" onClick={onClose} className={linkClass("/dashboard")}>
+                  <LayoutDashboard size={18} />
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link href="/beranda" onClick={onClose} className={linkClass("/beranda")}>
+                  <Home size={18} />
+                  Beranda
+                </Link>
+              </li>
+              <li>
+                <Link href="/pengaduan" onClick={onClose} className={linkClass("/pengaduan")}>
+                  <FileText size={18} />
+                  Pengaduan
+                </Link>
+              </li>
+              <li>
+                <div className="flex items-center gap-5">
+                  <Link href="/pengajuan-surat" className={`flex items-center gap-2 hover:text-green-600 ${isPengajuanSuratActive ? "text-green-500" : "text-black"}`}>
+                    <FileEdit size={18} />
+                    Pengajuan surat
+                  </Link>
+                  <button onClick={() => setIsOpenDropdown(!isOpenDropdown)} className="ml-1 focus:outline-none">
+                    <ChevronDown size={16} className={`transition-transform duration-300 ${isOpenDropdown ? "rotate-180 text-green-500" : "text-black"}`} />
+                  </button>
+                </div>
+
+                {isOpenDropdown && (
+                  <ul className="pl-7 mt-4 text-sm">
+                    {loading ? (
+                      <li className="italic text-gray-500">Memuat...</li>
+                    ) : (
+                      jenisSurat.map((item) => (
+                        <li key={item.slug}>
+                          <Link
+                            href={`/pengajuan-surat/${item.slug}`} onClick={onClose}
+                            className={`${isActive(`/pengajuan-surat/${item.slug}`) ? "text-green-500" : "text-black"} hover:text-green-600 block break-words border-b border-gray-200 md:border-none py-1 max-w-[120px]`}
+                          >
+                            {item.nama_surat}
+                          </Link>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                )}
+              </li>
+            </ul>
+          ) : (
+            <div className="space-y-3 text-sm">
+              <Link href="/auth/daftar" className="block w-full border border-green-600 text-green-600 text-center rounded px-4 py-2 font-medium hover:bg-green-50 transition">
+                Daftar
+              </Link>
+              <Link href="/auth/masuk" className="block w-full bg-[#2DB567] text-white text-center rounded px-4 py-2 font-medium hover:bg-[#28a65d] transition">
+                Masuk
+              </Link>
+            </div>
+          )}
         </aside>
       </div>
 

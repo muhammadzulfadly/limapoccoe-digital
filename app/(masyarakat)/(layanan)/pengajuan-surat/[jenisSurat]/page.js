@@ -208,14 +208,14 @@ export default function Page() {
 
       <div className="flex h-full">
         <div className="flex-1 bg-gray-100 p-8">
-          <h1 className="text-xl font-semibold mb-6">
+          <h1 className="text-lg sm:text-xl font-semibold mb-6">
             Pengajuan Surat / <span className="font-semibold">{namaSurat}</span>
           </h1>
 
           <div className="bg-white rounded-md shadow-sm p-8">
             {/* Tombol aksi */}
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex gap-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+              <div className="grid grid-cols-2 flex-col sm:flex-row gap-2 sm:gap-6 w-full sm:w-auto">
                 <button
                   onClick={() => {
                     if (profilLengkap) {
@@ -224,10 +224,10 @@ export default function Page() {
                       setShowProfilModal(true);
                     }
                   }}
-                  className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition"
+                  className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition w-full sm:w-auto"
                 >
                   <Plus className="w-5 h-5" strokeWidth={3} />
-                  Buat Pengajuan Surat
+                  Buat Surat
                 </button>
 
                 <button
@@ -236,16 +236,17 @@ export default function Page() {
                     setSuratDetail(detail);
                     setShowModal(true);
                   }}
-                  className="flex items-center gap-1 px-4 py-2 bg-green-100 text-sm rounded-md text-gray"
+                  className="flex items-center gap-1 px-4 py-2 bg-green-100 text-sm rounded-md text-gray w-full sm:w-auto"
                 >
                   <Info className="w-4 h-4" />
-                  Penjelasan dan Persyaratan
+                  <span className="block sm:hidden">Persyaratan</span>
+                  <span className="hidden sm:block">Penjelasan dan Persyaratan</span>
                 </button>
               </div>
 
-              <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 transition-colors">
+              <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 w-full sm:w-auto min-w-0">
                 <Search className="w-5 h-5 mr-3" />
-                <input type="text" placeholder="Cari" className="outline-none text-sm w-40 bg-white placeholder-gray-500" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                <input type="text" placeholder="Cari" className="outline-none text-sm bg-white placeholder-gray-500 w-full" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 <button onClick={() => setShowFilter(!showFilter)}>
                   <SlidersHorizontal className={`w-4 h-4 ml-2 cursor-pointer transition-colors ${showFilter ? "text-green-600" : "text-gray-500"}`} />
                 </button>

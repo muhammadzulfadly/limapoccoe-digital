@@ -89,7 +89,7 @@ export default function LoginPage() {
         <div className="text-center text-sm">
           Lupa{" "}
           <button type="button" onClick={() => setShowForgotPassword(true)} className="text-[#27AE60] hover:underline">
-            Password
+            Kata Sandi
           </button>
         </div>
 

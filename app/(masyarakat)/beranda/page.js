@@ -16,7 +16,6 @@ const slides = [
 ];
 
 export default function HomePage() {
-  const [showSessionExpired, setShowSessionExpired] = useState(false);
   const [current, setCurrent] = useState(0);
   const total = slides.length;
   const router = useRouter();
@@ -31,7 +30,6 @@ export default function HomePage() {
     const expiresAt = localStorage.getItem("expiresAt");
 
     if (!token || !expiresAt || Date.now() > parseInt(expiresAt)) {
-      setShowSessionExpired(true);
       setTimeout(() => {
         router.push("/auth/masuk");
       }, 1800);
@@ -62,68 +60,68 @@ export default function HomePage() {
       </div>
 
       {/* LAYANAN KAMI */}
-      <section className="py-20 px-4 bg-white text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">LAYANAN KAMI</h2>
-        <p className="max-w-3xl mx-auto text-gray-600 text-sm sm:text-base">
+      <section className="py-16 px-4 bg-white text-center">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">LAYANAN KAMI</h2>
+
+        {/* Paragraf hanya tampil di desktop */}
+        <p className="hidden sm:block max-w-2xl mx-auto text-gray-600 text-sm sm:text-base mb-12">
           Kami menyediakan platform digital untuk mempermudah masyarakat dalam mengajukan permohonan surat serta menyampaikan pengaduan secara online. Tanpa perlu datang ke kantor desa, semua layanan kini dapat diakses dengan cepat, mudah,
           dan transparan.
         </p>
 
-        <div className="mt-16 flex flex-col md:flex-row justify-center gap-12 items-center">
+        <div className="grid grid-cols-2 gap-6 sm:gap-12 justify-center items-start max-w-4xl mx-auto">
           {/* Pengajuan Surat */}
-          <div className="max-w-xs text-center">
-            <Image src="/icons/surat.png" alt="Ikon Surat" width={150} height={150} className="mx-auto" />
-
-            <button onClick={() => handleLogin("/pengajuan-surat")} className="mt-6 bg-green-500 text-white px-6 py-2 rounded-full shadow-md font-medium hover:bg-green-600 transition">
+          <div className="flex flex-col items-center text-center">
+            <Image src="/icons/surat.png" alt="Ikon Surat" width={50} height={50} className="mx-auto mb-3 sm:mb-4 sm:w-[100px] sm:h-[100px]" />
+            <button onClick={() => handleLogin("/pengajuan-surat")} className="bg-green-500 text-white px-5 py-2 rounded-full shadow-md font-medium text-sm hover:bg-green-600 transition">
               Pengajuan Surat
             </button>
-
-            <p className="mt-4 text-gray-600 text-sm">Ajukan berbagai jenis surat secara online, mudah dan tanpa antre.</p>
+            {/* Teks hanya tampil di desktop */}
+            <p className="hidden sm:block mt-3 text-gray-600 text-sm max-w-[220px]">Ajukan berbagai jenis surat secara online, mudah dan tanpa antre.</p>
           </div>
 
           {/* Pengaduan */}
-          <div className="max-w-xs text-center">
-            <Image src="/icons/pengaduan.png" alt="Ikon Pengaduan" width={150} height={150} className="mx-auto" />
-
-            <button onClick={() => handleLogin("/pengaduan")} className="mt-6 bg-green-500 text-white px-6 py-2 rounded-full shadow-md font-medium hover:bg-green-600 transition">
+          <div className="flex flex-col items-center text-center">
+            <Image src="/icons/pengaduan.png" alt="Ikon Pengaduan" width={50} height={50} className="mx-auto mb-3 sm:mb-4 sm:w-[100px] sm:h-[100px]" />
+            <button onClick={() => handleLogin("/pengaduan")} className="bg-green-500 text-white px-5 py-2 rounded-full shadow-md font-medium text-sm hover:bg-green-600 transition">
               Pengaduan
             </button>
-
-            <p className="mt-4 text-gray-600 text-sm">Sampaikan keluhan atau aspirasi Anda langsung ke pihak desa, cepat dan praktis.</p>
+            {/* Teks hanya tampil di desktop */}
+            <p className="hidden sm:block mt-3 text-gray-600 text-sm max-w-[220px]">Sampaikan keluhan atau aspirasi Anda langsung ke pihak desa, cepat dan praktis.</p>
           </div>
         </div>
       </section>
 
       {/* Tentang Desa */}
-      <section className="bg-[#F0FFF6] py-16 px-4">
+      <section className="bg-[#F0FFF6] py-8 px-4">
         <div className="max-w-7xl mx-auto ">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Tentang Desa Limmapocoe</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          {/* Kiri: Gambar */}
-          <div className="">
-            <Image src="/images/tentang-desa.png" alt="Tentang Desa Limmapocoe" width={700} height={400} className="w-full h-auto object-cover" />
-          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Tentang Desa Limmapocoe</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            {/* Kiri: Gambar */}
+            <div className="">
+              <Image src="/images/tentang-desa.png" alt="Tentang Desa Limmapocoe" width={700} height={400} className="w-full h-auto object-cover" />
+            </div>
 
-          {/* Kanan: Teks */}
-          <div>
-            <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6">
-              <strong>Sekilas tentang desa.</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nunc et convallis placerat, ex nisi volutpat sapien, vel eleifend elit libero a erat. Sed nec augue at urna
-              vehicula pretium sit amet vel odio. Praesent ac orci eu tortor vehicula.
-            </p>
+            {/* Kanan: Teks */}
+            <div>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6">
+                <strong>Sekilas tentang desa.</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nunc et convallis placerat, ex nisi volutpat sapien, vel eleifend elit libero a erat. Sed nec augue at urna
+                vehicula pretium sit amet vel odio. Praesent ac orci eu tortor vehicula.
+              </p>
 
-            <div className="space-y-5">
-              {/* Kepala Desa */}
-              <div className="flex items-center gap-4">
-                <div className="bg-green-500 text-white p-3 rounded-full">
-                  <User className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="font-bold text-gray-900">H A Abu Bakri</p>
-                  <p className="text-sm text-gray-600">Kepala Desa Limmapocoe</p>
+              <div className="space-y-5">
+                {/* Kepala Desa */}
+                <div className="flex items-center gap-4">
+                  <div className="bg-green-500 text-white p-3 rounded-full">
+                    <User className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900">H A Abu Bakri</p>
+                    <p className="text-sm text-gray-600">Kepala Desa Limmapocoe</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
       </section>
@@ -180,15 +178,17 @@ export default function HomePage() {
       </section>
 
       {/* Galeri Desa Limmapocoe */}
-      <section className="bg-white py-20 px-4">
+      <section className="bg-white py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Galeri Desa Limmapocoe</h2>
           <p className="text-gray-600 mb-10 text-sm sm:text-base max-w-2xl">Galeri Desa Limmapocoe menampilkan dokumentasi foto kegiatan yang berlangsung di desa Limapoccoe.</p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Hapus place-items-center agar jarak antar baris tidak jauh */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {["/images/galeri1.png", "/images/galeri2.png", "/images/galeri1.png", "/images/galeri2.png", "/images/galeri1.png", "/images/galeri2.png"].map((src, index) => (
-              <div key={index} className="rounded-xl overflow-hidden shadow-sm border border-gray-200">
-                <Image src={src} alt={`Galeri ${index + 1}`} width={400} height={250} className="w-full h-56 object-cover" />
+              <div key={index} className="">
+                {/* Ukuran tetap dan posisi center */}
+                <Image src={src} alt={`Galeri ${index + 1}`} width={400} height={250} />
               </div>
             ))}
           </div>
@@ -218,51 +218,43 @@ export default function HomePage() {
       {/* Jumlah Penduduk Desa Limmapocoe */}
       <section className="bg-white py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Jumlah Penduduk Desa Limmapocoe</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Jumlah Penduduk Desa Limapoccoe</h2>
           <p className="text-gray-700 mb-10 text-sm sm:text-base max-w-3xl">Jumlah Penduduk dan Kepala Keluarga Desa Limapoccoe mencerminkan data demografis terkini yang digunakan sebagai dasar perencanaan dan pelayanan publik desa.</p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-6">
             {/* TOTAL PENDUDUK */}
-            <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4">
+            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center lg:flex-row lg:items-center lg:text-left gap-4">
               <Image src="/images/penduduk/total.png" alt="Total Penduduk" width={60} height={60} />
               <div>
-                <p className="text-lg font-semibold text-gray-600">TOTAL PENDUDUK</p>
-                <p className="text-xl font-bold text-gray-800">
-                  1.092 <span className="font-medium">Jiwa</span>
-                </p>
+                <p className="text-sm sm:text-lg  text-gray-600">TOTAL PENDUDUK</p>
+                <p className="text-sm sm:text-lg  text-gray-600">1.092 Jiwa</p>
               </div>
             </div>
 
             {/* KEPALA KELUARGA */}
-            <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4">
+            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center lg:flex-row lg:items-center lg:text-left gap-4">
               <Image src="/images/penduduk/kepala-keluarga.png" alt="Kepala Keluarga" width={60} height={60} />
               <div>
-                <p className="text-lg font-semibold text-gray-600">KEPALA KELUARGA</p>
-                <p className="text-xl font-bold text-gray-800">
-                  1.092 <span className="font-medium">Jiwa</span>
-                </p>
+                <p className="text-sm sm:text-lg  text-gray-600">KEPALA KELUARGA</p>
+                <p className="text-sm sm:text-lg  text-gray-600">1.092 Jiwa</p>
               </div>
             </div>
 
             {/* PEREMPUAN */}
-            <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4">
+            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center lg:flex-row lg:items-center lg:text-left gap-4">
               <Image src="/images/penduduk/perempuan.png" alt="Perempuan" width={60} height={60} />
               <div>
-                <p className="text-lg font-semibold text-gray-600">PEREMPUAN</p>
-                <p className="text-xl font-bold text-gray-800">
-                  1.092 <span className="font-medium">Jiwa</span>
-                </p>
+                <p className="text-sm sm:text-lg  text-gray-600">PEREMPUAN</p>
+                <p className="text-sm sm:text-lg text-gray-600">1.092 Jiwa</p>
               </div>
             </div>
 
             {/* LAKI-LAKI */}
-            <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4">
+            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center lg:flex-row lg:items-center lg:text-left gap-4">
               <Image src="/images/penduduk/laki-laki.png" alt="Laki-Laki" width={60} height={60} />
               <div>
-                <p className="text-lg font-semibold text-gray-600">LAKI-LAKI</p>
-                <p className="text-xl font-bold text-gray-800">
-                  1.092 <span className="font-medium">Jiwa</span>
-                </p>
+                <p className="text-sm sm:text-lg  text-gray-600">LAKI-LAKI</p>
+                <p className="text-sm sm:text-lg  text-gray-600">1.092 Jiwa</p>
               </div>
             </div>
           </div>
@@ -332,16 +324,6 @@ export default function HomePage() {
         <Image src="/icons/whatsapp.svg" alt="WhatsApp" width={20} height={20} />
         <span className="text-lg font-medium">Chat</span>
       </a>
-
-      {/* 🔴 Popup Belum Masuk */}
-      {showSessionExpired && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg px-6 py-8 w-[280px] text-center animate-fade-in">
-            <h3 className="text-[#EB5757] text-2xl font-bold mb-4">Anda Belum Masuk ke Akun Anda</h3>
-            <p className="text-sm text-[#141414] leading-relaxed mb-6">Silakan masuk ke Akun untuk melanjutkan.</p>
-          </div>
-        </div>
-      )}
     </>
   );
 }

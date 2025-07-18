@@ -62,13 +62,7 @@ export default function BerandaLayout({ children }) {
         </Link>
 
         <div className="md:hidden">
-          <button onClick={() => setSidebarOpen(!sidebarOpen)}>
-{sidebarOpen ? (
-  <X size={28} className="text-white" />
-) : (
-  <Menu size={28} className="text-white" />
-)}
-          </button>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)}>{sidebarOpen ? <X size={28} className="text-white" /> : <Menu size={28} className="text-white" />}</button>
         </div>
 
         <div className="hidden md:flex items-center gap-4">
@@ -79,10 +73,7 @@ export default function BerandaLayout({ children }) {
                 {userName}
               </Link>
               {isBeranda && (
-                <Link
-                  href="/dashboard"
-                  className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition"
-                >
+                <Link href="/dashboard" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
                   Dashboard
                 </Link>
               )}
@@ -92,10 +83,7 @@ export default function BerandaLayout({ children }) {
               <Link href="/auth/masuk" className="text-white text-sm hover:underline">
                 Masuk
               </Link>
-              <Link
-                href="/auth/daftar"
-                className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition"
-              >
+              <Link href="/auth/daftar" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
                 Daftar
               </Link>
             </>
@@ -106,14 +94,11 @@ export default function BerandaLayout({ children }) {
       {/* Layout */}
       <div className="pt-16 relative flex">
         {/* Sidebar */}
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-        {/* Overlay */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black/50 z-30 md:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
+        {(!isBeranda || (isBeranda && sidebarOpen)) && (
+          <>
+            <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+            {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />}
+          </>
         )}
 
         {/* Page Content */}
@@ -121,8 +106,8 @@ export default function BerandaLayout({ children }) {
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#1E844A] text-white text-center py-4 text-base">
-        © 2025 Pemerintah Desa Limapocoe - dikelola oleh Tim IT Desa
+      <footer className="bg-[#1E844A] text-white text-center py-4 px-4 text-base">
+        <div className="max-w-screen-xl mx-auto">© 2025 Pemerintah Desa Limapocoe - dikelola oleh Tim IT Desa</div>
       </footer>
     </>
   );
