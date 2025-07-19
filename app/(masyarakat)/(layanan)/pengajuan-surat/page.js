@@ -63,7 +63,7 @@ export default function DashboardPage() {
   const jumlahApproved = countByStatus("approved");
 
   return (
-<div className="flex flex-col min-h-screen bg-[#EDF0F5]">
+<div className="flex flex-col bg-[#EDF0F5]">
     {/* Konten utama */}
     <div className="flex-1 p-8 space-y-8">
       <section>

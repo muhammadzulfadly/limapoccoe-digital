@@ -44,8 +44,8 @@ export default function Page() {
   };
 
   const iconStyle = (status) => {
-    if (status === "approved") return <FileDown className="text-green-600" />;
-    return <Search className="text-blue-600" />;
+    if (status === "approved") return <FileDown className="text-green-600 w-4 h-4" />;
+    return <Search className="text-blue-600 w-4 h-4" />;
   };
 
   useEffect(() => {
@@ -261,58 +261,64 @@ export default function Page() {
             )}
 
             {/* Tabel data */}
-            <table className="w-full table-fixed border border-black">
-              <thead>
-                <tr className="bg-green-700 text-white">
-                  <th className="border border-black p-2 w-[5%]">No.</th>
-                  <th className="border border-black p-2 w-1/5">Tanggal</th>
-                  <th className="border border-black p-2 w-1/5">Jenis surat</th>
-                  <th className="border border-black p-2 w-1/5">Status</th>
-                  <th className="border border-black p-2 w-1/5">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={4} className="text-center text-black py-4 italic">
-                      Memuat data...
-                    </td>
+            <div className="w-full">
+              <table className="table-auto w-full border border-black text-[10px] sm:text-xs md:text-base">
+                <thead>
+                  <tr className="bg-green-700 text-white">
+                    <th className="border border-black p-2 w-[5%]">No.</th>
+                    <th className="border border-black p-2 w-1/5">Tanggal</th>
+                    <th className="border border-black p-2 w-1/5">Jenis surat</th>
+                    <th className="border border-black p-2 w-1/5">Status</th>
+                    <th className="border border-black p-2 w-1/5">Aksi</th>
                   </tr>
-                ) : paginatedData.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="text-center text-black py-4">
-                      Tidak ditemukan pengajuan yang sesuai
-                    </td>
-                  </tr>
-                ) : (
-                  paginatedData.map((item, index) => {
-                    const status = item.status.toLowerCase();
-                    const statusLabel = statusMap[status] || item.status;
-                    const statusClass = statusStyle[statusLabel] || "";
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={5} className="text-center text-black py-4 italic">
+                        Memuat data...
+                      </td>
+                    </tr>
+                  ) : paginatedData.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="text-center text-black py-4">
+                        Anda belum pernah melakukan pengajuan {namaSurat}
+                      </td>
+                    </tr>
+                  ) : (
+                    paginatedData.map((item, index) => {
+                      const status = item.status.toLowerCase();
+                      const statusLabel = statusMap[status] || item.status;
+                      const statusClass = statusStyle[statusLabel] || "";
 
-                    return (
-                      <tr key={item.id} className="text-center">
-                        <td className="border border-black p-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                        <td className="border border-black p-2">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
-                        <td className="border border-black p-2">{item.surat?.nama_surat || namaSurat}</td>
-                        <td className={`border border-black p-2 ${statusClass}`}>{statusLabel}</td>
-                        <td className="border border-black p-2">
-                          <div className="flex justify-center items-center gap-1">
-                            <button
-                              onClick={() => (item.status.toLowerCase() === "approved" ? handleDownload(item.id, `${namaSurat}`) : router.push(`/pengajuan-surat/${jenisSurat}/${item.id}`))}
-                              className="flex items-center gap-1 text-sm text-black hover:underline"
-                            >
-                              {iconStyle(item.status)}
-                              <span>{item.status === "approved" ? "Unduh" : "Buka"}</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
+                      return (
+                        <tr key={item.id} className="text-center">
+                          <td className="border border-black p-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                          <td className="border border-black p-2">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
+                          <td className="border border-black p-2">{item.surat?.nama_surat || namaSurat}</td>
+                          <td className={`border border-black p-2 ${statusClass}`}>{statusLabel}</td>
+                          <td className="border border-black p-2">
+                            <div className="flex flex-col items-center justify-center text-center group">
+                              <button
+                                onClick={() => (item.status.toLowerCase() === "approved" ? handleDownload(item.id, `${namaSurat}`) : router.push(`/pengajuan-surat/${jenisSurat}/${item.id}`))}
+                                className="flex flex-col items-center justify-center group"
+                              >
+                                {item.status === "approved" ? (
+                                  <FileDown className="text-green-600 w-6 h-6 group-hover:scale-105 transition-transform" />
+                                ) : (
+                                  <Search className="text-sky-500 w-6 h-6 group-hover:scale-105 transition-transform" />
+                                )}
+                                <span className="text-[10px] sm:text-sm text-black group-hover:underline">{item.status === "approved" ? "Unduh" : "Buka"}</span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
 
             {/* Pagination */}
             <div className="flex justify-center mt-6">

@@ -51,16 +51,19 @@ export default function ProfilePage() {
       if (!res.ok) throw new Error("Gagal mengambil data user");
 
       const data = await res.json();
+      const user = data.user || {};
+      const profile = data.profile || {};
+
       setForm({
-        nik: data.user?.nik || "",
-        name: data.user?.name || "",
-        tempat_lahir: data.profile?.tempat_lahir || "",
-        tanggal_lahir: data.profile?.tanggal_lahir || "",
-        jenis_kelamin: data.profile?.jenis_kelamin || "",
-        alamat: data.profile?.alamat || "",
-        pekerjaan: data.profile?.pekerjaan || "",
-        dusun: data.profile?.dusun || "",
-        rt_rw: data.profile?.rt_rw || "",
+        nik: user.nik || "",
+        name: user.name || "",
+        tempat_lahir: profile.tempat_lahir || "",
+        tanggal_lahir: profile.tanggal_lahir || "",
+        jenis_kelamin: profile.jenis_kelamin || "",
+        alamat: profile.alamat || "",
+        pekerjaan: profile.pekerjaan || "",
+        dusun: profile.dusun || "",
+        rt_rw: profile.rt_rw || "",
       });
     } catch (error) {
       console.error(error);
@@ -135,9 +138,8 @@ export default function ProfilePage() {
           </div>
 
           {/* Tombol Aksi */}
-          {/* Tombol Aksi */}
-          <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:items-center sm:gap-4 sm:w-auto">
-            <button onClick={handleToggleEdit} className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded w-full">
+          <div className={`w-full sm:flex sm:items-center sm:gap-4 sm:w-auto grid gap-2 ${isEditable ? "grid-cols-1 justify-center" : "grid-cols-2"}`}>
+            <button onClick={handleToggleEdit} className="bg-[#2DB567] hover:bg-[#239653] text-white text-sm font-medium px-4 py-1.5 rounded w-full sm:w-auto whitespace-nowrap">
               {isEditable ? "Simpan" : "Ubah Profil"}
             </button>
 

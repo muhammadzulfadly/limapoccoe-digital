@@ -107,9 +107,9 @@ export default function LoginPage() {
       {showForgotPassword && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg px-6 py-8 w-[280px] text-center animate-fade-in">
-            <h3 className="text-[#27AE60] text-2xl font-bold mb-4">Lupa Password!</h3>
+            <h3 className="text-[#27AE60] text-2xl font-bold mb-4">Lupa Kata Sandi!</h3>
             <p className="text-sm text-[#141414] leading-relaxed mb-6">
-              Jika Anda lupa password, silakan datang langsung ke kantor desa untuk melakukan reset password. Permintaan reset akan dibantu oleh staff desa yang bertugas. Jangan lupa membawa identitas diri untuk keperluan verifikasi.
+              Jika Anda lupa kata sandi, silakan datang langsung ke kantor desa untuk melakukan reset kata sandi. Permintaan reset akan dibantu oleh staff desa yang bertugas. Jangan lupa membawa identitas diri untuk keperluan verifikasi.
             </p>
             <button onClick={() => setShowForgotPassword(false)} className="bg-[#27AE60] hover:bg-[#219150] text-white rounded px-6 py-2 text-sm">
               Tutup

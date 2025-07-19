@@ -153,46 +153,48 @@ export default function PengaduanPage() {
             </div>
           )}
 
-          <table className="w-full table-fixed border border-black">
-            <thead>
-              <tr className="bg-green-600 text-white">
-                <th className="border border-black p-2 w-[5%]">No.</th>
-                <th className="border border-black p-2 w-1/6">Tanggal</th>
-                <th className="border border-black p-2 w-1/6">Judul Pengaduan</th>
-                <th className="border border-black p-2 w-1/6">Kategori</th>
-                <th className="border border-black p-2 w-1/6">Status</th>
-                <th className="border border-black p-2 w-1/6">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedData.length > 0 ? (
-                paginatedData.map((item, index) => {
-                  const readableStatus = statusMap[item.status] || item.status;
-                  return (
-                    <tr key={index} className="bg-white text-center">
-                      <td className="border border-black p-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                      <td className="border border-black p-2">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
-                      <td className="border border-black p-2">{item.title}</td>
-                      <td className="border border-black p-2">{item.category}</td>
-                      <td className={`border border-black p-2 ${statusColor[readableStatus] || ""}`}>{readableStatus}</td>
-                      <td className="border border-black p-2">
-                        <Link href={`/pengaduan/${item.id}`} className="flex justify-center items-center gap-1">
-                          <Search className="text-blue-400" />
-                          <span className="text-sm text-black hover:underline">Buka</span>
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={5} className="bg-white text-center text-black py-4">
-                    Tidak ditemukan pengaduan yang sesuai
-                  </td>
+          <div className="w-full">
+            <table className="table-auto w-full border border-black text-[10px] sm:text-xs md:text-base">
+              <thead>
+                <tr className="bg-green-600 text-white">
+                  <th className="border border-black p-2 w-[5%]">No.</th>
+                  <th className="border border-black p-2 w-1/6">Tanggal</th>
+                  <th className="border border-black p-2 w-1/6">Judul Pengaduan</th>
+                  <th className="border border-black p-2 w-1/6">Kategori</th>
+                  <th className="border border-black p-2 w-1/6">Status</th>
+                  <th className="border border-black p-2 w-1/6">Aksi</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((item, index) => {
+                    const readableStatus = statusMap[item.status] || item.status;
+                    return (
+                      <tr key={index} className="bg-white text-center">
+                        <td className="border border-black p-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                        <td className="border border-black p-2">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
+                        <td className="border border-black p-2">{item.title}</td>
+                        <td className="border border-black p-2">{item.category}</td>
+                        <td className={`border border-black p-2 ${statusColor[readableStatus] || ""}`}>{readableStatus}</td>
+                        <td className="border border-black p-2">
+                          <Link href={`/pengaduan/${item.id}`} className="flex flex-col items-center justify-center text-center group">
+                            <Search className="text-sky-500 w-6 h-6 group-hover:scale-105 transition-transform" />
+                            <span className="text-[10px] sm:text-sm text-black group-hover:underline">Buka</span>
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="bg-white text-center text-black py-4">
+                      Anda belum pernah melakukan pengaduan
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
 
           {/* Pagination */}
           <div className="flex justify-center mt-6">

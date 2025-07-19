@@ -74,7 +74,7 @@ export default function Sidebar({ isOpen, onClose }) {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:transform-none bg-white md:bg-transparent border-r border-gray-200`}
       >
-        <aside className="p-6 h-full overflow-y-auto">
+        <aside className="p-6 h-full overflow-y-auto bg-white pb-44">
           <h2 className="font-semibold text-base mb-4">PELAYANAN DESA</h2>
 
           {userLoggedIn ? (

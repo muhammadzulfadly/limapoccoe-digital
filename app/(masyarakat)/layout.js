@@ -54,61 +54,63 @@ export default function BerandaLayout({ children }) {
 
   return (
     <>
-      {/* Header */}
-      <header className="bg-[#2DB567] fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 md:px-8 py-3 shadow">
-        <Link href="/" className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Logo Desa Limapocoe" width={45} height={45} priority />
-          <span className="text-white font-bold text-lg md:text-xl">Desa Limapocoe</span>
-        </Link>
+      <div className="min-h-screen flex flex-col">
+        {/* Header */}
+        <header className="bg-[#2DB567] fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 md:px-8 py-3 shadow">
+          <Link href="/" className="flex items-center gap-3">
+            <Image src="/logo.png" alt="Logo Desa Limapocoe" width={45} height={45} priority />
+            <span className="text-white font-bold text-lg md:text-xl">Desa Limapocoe</span>
+          </Link>
 
-        <div className="md:hidden">
-          <button onClick={() => setSidebarOpen(!sidebarOpen)}>{sidebarOpen ? <X size={28} className="text-white" /> : <Menu size={28} className="text-white" />}</button>
-        </div>
+          <div className="md:hidden">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)}>{sidebarOpen ? <X size={28} className="text-white" /> : <Menu size={28} className="text-white" />}</button>
+          </div>
 
-        <div className="hidden md:flex items-center gap-4">
-          {userName ? (
-            <>
-              <User size={18} className="text-white" />
-              <Link href="/profil" className="text-white text-sm">
-                {userName}
-              </Link>
-              {isBeranda && (
-                <Link href="/dashboard" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
-                  Dashboard
+          <div className="hidden md:flex items-center gap-4">
+            {userName ? (
+              <>
+                <User size={18} className="text-white" />
+                <Link href="/profil" className="text-white text-sm">
+                  {userName}
                 </Link>
-              )}
-            </>
-          ) : (
+                {isBeranda && (
+                  <Link href="/dashboard" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
+                    Dashboard
+                  </Link>
+                )}
+              </>
+            ) : (
+              <>
+                <Link href="/auth/masuk" className="text-white text-sm hover:underline">
+                  Masuk
+                </Link>
+                <Link href="/auth/daftar" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
+                  Daftar
+                </Link>
+              </>
+            )}
+          </div>
+        </header>
+
+        {/* Layout */}
+        <div className="pt-16 relative flex flex-1">
+          {/* Sidebar */}
+          {(!isBeranda || (isBeranda && sidebarOpen)) && (
             <>
-              <Link href="/auth/masuk" className="text-white text-sm hover:underline">
-                Masuk
-              </Link>
-              <Link href="/auth/daftar" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
-                Daftar
-              </Link>
+              <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+              {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />}
             </>
           )}
+
+          {/* Page Content */}
+          <main className="flex-1">{children}</main>
         </div>
-      </header>
 
-      {/* Layout */}
-      <div className="pt-16 relative flex">
-        {/* Sidebar */}
-        {(!isBeranda || (isBeranda && sidebarOpen)) && (
-          <>
-            <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-            {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />}
-          </>
-        )}
-
-        {/* Page Content */}
-        <main className="flex-1">{children}</main>
+        {/* Footer */}
+        <footer className="bg-[#1E844A] text-white text-center py-4 px-4 text-xs sm:text-base">
+          <div className="max-w-screen-xl mx-auto">© 2025 Pemerintah Desa Limapocoe - dikelola oleh Tim IT Desa</div>
+        </footer>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-[#1E844A] text-white text-center py-4 px-4 text-base">
-        <div className="max-w-screen-xl mx-auto">© 2025 Pemerintah Desa Limapocoe - dikelola oleh Tim IT Desa</div>
-      </footer>
     </>
   );
 }
