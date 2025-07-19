@@ -1,6 +1,6 @@
 "use client";
 
-export default function Pekerjaan({ label="No. BPJS (opsional)", name="bpjs", value, onChange, error, disabled = false }) {
+export default function Pekerjaan({ label="No. BPJS (tidak wajib diisi)", name="bpjs", value, onChange, error, disabled = false }) {
   return (
     <div>
       <label className="text-sm font-semibold text-gray-500">{label}</label>

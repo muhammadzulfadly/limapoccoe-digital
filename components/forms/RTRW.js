@@ -1,6 +1,6 @@
 "use client";
 
-export default function RtRw({ label="RT/RW (opsional)", name="rt_rw", value, onChange, error, disabled = false}) {
+export default function RtRw({ label="RT/RW (tidak wajib diisi)", name="rt_rw", value, onChange, error, disabled = false}) {
   return (
     <div>
       <label className="text-sm font-semibold text-gray-500">{label}</label>
