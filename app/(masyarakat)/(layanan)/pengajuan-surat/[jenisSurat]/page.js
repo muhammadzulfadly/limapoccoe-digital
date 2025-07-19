@@ -227,7 +227,8 @@ export default function Page() {
                   className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition w-full sm:w-auto"
                 >
                   <Plus className="w-5 h-5" strokeWidth={3} />
-                  Buat Surat
+                  <span className="block sm:hidden">Buat Surat</span>
+                  <span className="hidden sm:block"> Buat Pengajuan Surat</span>
                 </button>
 
                 <button
