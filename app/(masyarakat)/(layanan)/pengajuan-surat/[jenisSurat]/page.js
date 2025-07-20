@@ -1,7 +1,6 @@
 "use client";
 
 import { FileDown, Search, Plus, Info, SlidersHorizontal, ChevronsLeft, ChevronsRight } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 

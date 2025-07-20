@@ -15,7 +15,7 @@ export default function NomorTelepon({ label="Nomor Telepon", name="no_whatsapp"
   );
 }
 
-export function validateTelepon(value) {
+export function validateNomorTelepon(value) {
   if (!/^08\d{8,11}$/.test(value)) {
     return "Nomor telepon tidak valid. Harus dimulai dengan 08 dan 10-13 digit.";
   }

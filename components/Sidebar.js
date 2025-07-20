@@ -70,11 +70,11 @@ export default function Sidebar({ isOpen, onClose }) {
     <>
       {/* Sidebar container */}
       <div
-        className={`fixed top-[64px] left-0 z-40 w-57 h-[calc(100vh-64px)] transform transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${
+        className={`fixed top-[64px] left-0 z-40 w-57 bottom-0 transform transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:transform-none bg-white md:bg-transparent border-r border-gray-200`}
+        } md:transform-none bg-white md:bg-transparent border-r border-gray-200 flex flex-col`}
       >
-        <aside className="p-6 h-full overflow-y-auto bg-white pb-44">
+        <aside className="p-6 flex-1 overflow-y-auto bg-white pb-44 md:pb-6">
           <h2 className="font-semibold text-base mb-4">PELAYANAN DESA</h2>
 
           {userLoggedIn ? (
@@ -115,15 +115,16 @@ export default function Sidebar({ isOpen, onClose }) {
                 </div>
 
                 {isOpenDropdown && (
-                  <ul className="pl-7 mt-4 text-sm">
+                  <ul className="pl-7 mt-3 text-sm">
                     {loading ? (
                       <li className="italic text-gray-500">Memuat...</li>
                     ) : (
                       jenisSurat.map((item) => (
                         <li key={item.slug}>
                           <Link
-                            href={`/pengajuan-surat/${item.slug}`} onClick={onClose}
-                            className={`${isActive(`/pengajuan-surat/${item.slug}`) ? "text-green-500" : "text-black"} hover:text-green-600 block break-words border-b border-gray-200 md:border-none py-1 max-w-[120px]`}
+                            href={`/pengajuan-surat/${item.slug}`}
+                            onClick={onClose}
+                            className={`${isActive(`/pengajuan-surat/${item.slug}`) ? "text-green-500" : "text-black"} hover:text-green-600 block break-words border-b border-gray-200 md:border-none py-1.5 max-w-[125px]`}
                           >
                             {item.nama_surat}
                           </Link>

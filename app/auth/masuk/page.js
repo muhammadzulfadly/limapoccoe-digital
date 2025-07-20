@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Nik, { validateNik } from "@/components/form/Nik";
-import KataSandi, { validatePassword } from "@/components/form/KataSandi";
+import NIK, { validateNIK} from "@/components/forms/NIK";
+import KataSandi, { validateKataSandi} from "@/components/forms/KataSandi";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,8 +16,8 @@ export default function LoginPage() {
 
   const handleChange = ({ name, value }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
-    if (name === "nik") setErrors((prev) => ({ ...prev, nik: validateNik(value) }));
-    if (name === "password") setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
+    if (name === "nik") setErrors((prev) => ({ ...prev, nik: validateNIK(value) }));
+    if (name === "password") setErrors((prev) => ({ ...prev, password: validateKataSandi(value) }));
   };
 
   const validate = () => {
@@ -82,8 +82,8 @@ export default function LoginPage() {
       <h2 className="text-4xl font-bold mb-6 text-center text-[#27AE60]">MASUK</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Nik value={form.nik} onChange={handleChange} error={errors.nik} />
-        <KataSandi value={form.password} onChange={handleChange} error={errors.password} />
+        <NIK name="nik" value={form.nik} onChange={handleChange} error={errors.nik} label="NIK"/>
+        <KataSandi name="password" value={form.password} onChange={handleChange} error={errors.password} label="Kata Sandi"/>
         {errors.general && <p className="text-red-600 text-sm text-center">{errors.general}</p>}
 
         <div className="text-center text-sm">

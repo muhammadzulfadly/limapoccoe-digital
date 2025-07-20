@@ -161,7 +161,7 @@ export default function ProfilePage() {
           <AngkaHuruf name="alamat" value={form.alamat} onChange={handleChange} disabled={!isEditable} label="Alamat" />
           <Huruf name="pekerjaan" value={form.pekerjaan} onChange={handleChange} disabled={!isEditable} label="Pekerjaan" />
           <Dusun name="dusun" value={form.dusun} onChange={handleChange} disabled={!isEditable} label="Dusun" />
-          <RTRW name="rt_rw" value={form.rt_rw} onChange={handleChange} disabled={!isEditable} label="RT/RW (opsional)" />
+          <RTRW name="rt_rw" value={form.rt_rw} onChange={handleChange} disabled={!isEditable} />
         </form>
       </div>
 

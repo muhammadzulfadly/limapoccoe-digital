@@ -4,13 +4,11 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import Alamat, { validateAlamat } from "@/components/form/Alamat";
-import Dusun, { validateDusun } from "@/components/form/Dusun";
-import RtRw, { validateRtRw } from "@/components/form/RtRw";
-import TanggalLahir, { validateTanggal } from "@/components/form/TanggalLahir";
-import TempatLahir, { validateTempat } from "@/components/form/TempatLahir";
-import JenisKelamin, { validateGender } from "@/components/form/JenisKelamin";
-import Pekerjaan, { validatePekerjaan } from "@/components/form/Pekerjaan";
+import Dusun, { validateDusun } from "@/components/forms/Dusun";
+import Huruf, { validateHuruf } from "@/components/forms/Huruf";
+import RTRW, { validateRTRW } from "@/components/forms/RTRW";
+import Tanggal, { validateTanggal } from "@/components/forms/Tanggal";
+import JenisKelamin, { validateJenisKelamin } from "@/components/forms/JenisKelamin";
 
 export default function LengkapiProfilPage() {
   const router = useRouter();
@@ -39,13 +37,13 @@ export default function LengkapiProfilPage() {
   const handleChange = ({ name, value }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
     const validators = {
-      alamat: validateAlamat,
+      alamat: validateHuruf,
       dusun: validateDusun,
-      rt_rw: validateRtRw,
+      rt_rw: validateRTRW,
       tanggal_lahir: validateTanggal,
-      tempat_lahir: validateTempat,
-      jenis_kelamin: validateGender,
-      pekerjaan: validatePekerjaan,
+      tempat_lahir: validateHuruf,
+      jenis_kelamin: validateJenisKelamin,
+      pekerjaan: validateHuruf,
     };
     const validate = validators[name];
     if (validate) {
@@ -56,13 +54,13 @@ export default function LengkapiProfilPage() {
 
   const validateAll = () => {
     const newErrors = {
-      alamat: validateAlamat(form.alamat),
+      alamat: validateHuruf(form.alamat),
       dusun: validateDusun(form.dusun),
-      rt_rw: validateRtRw(form.rt_rw),
+      rt_rw: validateRTRW(form.rt_rw),
       tanggal_lahir: validateTanggal(form.tanggal_lahir),
-      tempat_lahir: validateTempat(form.tempat_lahir),
-      jenis_kelamin: validateGender(form.jenis_kelamin),
-      pekerjaan: validatePekerjaan(form.pekerjaan),
+      tempat_lahir: validateHuruf(form.tempat_lahir),
+      jenis_kelamin: validateJenisKelamin(form.jenis_kelamin),
+      pekerjaan: validateHuruf(form.pekerjaan),
     };
     Object.keys(newErrors).forEach((key) => {
       if (!newErrors[key]) delete newErrors[key];
@@ -109,26 +107,26 @@ export default function LengkapiProfilPage() {
       <h2 className="text-4xl font-bold mb-6 text-center text-[#27AE60]">LENGKAPI PROFIL</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Alamat value={form.alamat} onChange={handleChange} error={errors.alamat} />
+        <Huruf name="alamat" value={form.alamat} onChange={handleChange} error={errors.alamat} label="Alamat" />
         <div className="flex gap-4">
           <div className="w-1/2">
-            <Dusun value={form.dusun} onChange={handleChange} error={errors.dusun} />
+            <Dusun name="dusun" value={form.dusun} onChange={handleChange} error={errors.dusun} label="Dusun"/>
           </div>
           <div className="w-1/2">
-            <RtRw value={form.rt_rw} onChange={handleChange} error={errors.rt_rw} />
+            <RTRW name="rt_rw" value={form.rt_rw} onChange={handleChange} error={errors.rt_rw} />
           </div>
         </div>
         <div className="border-y border-gray-400 my-10" />
         <div className="flex gap-4">
           <div className="w-1/2">
-            <TanggalLahir value={form.tanggal_lahir} onChange={handleChange} error={errors.tanggal_lahir} />
+            <Tanggal name="tanggal_lahir" value={form.tanggal_lahir} onChange={handleChange} error={errors.tanggal_lahir} label="Tanggal Lahir" />
           </div>
           <div className="w-1/2">
-            <TempatLahir value={form.tempat_lahir} onChange={handleChange} error={errors.tempat_lahir} />
+            <Huruf name="tempat_lahir" value={form.tempat_lahir} onChange={handleChange} error={errors.tempat_lahir} label="Tempat Lahir" />
           </div>
         </div>
-        <JenisKelamin value={form.jenis_kelamin} onChange={handleChange} error={errors.jenis_kelamin} />
-        <Pekerjaan value={form.pekerjaan} onChange={handleChange} error={errors.pekerjaan} />
+        <JenisKelamin name="jenis_kelamin" value={form.jenis_kelamin} onChange={handleChange} error={errors.jenis_kelamin} label="Jenis Kelamin"/>
+        <Huruf name="pekerjaan" value={form.pekerjaan} onChange={handleChange} error={errors.pekerjaan} label="Pekerjaan" />
 
         <div className="flex justify-between mt-8">
           <button type="button" onClick={() => router.push("/dashboard")} className="border border-[#27AE60] text-[#27AE60] rounded px-6 py-2 hover:bg-green-50">

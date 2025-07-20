@@ -31,7 +31,7 @@ export default function KataSandi({ label="Kata Sandi", name="password", value, 
   );
 }
 
-export function validatePassword(value) {
+export function validateKataSandi(value) {
   if (value.length < 12) {
     return "Kata sandi minimal 12 karakter.";
   }

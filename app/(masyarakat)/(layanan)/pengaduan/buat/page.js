@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, UploadCloud } from "lucide-react";
 
-import NamaLengkap, { validateNama } from "@/components/form/NamaLengkap";
-import JudulPengaduan, { validateJudul } from "@/components/form/JudulPengaduan";
-import LokasiKejadian, { validateLokasi } from "@/components/form/LokasiKejadian";
-import KategoriPengaduan, { validateKategori } from "@/components/form/KategoriPengaduan";
-import DeskripsiPengaduan, { validateDeskripsi } from "@/components/form/DeskripsiPengaduan";
+import Huruf, { validateHuruf } from "@/components/forms/Huruf";
+import AngkaHuruf, { validateAngkaHuruf } from "@/components/forms/AngkaHuruf";
+import KategoriPengaduan, { validateKategoriPengaduan } from "@/components/forms/KategoriPengaduan";
+import Deskripsi, { validateDeskripsi } from "@/components/forms/Deskripsi";
 
 export default function BuatPengaduanPage() {
   const router = useRouter();
@@ -76,10 +75,10 @@ export default function BuatPengaduanPage() {
 
   const validate = () => {
     const newErrors = {
-      name: validateNama(form.name),
-      title: validateJudul(form.title),
-      location: validateLokasi(form.location),
-      category: validateKategori(form.category),
+      name: validateHuruf(form.name),
+      title: validateHuruf(form.title),
+      location: validateAngkaHuruf(form.location),
+      category: validateKategoriPengaduan(form.category),
       description: validateDeskripsi(form.description),
     };
 
@@ -167,14 +166,14 @@ export default function BuatPengaduanPage() {
           </button>
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <NamaLengkap value={form.name} onChange={handleChange} error={errors.name} disabled={true} />
-            <KategoriPengaduan value={form.category} onChange={handleChange} error={errors.category} />
-            <JudulPengaduan value={form.title} onChange={handleChange} error={errors.title} />
-            <LokasiKejadian value={form.location} onChange={handleChange} error={errors.location} />
-            <DeskripsiPengaduan value={form.description} onChange={handleChange} error={errors.description} />
+            <Huruf name ="name" value={form.name} onChange={handleChange} error={errors.name} disabled={true} label="Nama Lengkap"/>
+            <KategoriPengaduan name = "category" value={form.category} onChange={handleChange} error={errors.category} />
+            <Huruf name ="title" value={form.title} onChange={handleChange} error={errors.title} label="Judul Pengaduan"/>
+            <AngkaHuruf name ="location" value={form.location} onChange={handleChange} error={errors.location} label="Lokasi Pengaduan"/>
+            <Deskripsi name ="description" value={form.description} onChange={handleChange} error={errors.description} label="Deskripsi Pengaduan"/>
 
             <div className="col-span-1">
-              <label className="text-sm font-semibold text-gray-500">Upload Foto (opsional)</label>
+              <label className="text-sm font-semibold text-gray-500">Upload Foto (tidak wajib diisi)</label>
               <label
                 htmlFor="file"
                 className="min-h-[100px] mt-1 flex flex-col justify-center items-center text-center cursor-pointer

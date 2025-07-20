@@ -4,11 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import Nik, { validateNik } from "@/components/form/Nik";
-import NamaLengkap, { validateNama } from "@/components/form/NamaLengkap";
-import NomorTelepon, { validateTelepon } from "@/components/form/NomorTelepon";
-import KataSandi, { validatePassword } from "@/components/form/KataSandi";
-import KonfirmasiSandi from "@/components/form/KonfirmasiSandi";
+import NIK, { validateNIK} from "@/components/forms/NIK";
+import Huruf, { validateHuruf} from "@/components/forms/Huruf";
+import NomorTelepon, { validateNomorTelepon} from "@/components/forms/NomorTelepon";
+import KataSandi, { validateKataSandi} from "@/components/forms/KataSandi";
 
 export default function Page() {
   const router = useRouter();
@@ -30,10 +29,10 @@ export default function Page() {
     setForm((prev) => ({ ...prev, [name]: value }));
 
     let errorMessage = "";
-    if (name === "nik") errorMessage = validateNik(value);
-    else if (name === "name") errorMessage = validateNama(value);
-    else if (name === "no_whatsapp") errorMessage = validateTelepon(value);
-    else if (name === "password") errorMessage = validatePassword(value);
+    if (name === "nik") errorMessage = validateNIK(value);
+    else if (name === "name") errorMessage = validateHuruf(value);
+    else if (name === "no_whatsapp") errorMessage = validateNomorTelepon(value);
+    else if (name === "password") errorMessage = validateKataSandi(value);
     else if (name === "password_confirmation" && value !== form.password) {
       errorMessage = "Konfirmasi password tidak cocok.";
     }
@@ -43,10 +42,10 @@ export default function Page() {
 
   const validateAll = () => {
     const newErrors = {
-      nik: validateNik(form.nik),
-      name: validateNama(form.name),
-      no_whatsapp: validateTelepon(form.no_whatsapp),
-      password: validatePassword(form.password),
+      nik: validateNIK(form.nik),
+      name: validateHuruf(form.name),
+      no_whatsapp: validateNomorTelepon(form.no_whatsapp),
+      password: validateKataSandi(form.password),
     };
 
     if (form.password !== form.password_confirmation) {
@@ -111,13 +110,12 @@ export default function Page() {
       <h2 className="text-4xl font-bold mb-6 text-center text-[#27AE60]">DAFTAR AKUN</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Nik value={form.nik} onChange={handleFieldChange} error={errors.nik} />
-        <NamaLengkap value={form.name} onChange={handleFieldChange} error={errors.name} />
-        <NomorTelepon value={form.no_whatsapp} onChange={handleFieldChange} error={errors.no_whatsapp} />
+        <NIK name="nik" value={form.nik} onChange={handleFieldChange} error={errors.nik} label="NIK"/>
+        <Huruf name="name" value={form.name} onChange={handleFieldChange} error={errors.name} label="Nama Lengkap"/>
+        <NomorTelepon name="no_whatsapp" value={form.no_whatsapp} onChange={handleFieldChange} error={errors.no_whatsapp} label="Nomor Telepon"/>
         <div className="border-y border-gray-400 my-10" />
-
-        <KataSandi value={form.password} onChange={handleFieldChange} error={errors.password} />
-        <KonfirmasiSandi value={form.password_confirmation} onChange={handleFieldChange} error={errors.password_confirmation} />
+        <KataSandi name="password" value={form.password} onChange={handleFieldChange} error={errors.password} label="Kata Sandi"/>
+        <KataSandi name="password_confirmation" value={form.password_confirmation} onChange={handleFieldChange} error={errors.password_confirmation} label="Konfirmasi Kata Sandi"/>
 
         <div className="flex justify-center">
           <button type="submit" disabled={loading} className="px-20 bg-[#27AE60] text-white py-2 rounded text-base mt-4 mb-8 disabled:opacity-50 hover:bg-green-600">

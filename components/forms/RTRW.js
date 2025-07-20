@@ -17,7 +17,7 @@ export default function RtRw({ label="RT/RW (tidak wajib diisi)", name="rt_rw", 
   );
 }
 
-export function validateRtRw(value) {
+export function validateRTRW(value) {
   if (value && !/^\d{3}\/\d{3}$/.test(value)) return "Format RT/RW tidak valid. Contoh: 005/003.";
   return "";
 }

@@ -21,7 +21,7 @@ export default function Huruf({
   );
 }
 
-export function validateNama(value) {
+export function validateHuruf(value) {
   if (!/^[a-zA-Z\s]{1,}$/.test(value)) {
     return "Form tidak boleh kosong dan hanya huruf/spasi.";
   }

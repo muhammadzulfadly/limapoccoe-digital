@@ -14,7 +14,7 @@ export default function AngkaHuruf({ label="AngkaHuruf", name="angkahuruf", valu
   );
 }
 
-export function validateLokasi(value) {
+export function validateAngkaHuruf(value) {
   if (!value || value.length < 1) {
     return "Form tidak boleh kosong.";
   }

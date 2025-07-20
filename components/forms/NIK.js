@@ -43,7 +43,7 @@ export default function Nik({
   );
 }
 
-export function validateNik(value) {
+export function validateNIK(value) {
   if (!/^\d{16}$/.test(value)) {
     return "NIK harus terdiri dari 16 digit angka.";
   }

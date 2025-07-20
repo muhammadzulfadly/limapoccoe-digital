@@ -8,14 +8,14 @@ export default function Angka({ label="Angka", name="angka", value, onChange, er
       name={name}
       value={value}
       maxLength={16}
-      onChange={(e) => onChange({ name, value: e.target.value.replace(/\D/g, "") })}
+      onChange={(e) => onChange({ name, value: e.target.value.replace(/[^0-9.,:]/g, "") })}
       error={error}
       disabled={disabled}
     />
   );
 }
 
-export function validateNik(value) {
+export function validateAngka(value) {
   if (!value || value.length < 1) {
     return "Form tidak boleh kosong dan hanya berisi angka";
   }

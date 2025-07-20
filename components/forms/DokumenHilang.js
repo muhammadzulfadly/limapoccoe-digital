@@ -2,7 +2,9 @@
 
 import { ChevronDown } from "lucide-react";
 
-export default function JenisKelamin({ label = "Jenis Kelamin", name = "jenis_kelamin", value, onChange, error, disabled = false }) {
+const pilihanDusun = ["KTP", "Kartu Keluarga", "Akte Kelahiran"];
+
+export default function Dusun({ label = "Dokumen Hilang", name = "dokumen_hilang", value, onChange, error, disabled = false }) {
   return (
     <div className="relative">
       <label className="text-sm font-semibold text-gray-500">
@@ -18,8 +20,11 @@ export default function JenisKelamin({ label = "Jenis Kelamin", name = "jenis_ke
           className={`mt-1 appearance-none w-full rounded-lg border bg-white px-4 py-2 text-sm outline-none ${error ? "border-red-500" : "border-gray-300"}`}
         >
           <option value="">Pilih</option>
-          <option value="Laki-laki">Laki-laki</option>
-          <option value="Perempuan">Perempuan</option>
+          {pilihanDusun.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
         </select>
         <ChevronDown className="absolute right-3 bottom-3 text-black pointer-events-none" size={16} />
       </div>
@@ -28,7 +33,7 @@ export default function JenisKelamin({ label = "Jenis Kelamin", name = "jenis_ke
   );
 }
 
-export function validateJenisKelamin(value) {
-  if (!value) return "Jenis kelamin wajib dipilih.";
+export function validateDokumenHilang(value) {
+  if (!value) return "Dokumen wajib dipilih.";
   return "";
 }

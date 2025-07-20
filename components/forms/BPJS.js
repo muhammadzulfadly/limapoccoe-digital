@@ -18,7 +18,7 @@ export default function Pekerjaan({ label="No. BPJS (tidak wajib diisi)", name="
   );
 }
 
-export function validatePekerjaan(value) {
+export function validateBPJS(value) {
   if (!/^\d{13}$/.test(value)) {
     return "BPJS harus terdiri dari 13 digit angka.";
   }
