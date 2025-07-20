@@ -134,7 +134,7 @@ export default function OTPPage() {
   useEffect(() => {
     const token = localStorage.getItem("registration_token");
     if (!token) {
-        setError(true);
+      setError(true);
     } else {
       setRegistrationToken(token);
     }
@@ -161,6 +161,7 @@ export default function OTPPage() {
       <button onClick={() => router.back()} className="absolute top-6 left-6 text-2xl">
         ←
       </button>
+      <img src="/logo.png" alt="Logo Desa" className="block mx-auto w-20 h-20 mb-4 md:hidden" />
       <h2 className="text-4xl font-bold mb-6 text-center text-[#27AE60]">VERIFIKASI OTP</h2>
       <p className="text-center text-gray-600 mb-2">
         Masukkan kode OTP yang dikirim ke nomor <br />

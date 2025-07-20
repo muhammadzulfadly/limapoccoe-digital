@@ -73,9 +73,10 @@ export default function HomePage() {
           {/* Pengajuan Surat */}
           <div className="flex flex-col items-center text-center">
             <Image src="/icons/surat.png" alt="Ikon Surat" width={50} height={50} className="mx-auto mb-3 sm:mb-4 sm:w-[100px] sm:h-[100px]" />
-            <button onClick={() => handleLogin("/pengajuan-surat")} className="bg-green-500 text-white px-5 py-2 rounded-full shadow-md font-medium text-sm hover:bg-green-600 transition">
+            <button onClick={() => handleLogin("/pengajuan-surat")} className="bg-green-500 text-white px-5 py-2 rounded-full shadow-md font-medium text-sm hover:bg-green-600 transition whitespace-nowrap w-fit">
               Pengajuan Surat
             </button>
+
             {/* Teks hanya tampil di desktop */}
             <p className="hidden sm:block mt-3 text-gray-600 text-sm max-w-[220px]">Ajukan berbagai jenis surat secara online, mudah dan tanpa antre.</p>
           </div>

@@ -104,19 +104,20 @@ export default function LengkapiProfilPage() {
       <button onClick={() => router.back()} className="absolute top-6 left-6 text-2xl">
         ←
       </button>
+      <img src="/logo.png" alt="Logo Desa" className="block mx-auto w-20 h-20 mb-4 md:hidden" />
       <h2 className="text-4xl font-bold mb-6 text-center text-[#27AE60]">LENGKAPI PROFIL</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Huruf name="alamat" value={form.alamat} onChange={handleChange} error={errors.alamat} label="Alamat" />
         <div className="flex gap-4">
           <div className="w-1/2">
-            <Dusun name="dusun" value={form.dusun} onChange={handleChange} error={errors.dusun} label="Dusun"/>
+            <Dusun name="dusun" value={form.dusun} onChange={handleChange} error={errors.dusun} label="Dusun" />
           </div>
           <div className="w-1/2">
             <RTRW name="rt_rw" value={form.rt_rw} onChange={handleChange} error={errors.rt_rw} />
           </div>
         </div>
-        <div className="border-y border-gray-400 my-10" />
+        <div className="hidden md:block border-y border-gray-400 my-10" />
         <div className="flex gap-4">
           <div className="w-1/2">
             <Tanggal name="tanggal_lahir" value={form.tanggal_lahir} onChange={handleChange} error={errors.tanggal_lahir} label="Tanggal Lahir" />
@@ -125,14 +126,15 @@ export default function LengkapiProfilPage() {
             <Huruf name="tempat_lahir" value={form.tempat_lahir} onChange={handleChange} error={errors.tempat_lahir} label="Tempat Lahir" />
           </div>
         </div>
-        <JenisKelamin name="jenis_kelamin" value={form.jenis_kelamin} onChange={handleChange} error={errors.jenis_kelamin} label="Jenis Kelamin"/>
+        <JenisKelamin name="jenis_kelamin" value={form.jenis_kelamin} onChange={handleChange} error={errors.jenis_kelamin} label="Jenis Kelamin" />
         <Huruf name="pekerjaan" value={form.pekerjaan} onChange={handleChange} error={errors.pekerjaan} label="Pekerjaan" />
 
-        <div className="flex justify-between mt-8">
-          <button type="button" onClick={() => router.push("/dashboard")} className="border border-[#27AE60] text-[#27AE60] rounded px-6 py-2 hover:bg-green-50">
+        <div className="flex flex-col-reverse md:flex-row md:justify-between gap-3 mt-8 pt-2">
+          <button type="button" onClick={() => router.push("/dashboard")} className="border border-[#27AE60] text-[#27AE60] rounded px-6 py-2 hover:bg-green-50 w-full md:w-auto">
             Lanjutkan nanti
           </button>
-          <button type="submit" disabled={loading} className="bg-[#27AE60] text-white rounded px-14 py-2 hover:bg-green-700 disabled:opacity-50">
+
+          <button type="submit" disabled={loading} className="bg-[#27AE60] text-white rounded px-14 py-2 hover:bg-green-700 disabled:opacity-50 w-full md:w-auto">
             {loading ? "Menyimpan..." : "Simpan"}
           </button>
         </div>

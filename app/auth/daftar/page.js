@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import NIK, { validateNIK} from "@/components/forms/NIK";
-import Huruf, { validateHuruf} from "@/components/forms/Huruf";
-import NomorTelepon, { validateNomorTelepon} from "@/components/forms/NomorTelepon";
-import KataSandi, { validateKataSandi} from "@/components/forms/KataSandi";
+import NIK, { validateNIK } from "@/components/forms/NIK";
+import Huruf, { validateHuruf } from "@/components/forms/Huruf";
+import NomorTelepon, { validateNomorTelepon } from "@/components/forms/NomorTelepon";
+import KataSandi, { validateKataSandi } from "@/components/forms/KataSandi";
 
 export default function Page() {
   const router = useRouter();
@@ -107,15 +107,16 @@ export default function Page() {
       <button onClick={() => router.back()} className="absolute top-6 left-6 text-2xl">
         ←
       </button>
+      <img src="/logo.png" alt="Logo Desa" className="block mx-auto w-20 h-20 mb-4 md:hidden" />
       <h2 className="text-4xl font-bold mb-6 text-center text-[#27AE60]">DAFTAR AKUN</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <NIK name="nik" value={form.nik} onChange={handleFieldChange} error={errors.nik} label="NIK"/>
-        <Huruf name="name" value={form.name} onChange={handleFieldChange} error={errors.name} label="Nama Lengkap"/>
-        <NomorTelepon name="no_whatsapp" value={form.no_whatsapp} onChange={handleFieldChange} error={errors.no_whatsapp} label="Nomor Telepon"/>
-        <div className="border-y border-gray-400 my-10" />
-        <KataSandi name="password" value={form.password} onChange={handleFieldChange} error={errors.password} label="Kata Sandi"/>
-        <KataSandi name="password_confirmation" value={form.password_confirmation} onChange={handleFieldChange} error={errors.password_confirmation} label="Konfirmasi Kata Sandi"/>
+        <NIK name="nik" value={form.nik} onChange={handleFieldChange} error={errors.nik} label="NIK" />
+        <Huruf name="name" value={form.name} onChange={handleFieldChange} error={errors.name} label="Nama Lengkap" />
+        <NomorTelepon name="no_whatsapp" value={form.no_whatsapp} onChange={handleFieldChange} error={errors.no_whatsapp} label="Nomor Telepon" />
+        <div className="hidden md:block border-y border-gray-400 my-10" />
+        <KataSandi name="password" value={form.password} onChange={handleFieldChange} error={errors.password} label="Kata Sandi" />
+        <KataSandi name="password_confirmation" value={form.password_confirmation} onChange={handleFieldChange} error={errors.password_confirmation} label="Konfirmasi Kata Sandi" />
 
         <div className="flex justify-center">
           <button type="submit" disabled={loading} className="px-20 bg-[#27AE60] text-white py-2 rounded text-base mt-4 mb-8 disabled:opacity-50 hover:bg-green-600">
