@@ -59,7 +59,7 @@ export default function BerandaLayout({ children }) {
         <header className="bg-[#27AE60] fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 md:px-8 py-3 shadow">
           <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.png" alt="Logo Desa Limapocoe" width={45} height={45} priority />
-            <span className="text-white font-bold text-lg md:text-xl">Desa Limapocoe</span>
+            <span className="text-white font-semibold text-lg md:text-xl">Desa Limapocoe</span>
           </Link>
 
           <div className="md:hidden">

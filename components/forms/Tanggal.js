@@ -29,8 +29,6 @@ export default function Tanggal({
         onChange={(e) => onChange({ name, value: e.target.value })}
         className={`
           w-full
-          appearance-none
-          text-left
           text-sm
           bg-white
           outline-none
@@ -42,6 +40,11 @@ export default function Tanggal({
 
           md:border md:rounded-lg md:px-4 md:py-2
           ${error ? "border-red-500 focus:border-red-500" : ""}
+
+          text-left
+          [text-indent:0.01px]
+          [appearance:none]
+          [webkit-appearance:none]
         `}
       />
 
