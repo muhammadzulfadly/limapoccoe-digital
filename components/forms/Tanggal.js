@@ -30,6 +30,7 @@ export default function Tanggal({
         className={`
           w-full
           appearance-none
+          text-left
           text-sm
           bg-white
           outline-none

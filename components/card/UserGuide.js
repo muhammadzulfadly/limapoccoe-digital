@@ -10,12 +10,12 @@ export default function UserGuideCard() {
     >
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm w-full p-4 flex items-center justify-between">
         <div>
-          <div className="text-sm md:text-sm font-semibold">User Guide</div>
-          <div className="text-xs md:text-sm text-gray-400">Lihat panduan</div>
+          <div className="text-sm md:text-sm font-semibold text-[#00171F]">User Guide</div>
+          <div className="text-xs md:text-sm text-[#00171F]">Lihat panduan</div>
         </div>
         <FileText
           size={32} // Mobile size
-          className="text-gray-800 md:w-[50px] md:h-[50px]"
+          className="text-[#00171F] md:w-[50px] md:h-[50px]"
         />
       </div>
     </a>

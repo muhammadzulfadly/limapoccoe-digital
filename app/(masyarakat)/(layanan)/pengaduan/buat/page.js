@@ -128,8 +128,8 @@ export default function BuatPengaduanPage() {
   };
 
   return (
-    <div className="flex h-full">
-      <div className="flex-1 p-8 space-y-8 bg-[#EDF0F5]">
+    <div className="">
+      <div className="min-h-screen p-8">
         {/* Success Modal */}
         {showSuccessModal && (
           <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
@@ -156,31 +156,29 @@ export default function BuatPengaduanPage() {
           </div>
         )}
 
-        <h2 className="text-2xl font-semibold mb-4">
-          Pengaduan / <span className="font-semibold">Buat pengaduan</span>
-        </h2>
+        <h2 className="sm:text-2xl text-base font-semibold mb-4">Pengaduan / Buat pengaduan</h2>
 
-        <div className="bg-white rounded-lg p-6 max-w-6xl mx-auto">
+        <div className="bg-white rounded-lg p-6 mx-auto">
           <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
             <ChevronLeft size={30} className="mr-1" /> Kembali
           </button>
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Huruf name ="name" value={form.name} onChange={handleChange} error={errors.name} disabled={true} label="Nama Lengkap"/>
-            <KategoriPengaduan name = "category" value={form.category} onChange={handleChange} error={errors.category} />
-            <Huruf name ="title" value={form.title} onChange={handleChange} error={errors.title} label="Judul Pengaduan"/>
-            <AngkaHuruf name ="location" value={form.location} onChange={handleChange} error={errors.location} label="Lokasi Pengaduan"/>
-            <Deskripsi name ="description" value={form.description} onChange={handleChange} error={errors.description} label="Deskripsi Pengaduan"/>
+            <Huruf name="name" value={form.name} onChange={handleChange} error={errors.name} disabled={true} label="Nama Lengkap" />
+            <KategoriPengaduan name="category" value={form.category} onChange={handleChange} error={errors.category} />
+            <Huruf name="title" value={form.title} onChange={handleChange} error={errors.title} label="Judul Pengaduan" />
+            <AngkaHuruf name="location" value={form.location} onChange={handleChange} error={errors.location} label="Lokasi Pengaduan" />
+            <Deskripsi name="description" value={form.description} onChange={handleChange} error={errors.description} label="Deskripsi Pengaduan" />
 
             <div className="col-span-1">
-              <label className="text-sm font-semibold text-gray-500">Upload Foto (tidak wajib diisi)</label>
+              <label className="text-sm font-semibold text-gray-500">Upload Foto (tidak wajib)</label>
               <label
                 htmlFor="file"
                 className="min-h-[100px] mt-1 flex flex-col justify-center items-center text-center cursor-pointer
-              border-dashed border-green-300 bg-green-50 w-full border rounded px-4 py-5 text-sm hover:bg-green-100"
+              border-dashed border-[#384EB7-30] bg-[#F0FFF6] w-full border rounded px-4 py-5 text-sm hover:bg-green-100"
               >
-                <UploadCloud size={30} className="mb-2 text-green-500" />
-                <span className="text-green-600 font-semibold">Upload Foto</span>
+                <UploadCloud size={30} className="mb-2 text-[#27AE60]" />
+                <span className="text-[#27AE60] font-semibold">Upload Foto</span>
                 <p className="text-xs text-gray-500 mt-1">Format yang didukung: JPG, JPEG, PNG. Maks 2MB</p>
                 {form.file && <p className="mt-2 text-sm text-gray-600">File: {form.file.name}</p>}
                 {errors.file && <p className="text-sm text-red-500 mt-1">{errors.file}</p>}
@@ -189,7 +187,7 @@ export default function BuatPengaduanPage() {
             </div>
 
             <div className="md:col-span-2 flex justify-end">
-              <button type="submit" disabled={loading} className="bg-green-600 hover:bg-green-700 text-white text-sm px-6 py-2 rounded">
+              <button type="submit" disabled={loading} className="bg-[#27AE60] hover:bg-green-600 text-white text-sm px-6 py-2 rounded">
                 {loading ? "Mengirim..." : "Kirim"}
               </button>
             </div>

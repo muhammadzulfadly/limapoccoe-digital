@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Phone, User } from "lucide-react";
+import { Mail, Phone, User, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const slides = [
@@ -48,13 +48,15 @@ export default function HomePage() {
         {/* Overlay */}
         <div className="absolute inset-0  z-10" />
 
-        {/* Tombol Panah */}
-        <div className="absolute inset-0 flex items-center justify-between px-2 sm:px-6 z-20">
-          <button onClick={prevSlide} className="text-white bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">
-            <span className="text-2xl">{"<"}</span>
+        <div className="absolute inset-0 flex items-center justify-between z-20">
+          {/* Tombol kiri */}
+          <button onClick={prevSlide} className="w-10 h-20 bg-black bg-opacity-20 hover:bg-opacity-30 flex items-center justify-center">
+            <ChevronLeft className="text-white w-6 h-6" strokeWidth={2} />
           </button>
-          <button onClick={nextSlide} className="text-white bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">
-            <span className="text-2xl">{">"}</span>
+
+          {/* Tombol kanan */}
+          <button onClick={nextSlide} className="w-10 h-20 bg-black bg-opacity-20 hover:bg-opacity-30 flex items-center justify-center">
+            <ChevronRight className="text-white w-6 h-6" strokeWidth={2} />
           </button>
         </div>
       </div>
@@ -73,7 +75,7 @@ export default function HomePage() {
           {/* Pengajuan Surat */}
           <div className="flex flex-col items-center text-center">
             <Image src="/icons/surat.png" alt="Ikon Surat" width={50} height={50} className="mx-auto mb-3 sm:mb-4 sm:w-[100px] sm:h-[100px]" />
-            <button onClick={() => handleLogin("/pengajuan-surat")} className="bg-green-500 text-white px-5 py-2 rounded-full shadow-md font-medium text-sm hover:bg-green-600 transition whitespace-nowrap w-fit">
+            <button onClick={() => handleLogin("/pengajuan-surat")} className="bg-[#27AE60] text-white px-5 py-2 rounded-full shadow-md font-medium text-sm hover:bg-green-600 transition whitespace-nowrap w-fit">
               Pengajuan Surat
             </button>
 
@@ -84,7 +86,7 @@ export default function HomePage() {
           {/* Pengaduan */}
           <div className="flex flex-col items-center text-center">
             <Image src="/icons/pengaduan.png" alt="Ikon Pengaduan" width={50} height={50} className="mx-auto mb-3 sm:mb-4 sm:w-[100px] sm:h-[100px]" />
-            <button onClick={() => handleLogin("/pengaduan")} className="bg-green-500 text-white px-5 py-2 rounded-full shadow-md font-medium text-sm hover:bg-green-600 transition">
+            <button onClick={() => handleLogin("/pengaduan")} className="bg-[#27AE60] text-white px-5 py-2 rounded-full shadow-md font-medium text-sm hover:bg-green-600 transition">
               Pengaduan
             </button>
             {/* Teks hanya tampil di desktop */}
@@ -113,7 +115,7 @@ export default function HomePage() {
               <div className="space-y-5">
                 {/* Kepala Desa */}
                 <div className="flex items-center gap-4">
-                  <div className="bg-green-500 text-white p-3 rounded-full">
+                  <div className="bg-[#27AE60] text-white p-3 rounded-full">
                     <User className="w-6 h-6" />
                   </div>
                   <div>
@@ -135,11 +137,11 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className="rounded-xl overflow-hidden border border-green-400 shadow-sm">
+              <div key={index} className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm">
                 {/* Gambar */}
                 <div className="relative">
                   <Image src="/images/berita-desa.png" alt="Foto Rapat" width={400} height={250} className="w-full h-52 object-cover" />
-                  <span className="absolute bottom-2 right-2 bg-green-500 text-white text-xs font-medium px-3 py-1 rounded">9 Mei 2025</span>
+                  <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded">9 Mei 2025</span>
                 </div>
 
                 {/* Isi */}
@@ -161,7 +163,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm border-2 border-green-400">
+              <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm border-2 border-[#27AE60]">
                 {/* Gambar */}
                 <div className="rounded-t-2xl overflow-hidden">
                   <Image src="/images/wisata-desa.png" alt="Wisata Desa" width={400} height={250} className="w-full h-52 object-cover" />
@@ -206,7 +208,7 @@ export default function HomePage() {
             {["/images/produk/produk1.png", "/images/produk/produk2.png", "/images/produk/produk3.png", "/images/produk/produk3.png", "/images/produk/produk3.png", "/images/produk/produk3.png"].map((src, index) => (
               <div key={index} className="rounded-xl overflow-hidden bg-white shadow-sm">
                 <Image src={src} alt={`Produk ${index + 1}`} width={400} height={250} className="w-full h-48 object-cover rounded-t-xl" />
-                <div className="flex justify-between items-center bg-green-500 text-white px-4 py-3 text-sm font-semibold rounded-b-xl">
+                <div className="flex justify-between items-center bg-[#27AE60] text-white px-4 py-3 text-sm font-semibold rounded-b-xl">
                   <span>Kripik kaca</span>
                   <span>Rp. 100.000</span>
                 </div>
@@ -323,7 +325,7 @@ export default function HomePage() {
         className="fixed bottom-0 right-0 z-50 bg-[#27AE60] text-white px-6 py-2 rounded-tl-xl hover:bg-green-600 flex items-center gap-3 shadow-lg transition-all"
       >
         <Image src="/icons/whatsapp.svg" alt="WhatsApp" width={20} height={20} />
-        <span className="text-lg font-medium">Chat</span>
+        <span className="text-base font-medium">Chat</span>
       </a>
     </>
   );

@@ -79,10 +79,10 @@ export default function DashboardPage() {
 
   return (
     <div className="flex h-full">
-      <div className="flex-1 p-8 space-y-8 bg-[#EDF0F5]">
+      <div className="flex-1 p-8 space-y-8">
         {/* Pengajuan Surat */}
         <section>
-          <h2 className="font-semibold text-2xl mb-4">Pengajuan Surat</h2>
+          <h2 className="sm:text-2xl text-base font-semibold mb-4">Pengajuan Surat</h2>
           {loadingSurat ? (
             <p className="text-gray-500 italic">Memuat data pengajuan...</p>
           ) : (
@@ -99,7 +99,7 @@ export default function DashboardPage() {
 
         {/* Pengaduan */}
         <section>
-          <h2 className="font-semibold text-2xl mb-4">Pengaduan</h2>
+          <h2 className="sm:text-2xl text-base font-semibold mb-4">Pengaduan</h2>
           {loadingPengaduan ? (
             <p className="text-gray-500 italic">Memuat data pengaduan...</p>
           ) : (
@@ -115,7 +115,7 @@ export default function DashboardPage() {
 
         {/* Panduan */}
         <section>
-          <h2 className="font-semibold text-2xl mb-4">Panduan Pengguna</h2>
+          <h2 className="sm:text-2xl text-base font-semibold mb-4">Panduan Pengguna</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
             <UserGuideCard />
           </div>

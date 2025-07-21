@@ -57,12 +57,12 @@ export default function DetailPengaduanPage() {
   if (!pengaduan) return <p className="p-8">Data tidak ditemukan.</p>;
 
   return (
-    <div className="bg-[#EDF0F5] min-h-screen p-8">
-      <h1 className="text-lg font-semibold mb-6">
+    <div className="min-h-screen p-8">
+      <h2 className="sm:text-2xl text-base font-semibold mb-4">
         Pengaduan / {statusMap[pengaduan.status]}
-      </h1>
+      </h2>
 
-      <div className="bg-white rounded-lg p-6 max-w-6xl mx-auto">
+      <div className="bg-white rounded-lg p-6 mx-auto">
         <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
           <ChevronLeft size={30} className="mr-1" />
           Kembali

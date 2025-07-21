@@ -85,11 +85,11 @@ export default function DetailAjuanSuratPage() {
   const profile = user?.profile_masyarakat;
 
   return (
-    <div className="flex h-full">
-      <div className="flex-1 bg-gray-100 p-8">
-        <h1 className="text-xl font-semibold mb-6">
-          Detail Pengajuan Surat / {surat?.nama_surat} / {statusMap[ajuan?.status]}
-        </h1>
+    <div className="">
+      <div className="min-h-screen p-8">
+        <h2 className="sm:text-2xl text-base font-semibold mb-4">
+          Pengajuan Surat / {surat?.nama_surat} / {statusMap[ajuan?.status]}
+        </h2>
 
         <div className="bg-white rounded-md shadow-sm p-8">
           <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">

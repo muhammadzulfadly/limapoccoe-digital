@@ -36,15 +36,15 @@ export default function Page() {
   };
 
   const statusStyle = {
-    "Sedang Proses": "text-gray-500 font-semibold",
-    "Butuh Konfirmasi": "text-blue-600 font-semibold",
-    Ditolak: "text-red-600 font-semibold",
-    Selesai: "text-green-600 font-semibold",
+    "Sedang Proses": "text-[#8A8A8E] font-semibold",
+    "Butuh Konfirmasi": "text-[#016E84] font-semibold",
+    Ditolak: "text-[#E74C3C] font-semibold",
+    Selesai: "text-[#34C759] font-semibold",
   };
 
   const iconStyle = (status) => {
-    if (status === "approved") return <FileDown className="text-green-600 w-4 h-4" />;
-    return <Search className="text-blue-600 w-4 h-4" />;
+    if (status === "approved") return <FileDown className="text-[#27AE60] w-4 h-4" />;
+    return <Search className="text-[#00A8E8] w-4 h-4" />;
   };
 
   useEffect(() => {
@@ -200,16 +200,16 @@ export default function Page() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white px-6 py-4 rounded shadow-md text-center">
             <p className="text-lg font-semibold mb-2">Mengunduh file...</p>
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-600 mx-auto" />
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#27AE60] mx-auto" />
           </div>
         </div>
       )}
 
-      <div className="flex h-full">
-        <div className="flex-1 bg-gray-100 p-8">
-          <h1 className="text-lg sm:text-xl font-semibold mb-6">
-            Pengajuan Surat / <span className="font-semibold">{namaSurat}</span>
-          </h1>
+      <div className="">
+        <div className="min-h-screen p-8">
+          <h2 className="sm:text-2xl text-base font-semibold mb-4">
+            Pengajuan Surat / {namaSurat}
+          </h2>
 
           <div className="bg-white rounded-md shadow-sm p-8">
             {/* Tombol aksi */}
@@ -223,7 +223,7 @@ export default function Page() {
                       setShowProfilModal(true);
                     }
                   }}
-                  className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition w-full sm:w-auto"
+                  className="flex items-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-sm hover:bg-green-600 transition w-full sm:w-auto"
                 >
                   <Plus className="w-5 h-5" strokeWidth={3} />
                   <span className="block sm:hidden">Buat Surat</span>
@@ -236,7 +236,7 @@ export default function Page() {
                     setSuratDetail(detail);
                     setShowModal(true);
                   }}
-                  className="flex items-center gap-1 px-4 py-2 bg-green-100 text-sm rounded-md text-gray w-full sm:w-auto"
+                  className="flex items-center gap-1 px-4 py-2 bg-[#F2FCF5] text-sm rounded-md text-gray w-full sm:w-auto"
                 >
                   <Info className="w-4 h-4" />
                   <span className="block sm:hidden">Persyaratan</span>
@@ -248,7 +248,7 @@ export default function Page() {
                 <Search className="w-5 h-5 mr-3" />
                 <input type="text" placeholder="Cari" className="outline-none text-sm bg-white placeholder-gray-500 w-full" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 <button onClick={() => setShowFilter(!showFilter)}>
-                  <SlidersHorizontal className={`w-4 h-4 ml-2 cursor-pointer transition-colors ${showFilter ? "text-green-600" : "text-gray-500"}`} />
+                  <SlidersHorizontal className={`w-4 h-4 ml-2 cursor-pointer transition-colors ${showFilter ? "text-[#27AE60]" : "text-gray-500"}`} />
                 </button>
               </div>
             </div>
@@ -261,15 +261,15 @@ export default function Page() {
             )}
 
             {/* Tabel data */}
-            <div className="w-full">
-              <table className="table-auto w-full border border-black text-[10px] sm:text-xs md:text-base">
-                <thead>
-                  <tr className="bg-green-700 text-white">
-                    <th className="border border-black p-2 w-[5%]">No.</th>
-                    <th className="border border-black p-2 w-1/5">Tanggal</th>
-                    <th className="border border-black p-2 w-1/5">Jenis surat</th>
-                    <th className="border border-black p-2 w-1/5">Status</th>
-                    <th className="border border-black p-2 w-1/5">Aksi</th>
+          <div className="w-full overflow-x-auto">
+            <table className="table-fixed w-full border border-black text-[9px] sm:text-sm md:text-base">
+              <thead>
+                  <tr className="bg-[#27AE60] text-white">
+                    <th className="border border-black p-2 w-[10%] whitespace-normal break-words hidden sm:table-cell">No.</th>
+                    <th className="border border-black p-2 w-[20%] whitespace-normal break-words">Tanggal</th>
+                    <th className="border border-black p-2 w-[25%] whitespace-normal break-words">Jenis surat</th>
+                    <th className="border border-black p-2 w-[25%] whitespace-normal break-words">Status</th>
+                    <th className="border border-black p-2 w-[20%] whitespace-normal break-words">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -293,22 +293,22 @@ export default function Page() {
 
                       return (
                         <tr key={item.id} className="text-center">
-                          <td className="border border-black p-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                          <td className="border border-black p-2">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
-                          <td className="border border-black p-2">{item.surat?.nama_surat || namaSurat}</td>
-                          <td className={`border border-black p-2 ${statusClass}`}>{statusLabel}</td>
-                          <td className="border border-black p-2">
+                          <td className="border border-black p-2 whitespace-normal break-words hidden sm:table-cell">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                          <td className="border border-black p-2 whitespace-normal break-words">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
+                          <td className="border border-black p-2 whitespace-normal break-words">{item.surat?.nama_surat || namaSurat}</td>
+                          <td className={`border border-black p-2 whitespace-normal break-words ${statusClass}`}>{statusLabel}</td>
+                          <td className="border border-black p-2 whitespace-normal break-words">
                             <div className="flex flex-col items-center justify-center text-center group">
                               <button
                                 onClick={() => (item.status.toLowerCase() === "approved" ? handleDownload(item.id, `${namaSurat}`) : router.push(`/pengajuan-surat/${jenisSurat}/${item.id}`))}
-                                className="flex flex-col items-center justify-center group"
+                                className="flex flex-col items-center justify-center text-center group text-[9px] sm:text-sm"
                               >
                                 {item.status === "approved" ? (
-                                  <FileDown className="text-green-600 w-6 h-6 group-hover:scale-105 transition-transform" />
+                                  <FileDown className="text-[#34C759] w-6 h-6 group-hover:scale-105 transition-transform" />
                                 ) : (
-                                  <Search className="text-sky-500 w-6 h-6 group-hover:scale-105 transition-transform" />
+                                  <Search className="text-[#00A8E8] w-6 h-6 group-hover:scale-105 transition-transform" />
                                 )}
-                                <span className="text-[10px] sm:text-sm text-black group-hover:underline">{item.status === "approved" ? "Unduh" : "Buka"}</span>
+                                <span className="text-black group-hover:underline">{item.status === "approved" ? "Unduh" : "Buka"}</span>
                               </button>
                             </div>
                           </td>
@@ -328,7 +328,7 @@ export default function Page() {
                 </button>
 
                 {getPaginationRange().map((page, i) => (
-                  <button key={i} onClick={() => typeof page === "number" && setCurrentPage(page)} disabled={typeof page !== "number"} className={`px-3 py-1 ${page === currentPage ? "bg-green-700 text-white" : "hover:bg-slate-100"}`}>
+                  <button key={i} onClick={() => typeof page === "number" && setCurrentPage(page)} disabled={typeof page !== "number"} className={`px-3 py-1 ${page === currentPage ? "bg-[#27AE60] text-white" : "hover:bg-slate-100"}`}>
                     {page === "..." ? "..." : page}
                   </button>
                 ))}
@@ -344,10 +344,10 @@ export default function Page() {
         {showModal && suratDetail && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-md p-6 w-[90%] max-w-2xl shadow-lg space-y-4">
-              <h2 className="text-xl font-bold">{suratDetail.nama_surat}</h2>
+              <h2 className="text-xl font-semibold">{suratDetail.nama_surat}</h2>
               <p className="text-justify">{suratDetail.deskripsi}</p>
 
-              <h3 className="text-lg font-semibold mt-4">Persyaratan yang Harus Dibawa</h3>
+              <h2 className="text-xl font-semibold mt-4">Persyaratan yang Harus Dibawa</h2>
               <ul className="list-disc pl-5 space-y-1">
                 {(suratDetail.syarat_ketentuan || "").split(",").map((item, idx) => (
                   <li key={idx}>{item.trim()}</li>
@@ -355,7 +355,7 @@ export default function Page() {
               </ul>
 
               <div className="flex justify-end pt-4">
-                <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-[#27AE60] text-white rounded hover:bg-green-600">
                   Kembali
                 </button>
               </div>
@@ -372,7 +372,7 @@ export default function Page() {
                 <button onClick={() => setShowProfilModal(false)} className="px-4 py-1 text-sm border border-gray-400 rounded hover:bg-gray-100">
                   Nanti
                 </button>
-                <button onClick={() => router.push("/auth/lengkapi-profil")} className="px-4 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">
+                <button onClick={() => router.push("/auth/lengkapi-profil")} className="px-4 py-1 text-sm bg-[#27AE60] text-white rounded hover:bg-green-600">
                   Lengkapi Sekarang
                 </button>
               </div>

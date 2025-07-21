@@ -120,8 +120,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f1f4f9] px-4 py-10 md:px-20">
-      <h1 className="text-xl font-bold text-black mb-4">Profil</h1>
+    <div className="min-h-screen p-8">
+      <h2 className="sm:text-2xl text-base font-semibold mb-4">Profil</h2>
       <div className="bg-white rounded-lg p-6 shadow relative">
         <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
           <ChevronLeft size={30} className="mr-1" />
@@ -190,7 +190,7 @@ export default function ProfilePage() {
       {showSuccessLogout && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[280px] text-center animate-fade-in">
-            <h3 className="text-green-600 text-2xl font-bold mb-2">Berhasil Logout</h3>
+            <h3 className="text-[#27AE60] text-2xl font-bold mb-2">Berhasil Logout</h3>
             <p className="text-sm text-gray-800">Anda sudah berhasil logout.</p>
           </div>
         </div>
@@ -200,7 +200,7 @@ export default function ProfilePage() {
       {showSuccessEdit && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[280px] text-center animate-fade-in">
-            <h3 className="text-green-600 text-2xl font-bold mb-2">Berhasil!</h3>
+            <h3 className="text-[#27AE60] text-2xl font-bold mb-2">Berhasil!</h3>
             <p className="text-sm text-gray-800">Anda telah berhasil merubah profil.</p>
           </div>
         </div>

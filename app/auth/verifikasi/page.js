@@ -183,7 +183,7 @@ export default function OTPPage() {
           ))}
         </div>
 
-        <div className={`text-center mt-4 ${timeLeft > 0 ? "text-green-600" : "text-red-600"}`}>{timeLeft > 0 ? formatTime(timeLeft) : "Kode OTP kadaluarsa"}</div>
+        <div className={`text-center mt-4 ${timeLeft > 0 ? "text-[#27AE60]" : "text-red-600"}`}>{timeLeft > 0 ? formatTime(timeLeft) : "Kode OTP kadaluarsa"}</div>
 
         <p className="text-right text-sm mt-2">
           Tidak dapat kode OTP?{" "}

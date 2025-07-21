@@ -64,7 +64,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const isActive = (path) => pathname === path || pathname.startsWith(`${path}/`);
 
-  const linkClass = (path) => `${isActive(path) ? "text-green-500" : "text-black"} hover:text-green-600 flex items-center gap-2`;
+  const linkClass = (path) => `${isActive(path) ? "text-[#27AE60]" : "text-black"} hover:text-green-600 flex items-center gap-2`;
 
   return (
     <>
@@ -105,12 +105,12 @@ export default function Sidebar({ isOpen, onClose }) {
               </li>
               <li>
                 <div className="flex items-center gap-5">
-                  <Link href="/pengajuan-surat" className={`flex items-center gap-2 hover:text-green-600 ${isPengajuanSuratActive ? "text-green-500" : "text-black"}`}>
+                  <Link href="/pengajuan-surat" className={`flex items-center gap-2 hover:text-green-600 ${isPengajuanSuratActive ? "text-[#27AE60]" : "text-black"}`}>
                     <FileEdit size={18} />
                     Pengajuan surat
                   </Link>
                   <button onClick={() => setIsOpenDropdown(!isOpenDropdown)} className="ml-1 focus:outline-none">
-                    <ChevronDown size={16} className={`transition-transform duration-300 ${isOpenDropdown ? "rotate-180 text-green-500" : "text-black"}`} />
+                    <ChevronDown size={16} className={`transition-transform duration-300 ${isOpenDropdown ? "rotate-180 text-[#27AE60]" : "text-black"}`} />
                   </button>
                 </div>
 
@@ -124,7 +124,7 @@ export default function Sidebar({ isOpen, onClose }) {
                           <Link
                             href={`/pengajuan-surat/${item.slug}`}
                             onClick={onClose}
-                            className={`${isActive(`/pengajuan-surat/${item.slug}`) ? "text-green-500" : "text-black"} hover:text-green-600 block break-words border-b border-gray-200 md:border-none py-1.5 max-w-[125px]`}
+                            className={`${isActive(`/pengajuan-surat/${item.slug}`) ? "text-[#27AE60]" : "text-black"} hover:text-green-600 block break-words border-b border-gray-200 md:border-none py-1.5 max-w-[125px]`}
                           >
                             {item.nama_surat}
                           </Link>
@@ -137,10 +137,10 @@ export default function Sidebar({ isOpen, onClose }) {
             </ul>
           ) : (
             <div className="space-y-3 text-sm">
-              <Link href="/auth/daftar" className="block w-full border border-green-600 text-green-600 text-center rounded px-4 py-2 font-medium hover:bg-green-50 transition">
+              <Link href="/auth/daftar" className="block w-full border border-[#27AE60] text-[#27AE60] text-center rounded px-4 py-2 font-medium hover:bg-green-50 transition">
                 Daftar
               </Link>
-              <Link href="/auth/masuk" className="block w-full bg-[#2DB567] text-white text-center rounded px-4 py-2 font-medium hover:bg-[#28a65d] transition">
+              <Link href="/auth/masuk" className="block w-full bg-[#2DB567] text-white text-center rounded px-4 py-2 font-medium hover:bg-green-600 transition">
                 Masuk
               </Link>
             </div>
