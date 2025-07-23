@@ -51,16 +51,13 @@ export default function DetailPengaduanPage() {
     if (id) fetchPengaduan();
   }, [id]);
 
-
   if (loading) return <p className="p-8">Memuat...</p>;
   if (errorMsg) return <p className="p-8 text-red-500">{errorMsg}</p>;
   if (!pengaduan) return <p className="p-8">Data tidak ditemukan.</p>;
 
   return (
     <div className="min-h-full p-8">
-      <h2 className="sm:text-2xl text-base font-semibold mb-4">
-        Pengaduan / {statusMap[pengaduan.status]}
-      </h2>
+      <h2 className="sm:text-2xl text-base font-semibold mb-4">Pengaduan / {statusMap[pengaduan.status]}</h2>
 
       <div className="bg-white rounded-lg p-6 mx-auto">
         <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
@@ -72,16 +69,16 @@ export default function DetailPengaduanPage() {
           {pengaduan.response && (
             <div className="md:col-span-2">
               <Deskripsi value={pengaduan.response} onChange={() => {}} disabled label="Tanggapan Staff Desa" />
-              <div className="border-y border-gray-400 my-10" />
+              <div className="hidden md:block border-y border-gray-400 my-10" />
             </div>
           )}
           <NIK value={pengaduan.user?.nik || pengaduan.nik} onChange={() => {}} disabled />
           <Date value={pengaduan.created_at} onChange={() => {}} disabled />
-          <Huruf value={pengaduan.user?.name || pengaduan.name} onChange={() => {}} disabled label="Nama Lengkap"/>
+          <Huruf value={pengaduan.user?.name || pengaduan.name} onChange={() => {}} disabled label="Nama Lengkap" />
           <KategoriPengaduan value={pengaduan.category} onChange={() => {}} disabled />
-          <Huruf value={pengaduan.title} onChange={() => {}} disabled label="Judul Pengaduan"/>
-          <AngkaHuruf value={pengaduan.location} onChange={() => {}} disabled label="Lokasi Pengaduan"/>
-          <Deskripsi value={pengaduan.content} onChange={() => {}} disabled label="Deskripsi Pengaduan"/>
+          <Huruf value={pengaduan.title} onChange={() => {}} disabled label="Judul Pengaduan" />
+          <AngkaHuruf value={pengaduan.location} onChange={() => {}} disabled label="Lokasi Pengaduan" />
+          <Deskripsi value={pengaduan.content} onChange={() => {}} disabled label="Deskripsi Pengaduan" />
 
           {pengaduan?.evidence_url ? (
             <img src={`/api/photo/${pengaduan.evidence_url.split("/").pop()}`} alt="Bukti" className="mt-2 max-w-full rounded border" />
@@ -89,7 +86,6 @@ export default function DetailPengaduanPage() {
             <div className="mt-1 p-2 border rounded bg-gray-100 text-sm text-gray-500 italic">Tidak ada foto</div>
           )}
         </div>
-
       </div>
     </div>
   );
