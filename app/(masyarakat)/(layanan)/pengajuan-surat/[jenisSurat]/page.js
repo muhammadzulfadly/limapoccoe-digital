@@ -205,181 +205,177 @@ export default function Page() {
         </div>
       )}
 
-      <div className="">
-        <div className="min-h-screen p-8">
-          <h2 className="sm:text-2xl text-base font-semibold mb-4">
-            Pengajuan Surat / {namaSurat}
-          </h2>
+      <div className="min-h-full p-8">
+        <h2 className="sm:text-2xl text-base font-semibold mb-4">Pengajuan Surat / {namaSurat}</h2>
 
-          <div className="bg-white rounded-md shadow-sm p-8">
-            {/* Tombol aksi */}
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-              <div className="grid grid-cols-2 flex-col sm:flex-row gap-2 sm:gap-6 w-full sm:w-auto">
-                <button
-                  onClick={() => {
-                    if (profilLengkap) {
-                      router.push(`/pengajuan-surat/${jenisSurat}/baru`);
-                    } else {
-                      setShowProfilModal(true);
-                    }
-                  }}
-                  className="flex items-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-sm hover:bg-green-600 transition w-full sm:w-auto"
-                >
-                  <Plus className="w-5 h-5" strokeWidth={3} />
-                  <span className="block sm:hidden">Buat Surat</span>
-                  <span className="hidden sm:block"> Buat Pengajuan Surat</span>
-                </button>
+        <div className="bg-white rounded-md shadow-sm p-8">
+          {/* Tombol aksi */}
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <div className="grid grid-cols-2 flex-col sm:flex-row gap-2 sm:gap-6 w-full sm:w-auto">
+              <button
+                onClick={() => {
+                  if (profilLengkap) {
+                    router.push(`/pengajuan-surat/${jenisSurat}/baru`);
+                  } else {
+                    setShowProfilModal(true);
+                  }
+                }}
+                className="flex items-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-sm hover:bg-green-600 transition w-full sm:w-auto"
+              >
+                <Plus className="w-5 h-5" strokeWidth={3} />
+                <span className="block sm:hidden">Buat Surat</span>
+                <span className="hidden sm:block"> Buat Pengajuan Surat</span>
+              </button>
 
-                <button
-                  onClick={() => {
-                    const detail = suratList.find((item) => item.slug === jenisSurat);
-                    setSuratDetail(detail);
-                    setShowModal(true);
-                  }}
-                  className="flex items-center gap-1 px-4 py-2 bg-[#F2FCF5] text-sm rounded-md text-gray w-full sm:w-auto"
-                >
-                  <Info className="w-4 h-4" />
-                  <span className="block sm:hidden">Persyaratan</span>
-                  <span className="hidden sm:block">Penjelasan dan Persyaratan</span>
-                </button>
-              </div>
-
-              <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 w-full sm:w-auto min-w-0">
-                <Search className="w-5 h-5 mr-3" />
-                <input type="text" placeholder="Cari" className="outline-none text-sm bg-white placeholder-gray-500 w-full" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-                <button onClick={() => setShowFilter(!showFilter)}>
-                  <SlidersHorizontal className={`w-4 h-4 ml-2 cursor-pointer transition-colors ${showFilter ? "text-[#27AE60]" : "text-gray-500"}`} />
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  const detail = suratList.find((item) => item.slug === jenisSurat);
+                  setSuratDetail(detail);
+                  setShowModal(true);
+                }}
+                className="flex items-center gap-1 px-4 py-2 bg-[#F2FCF5] text-sm rounded-md text-gray w-full sm:w-auto"
+              >
+                <Info className="w-4 h-4" />
+                <span className="block sm:hidden">Persyaratan</span>
+                <span className="hidden sm:block">Penjelasan dan Persyaratan</span>
+              </button>
             </div>
 
-            {showFilter && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <input type="text" placeholder="Filter Tanggal" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.date} onChange={(e) => handleFilterChange("date", e.target.value)} />
-                <input type="text" placeholder="Filter Status" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.status} onChange={(e) => handleFilterChange("status", e.target.value)} />
-              </div>
-            )}
+            <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 w-full sm:w-auto min-w-0">
+              <Search className="w-5 h-5 mr-3" />
+              <input type="text" placeholder="Cari" className="outline-none text-sm bg-white placeholder-gray-500 w-full" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <button onClick={() => setShowFilter(!showFilter)}>
+                <SlidersHorizontal className={`w-4 h-4 ml-2 cursor-pointer transition-colors ${showFilter ? "text-[#27AE60]" : "text-gray-500"}`} />
+              </button>
+            </div>
+          </div>
 
-            {/* Tabel data */}
+          {showFilter && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <input type="text" placeholder="Filter Tanggal" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.date} onChange={(e) => handleFilterChange("date", e.target.value)} />
+              <input type="text" placeholder="Filter Status" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.status} onChange={(e) => handleFilterChange("status", e.target.value)} />
+            </div>
+          )}
+
+          {/* Tabel data */}
           <div className="w-full overflow-x-auto">
             <table className="table-fixed w-full border border-black text-[9px] sm:text-sm md:text-base">
               <thead>
-                  <tr className="bg-[#27AE60] text-white">
-                    <th className="border border-black p-2 w-[10%] whitespace-normal break-words hidden sm:table-cell">No.</th>
-                    <th className="border border-black p-2 w-[20%] whitespace-normal break-words">Tanggal</th>
-                    <th className="border border-black p-2 w-[25%] whitespace-normal break-words">Jenis surat</th>
-                    <th className="border border-black p-2 w-[25%] whitespace-normal break-words">Status</th>
-                    <th className="border border-black p-2 w-[20%] whitespace-normal break-words">Aksi</th>
+                <tr className="bg-[#27AE60] text-white">
+                  <th className="border border-black p-2 w-[10%] whitespace-normal break-words hidden sm:table-cell">No.</th>
+                  <th className="border border-black p-2 w-[20%] whitespace-normal break-words">Tanggal</th>
+                  <th className="border border-black p-2 w-[25%] whitespace-normal break-words">Jenis surat</th>
+                  <th className="border border-black p-2 w-[25%] whitespace-normal break-words">Status</th>
+                  <th className="border border-black p-2 w-[20%] whitespace-normal break-words">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={5} className="text-center text-black py-4 italic">
+                      Memuat data...
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan={5} className="text-center text-black py-4 italic">
-                        Memuat data...
-                      </td>
-                    </tr>
-                  ) : paginatedData.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="text-center text-black py-4">
-                        Anda belum pernah melakukan pengajuan {namaSurat}
-                      </td>
-                    </tr>
-                  ) : (
-                    paginatedData.map((item, index) => {
-                      const status = item.status.toLowerCase();
-                      const statusLabel = statusMap[status] || item.status;
-                      const statusClass = statusStyle[statusLabel] || "";
+                ) : paginatedData.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="text-center text-black py-4">
+                      Anda belum pernah melakukan pengajuan {namaSurat}
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedData.map((item, index) => {
+                    const status = item.status.toLowerCase();
+                    const statusLabel = statusMap[status] || item.status;
+                    const statusClass = statusStyle[statusLabel] || "";
 
-                      return (
-                        <tr key={item.id} className="text-center">
-                          <td className="border border-black p-2 whitespace-normal break-words hidden sm:table-cell">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                          <td className="border border-black p-2 whitespace-normal break-words">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
-                          <td className="border border-black p-2 whitespace-normal break-words">{item.surat?.nama_surat || namaSurat}</td>
-                          <td className={`border border-black p-2 whitespace-normal break-words ${statusClass}`}>{statusLabel}</td>
-                          <td className="border border-black p-2 whitespace-normal break-words">
-                            <div className="flex flex-col items-center justify-center text-center group">
-                              <button
-                                onClick={() => (item.status.toLowerCase() === "approved" ? handleDownload(item.id, `${namaSurat}`) : router.push(`/pengajuan-surat/${jenisSurat}/${item.id}`))}
-                                className="flex flex-col items-center justify-center text-center group text-[9px] sm:text-sm"
-                              >
-                                {item.status === "approved" ? (
-                                  <FileDown className="text-[#34C759] w-6 h-6 group-hover:scale-105 transition-transform" />
-                                ) : (
-                                  <Search className="text-[#00A8E8] w-6 h-6 group-hover:scale-105 transition-transform" />
-                                )}
-                                <span className="text-black group-hover:underline">{item.status === "approved" ? "Unduh" : "Buka"}</span>
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    return (
+                      <tr key={item.id} className="text-center">
+                        <td className="border border-black p-2 whitespace-normal break-words hidden sm:table-cell">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                        <td className="border border-black p-2 whitespace-normal break-words">{new Date(item.created_at).toLocaleDateString("id-ID")}</td>
+                        <td className="border border-black p-2 whitespace-normal break-words">{item.surat?.nama_surat || namaSurat}</td>
+                        <td className={`border border-black p-2 whitespace-normal break-words ${statusClass}`}>{statusLabel}</td>
+                        <td className="border border-black p-2 whitespace-normal break-words">
+                          <div className="flex flex-col items-center justify-center text-center group">
+                            <button
+                              onClick={() => (item.status.toLowerCase() === "approved" ? handleDownload(item.id, `${namaSurat}`) : router.push(`/pengajuan-surat/${jenisSurat}/${item.id}`))}
+                              className="flex flex-col items-center justify-center text-center group text-[9px] sm:text-sm"
+                            >
+                              {item.status === "approved" ? (
+                                <FileDown className="text-[#34C759] w-6 h-6 group-hover:scale-105 transition-transform" />
+                              ) : (
+                                <Search className="text-[#00A8E8] w-6 h-6 group-hover:scale-105 transition-transform" />
+                              )}
+                              <span className="text-black group-hover:underline">{item.status === "approved" ? "Unduh" : "Buka"}</span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
 
-            {/* Pagination */}
-            <div className="flex justify-center mt-6">
-              <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
-                <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 disabled:opacity-50">
-                  <ChevronsLeft className="w-4 h-4" />
+          {/* Pagination */}
+          <div className="flex justify-center mt-6">
+            <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
+              <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 disabled:opacity-50">
+                <ChevronsLeft className="w-4 h-4" />
+              </button>
+
+              {getPaginationRange().map((page, i) => (
+                <button key={i} onClick={() => typeof page === "number" && setCurrentPage(page)} disabled={typeof page !== "number"} className={`px-3 py-1 ${page === currentPage ? "bg-[#27AE60] text-white" : "hover:bg-slate-100"}`}>
+                  {page === "..." ? "..." : page}
                 </button>
+              ))}
 
-                {getPaginationRange().map((page, i) => (
-                  <button key={i} onClick={() => typeof page === "number" && setCurrentPage(page)} disabled={typeof page !== "number"} className={`px-3 py-1 ${page === currentPage ? "bg-[#27AE60] text-white" : "hover:bg-slate-100"}`}>
-                    {page === "..." ? "..." : page}
-                  </button>
-                ))}
-
-                <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1 disabled:opacity-50">
-                  <ChevronsRight className="w-4 h-4" />
-                </button>
-              </div>
+              <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1 disabled:opacity-50">
+                <ChevronsRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
-
-        {showModal && suratDetail && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-md p-6 w-[90%] max-w-2xl shadow-lg space-y-4">
-              <h2 className="text-xl font-semibold">{suratDetail.nama_surat}</h2>
-              <p className="text-justify">{suratDetail.deskripsi}</p>
-
-              <h2 className="text-xl font-semibold mt-4">Persyaratan yang Harus Dibawa</h2>
-              <ul className="list-disc pl-5 space-y-1">
-                {(suratDetail.syarat_ketentuan || "").split(",").map((item, idx) => (
-                  <li key={idx}>{item.trim()}</li>
-                ))}
-              </ul>
-
-              <div className="flex justify-end pt-4">
-                <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-[#27AE60] text-white rounded hover:bg-green-600">
-                  Kembali
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {showProfilModal && (
-          <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded shadow-md text-center w-[300px]">
-              <h3 className="text-lg font-semibold text-[#EB5757] mb-3">Lengkapi Profil</h3>
-              <p className="text-sm text-gray-700 mb-4">Anda harus melengkapi profil sebelum membuat pengajuan surat.</p>
-              <div className="flex justify-center gap-4">
-                <button onClick={() => setShowProfilModal(false)} className="px-4 py-1 text-sm border border-gray-400 rounded hover:bg-gray-100">
-                  Nanti
-                </button>
-                <button onClick={() => router.push("/auth/lengkapi-profil")} className="px-4 py-1 text-sm bg-[#27AE60] text-white rounded hover:bg-green-600">
-                  Lengkapi Sekarang
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
+
+      {showModal && suratDetail && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-md p-6 w-[90%] max-w-2xl shadow-lg space-y-4">
+            <h2 className="text-xl font-semibold">{suratDetail.nama_surat}</h2>
+            <p className="text-justify">{suratDetail.deskripsi}</p>
+
+            <h2 className="text-xl font-semibold mt-4">Persyaratan yang Harus Dibawa</h2>
+            <ul className="list-disc pl-5 space-y-1">
+              {(suratDetail.syarat_ketentuan || "").split(",").map((item, idx) => (
+                <li key={idx}>{item.trim()}</li>
+              ))}
+            </ul>
+
+            <div className="flex justify-end pt-4">
+              <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-[#27AE60] text-white rounded hover:bg-green-600">
+                Kembali
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showProfilModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded shadow-md text-center w-[300px]">
+            <h3 className="text-lg font-semibold text-[#EB5757] mb-3">Lengkapi Profil</h3>
+            <p className="text-sm text-gray-700 mb-4">Anda harus melengkapi profil sebelum membuat pengajuan surat.</p>
+            <div className="flex justify-center gap-4">
+              <button onClick={() => setShowProfilModal(false)} className="px-4 py-1 text-sm border border-gray-400 rounded hover:bg-gray-100">
+                Nanti
+              </button>
+              <button onClick={() => router.push("/auth/lengkapi-profil")} className="px-4 py-1 text-sm bg-[#27AE60] text-white rounded hover:bg-green-600">
+                Lengkapi Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

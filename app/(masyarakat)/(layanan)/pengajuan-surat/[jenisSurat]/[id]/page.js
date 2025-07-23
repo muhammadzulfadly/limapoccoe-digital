@@ -4,7 +4,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 
-
 import AngkaHuruf from "@/components/forms/AngkaHuruf";
 import Dusun from "@/components/forms/Dusun";
 import Huruf from "@/components/forms/Huruf";
@@ -85,65 +84,63 @@ export default function DetailAjuanSuratPage() {
   const profile = user?.profile_masyarakat;
 
   return (
-    <div className="">
-      <div className="min-h-screen p-8">
-        <h2 className="sm:text-2xl text-base font-semibold mb-4">
-          Pengajuan Surat / {surat?.nama_surat} / {statusMap[ajuan?.status]}
-        </h2>
+    <div className="min-h-full p-8">
+      <h2 className="sm:text-2xl text-base font-semibold mb-4">
+        Pengajuan Surat / {surat?.nama_surat} / {statusMap[ajuan?.status]}
+      </h2>
 
-        <div className="bg-white rounded-md shadow-sm p-8">
-          <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
-            <ChevronLeft size={30} className="mr-1" />
-            Kembali
-          </button>
+      <div className="bg-white rounded-md shadow-sm p-8">
+        <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
+          <ChevronLeft size={30} className="mr-1" />
+          Kembali
+        </button>
 
-          {!ajuan ? (
-            <p className="text-gray-600">🔄 Memuat data ajuan...</p>
-          ) : (
-            <>
-              {/* Informasi Pengajuan Surat*/}
-              <div className="pt-4 mb-6">
-                <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Pengajuan Surat</p>
-                <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
-                  <AngkaHuruf value={ajuan.nomor_surat_tersimpan || "-"} disabled label="Nomor Surat"/>
-                  <Date value={ajuan.created_at?.split("T")[0] || "-"} disabled />
+        {!ajuan ? (
+          <p className="text-gray-600">🔄 Memuat data ajuan...</p>
+        ) : (
+          <>
+            {/* Informasi Pengajuan Surat*/}
+            <div className="pt-4 mb-6">
+              <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Pengajuan Surat</p>
+              <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
+                <AngkaHuruf value={ajuan.nomor_surat_tersimpan || "-"} disabled label="Nomor Surat" />
+                <Date value={ajuan.created_at?.split("T")[0] || "-"} disabled />
+              </div>
+            </div>
+
+            {/* Informasi Pribadi */}
+            {formKey !== "SKL" && (
+              <>
+                <legend className="pt-4 text-xl text-start font-semibold text-gray-700">Informasi Pribadi</legend>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-6">
+                  <NIK value={user?.nik || ""} disabled />
+                  <Huruf value={user?.name || ""} disabled label="Nama Lengkap" />
+                  <Huruf value={profile?.tempat_lahir || ""} disabled label="Tempat Lahir" />
+                  <Tanggal value={profile?.tanggal_lahir || ""} disabled label="Tanggal Lahir" />
+                  <JenisKelamin value={profile?.jenis_kelamin || ""} disabled />
+                  <AngkaHuruf value={profile?.alamat || ""} disabled label="Alamat" />
+                  <Huruf value={profile?.pekerjaan || ""} disabled label="Pekerjaan" />
+                  <Dusun value={profile?.dusun || ""} disabled />
+                  <RTRW value={profile?.rt_rw || ""} disabled />
+                </div>
+              </>
+            )}
+
+            {/* Informasi Tambahan */}
+            {ajuan.data_surat && Object.keys(ajuan.data_surat).length > 0 && (
+              <div className="pt-4 mt-6">
+                <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Tambahan</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {Object.entries(ajuan.data_surat).map(([key, value]) => (
+                    <div key={key} className="capitalize">
+                      <AngkaHuruf value={value} disabled label={key.replaceAll("_", " ")} />
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              {/* Informasi Pribadi */}
-              {formKey !== "SKL" && (
-                <>
-                  <legend className="pt-4 text-xl text-start font-semibold text-gray-700">Informasi Pribadi</legend>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-6">
-                    <NIK value={user?.nik || ""} disabled />
-                    <Huruf value={user?.name || ""} disabled label="Nama Lengkap"/>
-                    <Huruf value={profile?.tempat_lahir || ""} disabled label="Tempat Lahir"/>
-                    <Tanggal value={profile?.tanggal_lahir || ""} disabled label="Tanggal Lahir"/>
-                    <JenisKelamin value={profile?.jenis_kelamin || ""} disabled />
-                    <AngkaHuruf value={profile?.alamat || ""} disabled label="Alamat"/>
-                    <Huruf value={profile?.pekerjaan || ""} disabled label="Pekerjaan"/>
-                    <Dusun value={profile?.dusun || ""} disabled />
-                    <RTRW value={profile?.rt_rw || ""} disabled />
-                  </div>
-                </>
-              )}
-
-              {/* Informasi Tambahan */}
-              {ajuan.data_surat && Object.keys(ajuan.data_surat).length > 0 && (
-                <div className="pt-4 mt-6">
-                  <p className="text-xl text-start font-semibold text-gray-700 mb-4">Informasi Tambahan</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {Object.entries(ajuan.data_surat).map(([key, value]) => (
-                      <div key={key} className="capitalize">
-                        <AngkaHuruf value={value} disabled label={key.replaceAll("_", " ")} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

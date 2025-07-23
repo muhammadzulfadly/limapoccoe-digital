@@ -120,7 +120,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-full p-8">
       <h2 className="sm:text-2xl text-base font-semibold mb-4">Profil</h2>
       <div className="bg-white rounded-lg p-6 shadow relative">
         <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">

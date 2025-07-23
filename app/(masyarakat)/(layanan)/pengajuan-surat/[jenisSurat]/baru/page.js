@@ -501,64 +501,61 @@ export default function BuatSuratBaru() {
   };
 
   return (
-    <div className="">
-      <div className="min-h-screen p-8">
-        <h2 className="sm:text-2xl text-base font-semibold mb-4">
-          Pengajuan Surat / {surat?.nama_surat} / Buat Surat Baru
-        </h2>
+    <div className="min-h-full p-8">
+      <h2 className="sm:text-2xl text-base font-semibold mb-4">Pengajuan Surat / {surat?.nama_surat} / Buat Surat Baru</h2>
 
-        <div className="bg-white rounded-md shadow-sm p-8">
-          <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
-            <ChevronLeft size={30} className="mr-1" />
-            Kembali
-          </button>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Data Pribadi */}
+      <div className="bg-white rounded-md shadow-sm p-8">
+        <button type="button" onClick={() => router.back()} className="flex items-center text-base text-gray-500 mb-6">
+          <ChevronLeft size={30} className="mr-1" />
+          Kembali
+        </button>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Data Pribadi */}
 
-            {formKey !== "SKL" && (
-              <>
-                <legend className="text-xl text-start font-semibold text-gray-700">Data Pribadi</legend>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                  <NIK value={profileInfo.nik ?? ""} disabled />
-                  <Huruf value={profileInfo.name ?? ""} label="Nama Lengkap" disabled />
-                  <Huruf value={profileInfo.tempat_lahir ?? ""} label="Tempat Lahir" disabled />
-                  <Tanggal value={profileInfo.tanggal_lahir ?? ""} label="Tanggal Lahir" disabled />
-                  <JenisKelamin value={profileInfo.jenis_kelamin ?? ""} disabled />
-                  <AngkaHuruf value={profileInfo.alamat ?? ""} label="Alamat" disabled />
-                  <Huruf value={profileInfo.pekerjaan ?? ""} label="Pekerjaan" disabled />
-                  <Dusun value={profileInfo.dusun ?? ""} disabled />
-                  <RTRW value={profileInfo.rt_rw ?? ""} disabled />
-                </div>
-              </>
-            )}
-
-            {/* Form Dinamis */}
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {fields.map((field, index) => {
-                  if (field.type === "separator") {
-                    return (
-                      <div key={`separator-${index}`} className="col-span-full pt-4">
-                        <p className="text-xl text-start font-semibold text-gray-600">{field.label}</p>
-                      </div>
-                    );
-                  }
-
-                  const { name, Component, props } = field;
-
-                  return <Component key={name} name={name} value={formData[name] || ""} onChange={handleChange} error={errors[name]} {...props} />;
-                })}
+          {formKey !== "SKL" && (
+            <>
+              <legend className="text-xl text-start font-semibold text-gray-700">Data Pribadi</legend>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                <NIK value={profileInfo.nik ?? ""} disabled />
+                <Huruf value={profileInfo.name ?? ""} label="Nama Lengkap" disabled />
+                <Huruf value={profileInfo.tempat_lahir ?? ""} label="Tempat Lahir" disabled />
+                <Tanggal value={profileInfo.tanggal_lahir ?? ""} label="Tanggal Lahir" disabled />
+                <JenisKelamin value={profileInfo.jenis_kelamin ?? ""} disabled />
+                <AngkaHuruf value={profileInfo.alamat ?? ""} label="Alamat" disabled />
+                <Huruf value={profileInfo.pekerjaan ?? ""} label="Pekerjaan" disabled />
+                <Dusun value={profileInfo.dusun ?? ""} disabled />
+                <RTRW value={profileInfo.rt_rw ?? ""} disabled />
               </div>
-            </div>
+            </>
+          )}
 
-            <div className="pt-2 flex justify-end">
-              <button type="submit" className="bg-[#27AE60] hover:bg-green-600 text-white px-6 py-2 rounded font-semibold">
-                Ajukan Surat
-              </button>
+          {/* Form Dinamis */}
+          <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {fields.map((field, index) => {
+                if (field.type === "separator") {
+                  return (
+                    <div key={`separator-${index}`} className="col-span-full pt-4">
+                      <p className="text-xl text-start font-semibold text-gray-600">{field.label}</p>
+                    </div>
+                  );
+                }
+
+                const { name, Component, props } = field;
+
+                return <Component key={name} name={name} value={formData[name] || ""} onChange={handleChange} error={errors[name]} {...props} />;
+              })}
             </div>
-          </form>
-        </div>
+          </div>
+
+          <div className="pt-2 flex justify-end">
+            <button type="submit" className="bg-[#27AE60] hover:bg-green-600 text-white px-6 py-2 rounded font-semibold">
+              Ajukan Surat
+            </button>
+          </div>
+        </form>
       </div>
+
       {showConfirm && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg px-6 py-8 w-[300px] text-center space-y-4 animate-fade-in">
