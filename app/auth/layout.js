@@ -1,5 +1,6 @@
 // app/auth/layout.js
 import "../globals.css";
+import PropTypes from "prop-types";
 
 export const metadata = {
   title: "Desa Limmapocoe",
@@ -20,9 +21,11 @@ export default function LoginLayout({ children }) {
       </div>
 
       {/* Kanan: Area konten */}
-      <div className="w-full bg-white lg:w-1/2 relative flex items-center justify-center px-6">
-      {children}
-      </div>
+      <div className="w-full bg-white lg:w-1/2 relative flex items-center justify-center px-6">{children}</div>
     </div>
   );
 }
+
+LoginLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
