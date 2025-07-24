@@ -18,6 +18,7 @@ export async function POST(req) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
+    console.error(err);
     return new Response(JSON.stringify({ message: "Gagal menghubungi server." }), {
       status: 500,
     });

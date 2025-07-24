@@ -24,7 +24,6 @@ export default function DetailPengaduanPage() {
   const [pengaduan, setPengaduan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchPengaduan = async () => {

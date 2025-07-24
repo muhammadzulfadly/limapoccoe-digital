@@ -19,7 +19,7 @@ export default function OTPPage() {
   };
 
   const handleChange = (e, index) => {
-    const value = e.target.value.replace(/[^0-9]/g, "");
+    const value = e.target.value.replace(/\D/g, "");
     const newOtp = [...otp];
     newOtp[index] = value.charAt(0) || "";
     setOtp(newOtp);
@@ -77,7 +77,7 @@ export default function OTPPage() {
       } else {
         setError(true);
       }
-    } catch (err) {
+    } catch {
       setError(true);
     } finally {
       setLoading(false);

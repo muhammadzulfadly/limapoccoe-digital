@@ -42,11 +42,6 @@ export default function Page() {
     Selesai: "text-[#34C759] font-semibold",
   };
 
-  const iconStyle = (status) => {
-    if (status === "approved") return <FileDown className="text-[#27AE60] w-4 h-4" />;
-    return <Search className="text-[#00A8E8] w-4 h-4" />;
-  };
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token || !jenisSurat) return;

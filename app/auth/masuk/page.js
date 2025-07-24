@@ -66,8 +66,7 @@ export default function LoginPage() {
         // Jika respons 200 tapi tidak lengkap
         setShowLoginError(true);
       }
-    } catch (err) {
-      // Server tidak bisa dihubungi / fetch error
+    } catch {
       setShowLoginError(true);
     } finally {
       setLoading(false);

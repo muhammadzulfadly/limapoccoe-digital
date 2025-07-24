@@ -95,7 +95,7 @@ export default function Page() {
       setTimeout(() => {
         router.push("/auth/verifikasi");
       }, 1800);
-    } catch (err) {
+    } catch {
       setShowError(true);
     } finally {
       setLoading(false);

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import Dusun, { validateDusun } from "@/components/forms/Dusun";
@@ -83,7 +82,6 @@ export default function LengkapiProfilPage() {
         },
         body: JSON.stringify(form),
       });
-      const result = await res.json();
       if (res.ok) {
         setShowSuccess(true);
         setTimeout(() => {

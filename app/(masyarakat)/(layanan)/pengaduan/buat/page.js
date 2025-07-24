@@ -170,11 +170,11 @@ export default function BuatPengaduanPage() {
           <Deskripsi name="description" value={form.description} onChange={handleChange} error={errors.description} label="Deskripsi Pengaduan" />
 
           <div className="col-span-1">
-            <label className="text-sm font-semibold text-gray-500">Upload Foto (tidak wajib)</label>
+            <p className="text-sm font-semibold text-gray-500">Upload Foto (tidak wajib)</p>
             <label
               htmlFor="file"
               className="min-h-[100px] mt-1 flex flex-col justify-center items-center text-center cursor-pointer
-              border-dashed border-[#384EB7-30] bg-[#F0FFF6] w-full border rounded px-4 py-5 text-sm hover:bg-green-100"
+    border-dashed border-[#384EB7-30] bg-[#F0FFF6] w-full border rounded px-4 py-5 text-sm hover:bg-green-100"
             >
               <UploadCloud size={30} className="mb-2 text-[#27AE60]" />
               <span className="text-[#27AE60] font-semibold">Upload Foto</span>

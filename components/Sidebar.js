@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Home, FileText, FileEdit, ChevronDown, LayoutDashboard, User } from "lucide-react";
+import PropTypes from "prop-types";
 
 export default function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
@@ -124,7 +125,7 @@ export default function Sidebar({ isOpen, onClose }) {
                           <Link
                             href={`/pengajuan-surat/${item.slug}`}
                             onClick={onClose}
-                            className={`${isActive(`/pengajuan-surat/${item.slug}`) ? "text-[#27AE60]" : "text-black"} hover:text-green-600 block break-words border-b border-gray-200 md:border-none py-1.5 max-w-[125px]`}
+                            className={(isActive(`/pengajuan-surat/${item.slug}`) ? "text-[#27AE60]" : "text-black") + " hover:text-green-600 block break-words border-b border-gray-200 md:border-none py-1.5 max-w-[125px]"}
                           >
                             {item.nama_surat}
                           </Link>
@@ -169,3 +170,8 @@ export default function Sidebar({ isOpen, onClose }) {
     </>
   );
 }
+
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+};
