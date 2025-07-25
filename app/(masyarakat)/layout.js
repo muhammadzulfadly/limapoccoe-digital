@@ -9,7 +9,6 @@ import { User, Menu, X } from "lucide-react";
 import Sidebar from "../../components/Sidebar";
 import PropTypes from "prop-types";
 
-
 export default function BerandaLayout({ children }) {
   const [userName, setUserName] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -99,7 +98,7 @@ export default function BerandaLayout({ children }) {
         {(!isBeranda || (isBeranda && sidebarOpen)) && (
           <>
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-            <button type="button" aria-label="Tutup sidebar" className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setSidebarOpen(false)}></button>
+            {sidebarOpen && <button type="button" aria-label="Tutup sidebar" className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />}
           </>
         )}
 
