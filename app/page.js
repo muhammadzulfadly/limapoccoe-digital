@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <Head>
         <title>Limapoccoe Digital</title>
-        <link rel="icon" type="image/png" href="/logo.png" />
+        <link rel="icon" type="image/png" href="/https://limapoccoedigital.id/logo.png" />
         <meta name="description" content="Website Resmi Pemerintahan Desa Limapoccoe" />
         <meta name="keywords" content="limapoccoe, website limapoccoe, aplikasi limapoccoe, limapoccoedigital, desa limapoccoe, maros, website maros" />
         <meta name="author" content="Limapoccoe Digital" />
