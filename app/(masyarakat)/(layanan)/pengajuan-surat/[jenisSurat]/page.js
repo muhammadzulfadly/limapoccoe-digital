@@ -239,8 +239,8 @@ export default function Page() {
                 className="flex items-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-sm hover:bg-green-600 transition w-full sm:w-auto"
               >
                 <Plus className="w-5 h-5" strokeWidth={3} />
-                <span className="block sm:hidden">Buat</span>
-                <span className="hidden sm:block"> Buat Pengajuan Surat</span>
+                <span className="block sm:hidden text-xs">Buat</span>
+                <span className="hidden sm:block text-xs sm:text-sm"> Buat Pengajuan Surat</span>
               </button>
 
               <button
@@ -263,7 +263,7 @@ export default function Page() {
 
             <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 w-full sm:w-auto min-w-0">
               <Search className="w-5 h-5 mr-3" />
-              <input type="text" placeholder="Cari Tanggal" className="outline-none text-sm bg-white placeholder-gray-500 w-full" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <input type="text" placeholder="Cari Tanggal" className="outline-none bg-white placeholder-gray-500 w-full text-xs sm:text-sm" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
           </div>
 

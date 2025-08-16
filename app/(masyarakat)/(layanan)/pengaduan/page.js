@@ -130,12 +130,12 @@ export default function PengaduanPage() {
           {/* tombol buat + search */}
           <div className="grid grid-cols-2 sm:flex sm:justify-between sm:items-center gap-4 mb-6">
             <button
-              className="flex items-center justify-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-sm hover:bg-green-600 transition"
+              className="flex items-center justify-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-xs sm:text-sm hover:bg-green-600 transition"
               onClick={() => (profilLengkap ? router.push("/pengaduan/buat") : setShowProfileModal(true))}
             >
               <Plus className="w-5 h-5" strokeWidth={3} />
-              <span className="block sm:hidden">Buat</span>
-              <span className="hidden sm:block"> Buat Pengaduan</span>
+              <span className="block sm:hidden text-xs">Buat</span>
+              <span className="hidden sm:block text-xs sm:text-sm">Buat Pengaduan</span>
             </button>
 
             <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 w-full sm:w-auto min-w-0">
@@ -143,7 +143,7 @@ export default function PengaduanPage() {
               <input
                 type="text"
                 placeholder="Cari"
-                className="flex-1 outline-none text-sm bg-white placeholder-gray-500 min-w-0"
+                className="flex-1 outline-none bg-white placeholder-gray-500 min-w-0 text-xs sm:text-sm"
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
