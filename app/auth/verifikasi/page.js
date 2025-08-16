@@ -3,26 +3,84 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+const OTP_EXPIRES_KEY = "otp_expires_at"; // kunci penyimpanan waktu kadaluarsa
+
 export default function OTPPage() {
   const router = useRouter();
   const [otp, setOtp] = useState(new Array(6).fill(""));
-  const [error, setError] = useState("");
+  const [inlineError, setInlineError] = useState(""); // error di bawah input
   const [loading, setLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 menit
+  const [timeLeft, setTimeLeft] = useState(300); // detik, dihitung dari expiresAt
   const [registrationToken, setRegistrationToken] = useState(null);
   const [noWhatsapp, setNoWhatsapp] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  // Popup hanya dipakai untuk: token tak ada ATAU waktu habis
+  const [showPopup, setShowPopup] = useState(false);
+
   const blurNumber = (num) => {
     return num.replace(/^(\d{3})\d+(?=\d{3})/, "$1xxxxxxx");
   };
+
+  // Ambil / set expiry awal: 5 menit dari waktu pertama kali halaman ini dibuka
+  const ensureExpiry = () => {
+    const saved = localStorage.getItem(OTP_EXPIRES_KEY);
+    if (saved && !Number.isNaN(Number(saved))) {
+      return Number(saved);
+    }
+    const newExpires = Date.now() + 5 * 60 * 1000; // 5 menit
+    localStorage.setItem(OTP_EXPIRES_KEY, String(newExpires));
+    return newExpires;
+  };
+
+  // hitung mundur berdasarkan expiresAt di localStorage
+  useEffect(() => {
+    const expiresAt = ensureExpiry();
+
+    const tick = () => {
+      const now = Date.now();
+      const remain = Math.max(0, Math.floor((expiresAt - now) / 1000));
+      setTimeLeft(remain);
+
+      // Jika sudah habis, pastikan popup tampil
+      if (remain <= 0) {
+        setShowPopup(true);
+      }
+    };
+
+    tick(); // hitung awal
+    const timer = setInterval(tick, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // init token & nomor WA; jika token tidak ada -> popup langsung
+  useEffect(() => {
+    const token = localStorage.getItem("registration_token");
+    if (!token) {
+      setShowPopup(true);
+    } else {
+      setRegistrationToken(token);
+    }
+    const storedNoWA = localStorage.getItem("no_whatsapp");
+    if (storedNoWA) setNoWhatsapp(storedNoWA);
+  }, [router]);
+
+  // cooldown resend
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
 
   const handleChange = (e, index) => {
     const value = e.target.value.replace(/\D/g, "");
     const newOtp = [...otp];
     newOtp[index] = value.charAt(0) || "";
     setOtp(newOtp);
+    setInlineError(""); // bersihkan error saat mengetik
     if (value && e.target.nextSibling) {
       e.target.nextSibling.focus();
     }
@@ -33,7 +91,9 @@ export default function OTPPage() {
       const newOtp = [...otp];
       newOtp[index - 1] = "";
       setOtp(newOtp);
-      e.target.previousSibling.focus();
+      if (e.target.previousSibling) {
+        e.target.previousSibling.focus();
+      }
     }
   };
 
@@ -41,44 +101,63 @@ export default function OTPPage() {
     e.preventDefault();
     const code = otp.join("");
 
+    // Jika sudah kadaluarsa, paksa popup
+    if (timeLeft <= 0) {
+      setShowPopup(true);
+      return;
+    }
+
     if (!/^\d{6}$/.test(code)) {
-      setError("Kode OTP harus terdiri dari 6 angka.");
+      setInlineError("Kode OTP harus terdiri dari 6 angka.");
+      return;
+    }
+
+    if (!registrationToken) {
+      // token tak ada -> popup
+      setShowPopup(true);
       return;
     }
 
     setLoading(true);
-    setError("");
+    setInlineError("");
 
     try {
       const res = await fetch("/api/auth/verify", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           registration_token: registrationToken,
           otp_code: code,
         }),
       });
 
-      const result = await res.json();
+      let result = {};
+      try {
+        result = await res.json();
+      } catch (_) {}
 
       if (res.ok) {
+        // bersih-bersih & lanjut
         localStorage.removeItem("registration_token");
         localStorage.removeItem("no_whatsapp");
+        localStorage.removeItem(OTP_EXPIRES_KEY); // opsional: bersihkan expiry saat sudah sukses
         const expiresAt = Date.now() + 60 * 60 * 1000; // 1 jam dari sekarang
-        localStorage.setItem("token", result.access_token);
-        localStorage.setItem("user", JSON.stringify(result.user));
-        localStorage.setItem("expiresAt", expiresAt.toString());
+        localStorage.setItem("token", result && result.access_token);
+        localStorage.setItem("user", JSON.stringify((result && result.user) || {}));
+        localStorage.setItem("expiresAt", String(expiresAt));
         setShowSuccess(true);
         setTimeout(() => {
           router.push("/auth/lengkapi-profil");
         }, 1800);
       } else {
-        setError(true);
+        // waktu belum habis → tampilkan error di bawah input, bukan popup
+        setInlineError(
+          (result && result.message) ||
+            "Kode OTP yang Anda masukkan salah. Silakan periksa kembali."
+        );
       }
-    } catch {
-      setError(true);
+    } catch (_) {
+      setInlineError("Terjadi kesalahan jaringan. Coba lagi.");
     } finally {
       setLoading(false);
     }
@@ -88,67 +167,44 @@ export default function OTPPage() {
     e.preventDefault();
 
     if (resendCooldown > 0) {
-      setError(`Silakan tunggu ${resendCooldown} detik sebelum mengirim ulang.`);
+      setInlineError(`Silakan tunggu ${resendCooldown} detik sebelum mengirim ulang.`);
+      return;
+    }
+
+    if (!registrationToken) {
+      setShowPopup(true); // token hilang → popup
       return;
     }
 
     setLoading(true);
-    setError("");
+    setInlineError("");
 
     try {
       const res = await fetch("/api/auth/resend", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          registration_token: registrationToken,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registration_token: registrationToken }),
       });
 
-      const result = await res.json();
+      let result = {};
+      try {
+        result = await res.json();
+      } catch (_) {}
 
       if (res.ok) {
+        // **Tidak** mereset waktu 5 menit, hanya cooldown & bersihkan input
         setOtp(new Array(6).fill(""));
-        setTimeLeft(300); // reset waktu OTP jika diperlukan
-        setResendCooldown(60); // 🔒 mulai cooldown 60 detik
+        setResendCooldown(60);
       } else {
-        setError(result.message || "Gagal mengirim ulang kode.");
+        setInlineError((result && result.message) || "Gagal mengirim ulang kode.");
       }
     } catch (err) {
       console.error("Resend error:", err);
-      setError("Terjadi kesalahan saat mengirim ulang OTP.");
+      setInlineError("Terjadi kesalahan saat mengirim ulang OTP.");
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (resendCooldown <= 0) return;
-    const interval = setInterval(() => {
-      setResendCooldown((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [resendCooldown]);
-
-  useEffect(() => {
-    const token = localStorage.getItem("registration_token");
-    if (!token) {
-      setError(true);
-    } else {
-      setRegistrationToken(token);
-    }
-    const storedNoWA = localStorage.getItem("no_whatsapp");
-    if (storedNoWA) setNoWhatsapp(storedNoWA);
-  }, [router]);
-
-  useEffect(() => {
-    if (timeLeft <= 0) return;
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [timeLeft]);
 
   const formatTime = (seconds) => {
     const m = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -174,46 +230,84 @@ export default function OTPPage() {
             <input
               key={idx}
               type="text"
-              maxLength="1"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              maxLength={1}
               value={digit}
               onChange={(e) => handleChange(e, idx)}
               onKeyDown={(e) => handleKeyDown(e, idx)}
-              className={`w-12 h-14 text-center text-2xl border rounded-md focus:outline-none ${error ? "border-red-500 text-red-500" : "border-gray-400"}`}
+              className={`w-12 h-14 text-center text-2xl border rounded-md focus:outline-none ${
+                inlineError ? "border-red-500 text-red-500" : "border-gray-400"
+              }`}
             />
           ))}
         </div>
 
-        <div className={`text-center mt-4 ${timeLeft > 0 ? "text-[#27AE60]" : "text-red-600"}`}>{timeLeft > 0 ? formatTime(timeLeft) : "Kode OTP kadaluarsa"}</div>
+        {/* Error inline di bawah kolom angka */}
+        {inlineError && (
+          <div className="text-red-600 text-sm mt-1 text-center">{inlineError}</div>
+        )}
+
+        <div className={`text-center mt-4 ${timeLeft > 0 ? "text-[#27AE60]" : "text-red-600"}`}>
+          {timeLeft > 0 ? formatTime(timeLeft) : "Kode OTP kadaluarsa"}
+        </div>
 
         <p className="text-right text-sm mt-2">
           Tidak dapat kode OTP?{" "}
-          <button type="button" onClick={handleResendOtp} disabled={loading || resendCooldown > 0} className="text-sm hover:underline text-[#27AE60] disabled:opacity-50">
+          <button
+            type="button"
+            onClick={handleResendOtp}
+            disabled={loading || resendCooldown > 0}
+            className="text-sm hover:underline text-[#27AE60] disabled:opacity-50"
+          >
             {resendCooldown > 0 ? `Kirim ulang (${resendCooldown})` : "Kirim ulang kode"}
           </button>
         </p>
 
         <div className="flex justify-center mt-6">
-          <button type="submit" disabled={loading} className="bg-[#27AE60] px-20 text-white py-2 rounded-md">
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-[#27AE60] px-20 text-white py-2 rounded-md disabled:opacity-50"
+          >
             {loading ? "Memverifikasi..." : "Verifikasi"}
           </button>
         </div>
       </form>
 
+      {/* Sukses */}
       {showSuccess && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg px-6 py-9 w-[290px] text-center animate-fade-in">
             <h3 className="text-[#27AE60] text-2xl font-bold mb-3">Berhasil!</h3>
-            <p className="text-sm text-[#141414] leading-relaxed">Kode OTP berhasil diverifikasi. Silakan lengkapi informasi profil Anda untuk melanjutkan proses.</p>
+            <p className="text-sm text-[#141414] leading-relaxed">
+              Kode OTP berhasil diverifikasi. Silakan lengkapi informasi profil Anda untuk
+              melanjutkan proses.
+            </p>
           </div>
         </div>
       )}
 
-      {error && (
+      {/* Popup error (hanya teks tetap + tombol) untuk: habis waktu ATAU token hilang */}
+      {showPopup && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg px-6 py-12 w-[260px] text-center animate-fade-in">
-            <h3 className="text-[#E74C3C] text-2xl font-bold mb-6 leading-snug">Verifikasi Gagal!</h3>
-            <p className="text-sm text-[#141414] leading-relaxed mb-6">Tidak ditemukan kode OTP untuk nomor Anda. Silakan lakukan pendaftaran ulang.</p>
-            <button onClick={() => router.push("/auth/daftar")} className="bg-[#E74C3C] text-white text-sm py-2 px-6 rounded-md hover:bg-red-600">
+          <div className="bg-white rounded-lg shadow-lg px-6 py-12 w-[300px] text-center animate-fade-in">
+            <h3 className="text-[#E74C3C] text-2xl font-bold mb-6 leading-snug">
+              Verifikasi Gagal!
+            </h3>
+            <p className="text-sm text-[#141414] leading-relaxed mb-6">
+              Tidak ditemukan kode OTP untuk nomor Anda. Silakan lakukan pendaftaran ulang.
+            </p>
+            <button
+              onClick={() => {
+                // bersihkan state penting sebelum daftar ulang
+                localStorage.removeItem("registration_token");
+                localStorage.removeItem("no_whatsapp");
+                localStorage.removeItem(OTP_EXPIRES_KEY);
+                router.push("/auth/daftar");
+              }}
+              className="bg-[#E74C3C] text-white text-sm py-2 px-6 rounded-md hover:bg-red-600"
+            >
               Daftar Ulang
             </button>
           </div>

@@ -20,13 +20,10 @@ export default function Page() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [profilLengkap, setProfilLengkap] = useState(true);
   const [showProfilModal, setShowProfilModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("Semua"); // selalu ada satu yang aktif
+  const [colSpan, setColSpan] = useState(5);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [showFilter, setShowFilter] = useState(false);
-  const [searchFilters, setSearchFilters] = useState({
-    date: "",
-    status: "",
-  });
 
   const statusMap = {
     processed: "Sedang Proses",
@@ -41,6 +38,36 @@ export default function Page() {
     Ditolak: "text-[#E74C3C] font-semibold",
     Selesai: "text-[#34C759] font-semibold",
   };
+
+  // urutan dan label tombol
+  const STATUS_TABS = ["Semua", "Sedang Proses", "Butuh Konfirmasi", "Ditolak", "Selesai"];
+
+  // warna tombol aktif (on) mengikuti gambar
+  const ACTIVE_TAB_CLASS = {
+    Semua: "bg-[#2B3A4A] text-white",
+    "Sedang Proses": "bg-[#8A8A8E] text-white",
+    "Butuh Konfirmasi": "bg-[#016E84] text-white",
+    Ditolak: "bg-[#E74C3C] text-white",
+    Selesai: "bg-[#34C759] text-white",
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        // breakpoint md: di Tailwind
+        setColSpan(4); // mobile
+      } else {
+        setColSpan(5); // desktop
+      }
+    };
+
+    // jalankan pertama kali
+    handleResize();
+
+    // pasang event listener
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -125,17 +152,11 @@ export default function Page() {
   const filteredData = ajuanList.filter((item) => {
     const formattedDate = new Date(item.created_at).toLocaleDateString("id-ID");
     const statusLabel = statusMap[item.status.toLowerCase()] || item.status;
-    const namaSurat = item.surat?.nama_surat || "";
 
-    const query = searchQuery.toLowerCase();
+    const matchesSearch = formattedDate.includes(searchQuery.toLowerCase());
+    const matchesStatus = activeTab === "Semua" ? true : statusLabel === activeTab;
 
-    const matchesSearch = namaSurat.toLowerCase().includes(query) || statusLabel.toLowerCase().includes(query) || formattedDate.includes(query);
-
-    const matchesStatus = statusLabel.toLowerCase().includes(searchFilters.status.toLowerCase());
-
-    const matchesDate = formattedDate.includes(searchFilters.date);
-
-    return matchesSearch && matchesStatus && matchesDate;
+    return matchesSearch && matchesStatus;
   });
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -218,7 +239,7 @@ export default function Page() {
                 className="flex items-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-sm hover:bg-green-600 transition w-full sm:w-auto"
               >
                 <Plus className="w-5 h-5" strokeWidth={3} />
-                <span className="block sm:hidden">Buat Surat</span>
+                <span className="block sm:hidden">Buat</span>
                 <span className="hidden sm:block"> Buat Pengajuan Surat</span>
               </button>
 
@@ -231,26 +252,44 @@ export default function Page() {
                 className="flex items-center gap-1 px-4 py-2 bg-[#F2FCF5] text-sm rounded-md text-gray w-full sm:w-auto"
               >
                 <Info className="w-4 h-4" />
-                <span className="block sm:hidden">Persyaratan</span>
-                <span className="hidden sm:block">Penjelasan dan Persyaratan</span>
+                <span className="block sm:hidden truncate whitespace-nowrap text-ellipsis" style={{ fontSize: "clamp(10px, 3vw, 14px)" }}>
+                  Persyaratan
+                </span>
+                <span className="hidden sm:block truncate whitespace-nowrap text-ellipsis" style={{ fontSize: "clamp(10px, 2vw, 14px)" }}>
+                  Penjelasan dan Persyaratan
+                </span>
               </button>
             </div>
 
             <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 w-full sm:w-auto min-w-0">
               <Search className="w-5 h-5 mr-3" />
-              <input type="text" placeholder="Cari" className="outline-none text-sm bg-white placeholder-gray-500 w-full" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-              <button onClick={() => setShowFilter(!showFilter)}>
-                <SlidersHorizontal className={`w-4 h-4 ml-2 cursor-pointer transition-colors ${showFilter ? "text-[#27AE60]" : "text-gray-500"}`} />
-              </button>
+              <input type="text" placeholder="Cari Tanggal" className="outline-none text-sm bg-white placeholder-gray-500 w-full" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
           </div>
 
-          {showFilter && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <input type="text" placeholder="Filter Tanggal" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.date} onChange={(e) => handleFilterChange("date", e.target.value)} />
-              <input type="text" placeholder="Filter Status" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.status} onChange={(e) => handleFilterChange("status", e.target.value)} />
-            </div>
-          )}
+          {/* Tombol status */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-1 sm:gap-2 mb-2">
+            {STATUS_TABS.map((tab) => {
+              const isActive = activeTab === tab;
+              return (
+                <button
+                  key={tab}
+                  onClick={() => {
+                    if (activeTab !== tab) {
+                      setActiveTab(tab);
+                      setCurrentPage(1);
+                    }
+                  }}
+                  className={`w-full px-2 py-1 sm:px-4 sm:py-2 rounded font-medium transition-colors 
+          truncate text-ellipsis whitespace-nowrap 
+          ${isActive ? ACTIVE_TAB_CLASS[tab] : "bg-gray-300 text-black hover:bg-gray-400"}`}
+                  style={{ fontSize: "clamp(10px, 3vw, 14px)" }}
+                >
+                  {tab}
+                </button>
+              );
+            })}
+          </div>
 
           {/* Tabel data */}
           <div className="w-full overflow-x-auto">
@@ -267,14 +306,14 @@ export default function Page() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="text-center text-black py-4 italic">
+                    <td colSpan={colSpan} className="text-center text-black py-4 italic">
                       Memuat data...
                     </td>
                   </tr>
                 ) : paginatedData.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center text-black py-4">
-                      Anda belum pernah melakukan pengajuan {namaSurat}
+                    <td colSpan={colSpan} className="bg-white text-center text-black py-4">
+                      {ajuanList.length === 0 ? `Anda belum pernah melakukan pengajuan ${namaSurat}` : "Hasil Pencarian Tidak Ada"}
                     </td>
                   </tr>
                 ) : (

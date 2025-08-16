@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Search, SlidersHorizontal, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Plus, Search, ChevronsLeft, ChevronsRight } from "lucide-react";
 import Link from "next/link";
 import MenungguCard from "@/components/card/Menunggu";
 import DiterimaCard from "@/components/card/DiTerima";
@@ -20,32 +20,32 @@ const statusColor = {
   Menunggu: "text-[#FF9500] font-semibold",
 };
 
+// urutan dan label tombol
+const STATUS_TABS = ["Semua", "Menunggu", "Diterima", "Selesai"];
+
+// warna tombol aktif (on) mengikuti gambar
+const ACTIVE_TAB_CLASS = {
+  Semua: "bg-[#2B3A4A] text-white",
+  Menunggu: "bg-[#FF9500] text-white",
+  Diterima: "bg-[#016E84] text-white",
+  Selesai: "bg-[#34C759] text-white",
+};
+
 export default function PengaduanPage() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showFilter, setShowFilter] = useState(false);
-  const [searchFilters, setSearchFilters] = useState({
-    title: "",
-    category: "",
-    status: "",
-    date: "",
-  });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("Semua"); // selalu ada satu yang aktif
   const itemsPerPage = 5;
   const router = useRouter();
   const [profilLengkap, setProfilLengkap] = useState(true);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [colSpan, setColSpan] = useState(6);
 
   useEffect(() => {
     const fetchAduanAndProfile = async () => {
       const token = localStorage.getItem("token");
-      const [aduanRes, profilRes] = await Promise.all([
-        fetch("/api/complaint", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("/api/auth/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
+      const [aduanRes, profilRes] = await Promise.all([fetch("/api/complaint", { headers: { Authorization: `Bearer ${token}` } }), fetch("/api/auth/profile", { headers: { Authorization: `Bearer ${token}` } })]);
 
       const aduanData = await aduanRes.json();
       const sorted = [...(aduanData.aduan || [])].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -60,32 +60,43 @@ export default function PengaduanPage() {
     fetchAduanAndProfile();
   }, []);
 
-  const jumlahMenunggu = data.filter((item) => statusMap[item.status] === "Menunggu").length;
-  const jumlahDiterima = data.filter((item) => statusMap[item.status] === "Diterima").length;
-  const jumlahSelesai = data.filter((item) => statusMap[item.status] === "Selesai").length;
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        // breakpoint md: di Tailwind
+        setColSpan(5); // mobile
+      } else {
+        setColSpan(6); // desktop
+      }
+    };
 
+    // jalankan pertama kali
+    handleResize();
+
+    // pasang event listener
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const jumlahMenunggu = data.filter((i) => statusMap[i.status] === "Menunggu").length;
+  const jumlahDiterima = data.filter((i) => statusMap[i.status] === "Diterima").length;
+  const jumlahSelesai = data.filter((i) => statusMap[i.status] === "Selesai").length;
+
+  // filter pencarian + tab
   const filteredData = data.filter((item) => {
     const readableStatus = statusMap[item.status] || item.status;
     const formattedDate = new Date(item.created_at).toLocaleDateString("id-ID");
+    const keyword = searchTerm.toLowerCase();
 
-    return (
-      item.title.toLowerCase().includes(searchFilters.title.toLowerCase()) &&
-      item.category.toLowerCase().includes(searchFilters.category.toLowerCase()) &&
-      readableStatus.toLowerCase().includes(searchFilters.status.toLowerCase()) &&
-      formattedDate.includes(searchFilters.date)
-    );
+    const matchesSearch = item.title.toLowerCase().includes(keyword) || item.category.toLowerCase().includes(keyword) || formattedDate.includes(keyword);
+
+    const matchesStatus = activeTab === "Semua" ? true : readableStatus === activeTab;
+
+    return matchesSearch && matchesStatus;
   });
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  const handleFilterChange = (key, value) => {
-    setSearchFilters((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-    setCurrentPage(1);
-  };
 
   const getPaginationRange = () => {
     const delta = 2;
@@ -95,11 +106,7 @@ export default function PengaduanPage() {
 
     range.push(1);
     if (left > 2) range.push("...");
-
-    for (let i = left; i <= right; i++) {
-      range.push(i);
-    }
-
+    for (let i = left; i <= right; i++) range.push(i);
     if (right < totalPages - 1) range.push("...");
     if (totalPages > 1) range.push(totalPages);
 
@@ -111,6 +118,7 @@ export default function PengaduanPage() {
       <div className="flex-1 p-8 space-y-8">
         <section>
           <h2 className="sm:text-2xl text-base font-semibold mb-4">Pengaduan</h2>
+
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
             <MenungguCard count={jumlahMenunggu} />
             <DiterimaCard count={jumlahDiterima} />
@@ -119,40 +127,57 @@ export default function PengaduanPage() {
 
           <hr className="border-gray-300 border-y mb-6" />
 
+          {/* tombol buat + search */}
           <div className="grid grid-cols-2 sm:flex sm:justify-between sm:items-center gap-4 mb-6">
             <button
-              className="flex items-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-sm hover:bg-green-600 transition w-full sm:w-auto"
-              onClick={() => {
-                if (profilLengkap) {
-                  router.push("/pengaduan/buat");
-                } else {
-                  setShowProfileModal(true);
-                }
-              }}
+              className="flex items-center justify-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-sm hover:bg-green-600 transition"
+              onClick={() => (profilLengkap ? router.push("/pengaduan/buat") : setShowProfileModal(true))}
             >
               <Plus className="w-5 h-5" strokeWidth={3} />
-              Buat Pengaduan
+              <span className="block sm:hidden">Buat</span>
+              <span className="hidden sm:block"> Buat Pengaduan</span>
             </button>
 
-            {/* Tambahkan min-w-0 agar flex child (input) tidak overflow */}
             <div className="flex items-center border border-gray-500 rounded-md px-4 py-2 bg-white text-gray-500 w-full sm:w-auto min-w-0">
               <Search className="w-5 h-5 mr-2" />
-              <input type="text" placeholder="Cari" className="flex-1 outline-none text-sm bg-white placeholder-gray-500 min-w-0" value={searchFilters.title} onChange={(e) => handleFilterChange("title", e.target.value)} />
-              <button onClick={() => setShowFilter(!showFilter)}>
-                <SlidersHorizontal className={`w-4 h-4 ml-2 cursor-pointer transition-colors ${showFilter ? "text-[#27AE60]" : "text-gray-500"}`} />
-              </button>
+              <input
+                type="text"
+                placeholder="Cari"
+                className="flex-1 outline-none text-sm bg-white placeholder-gray-500 min-w-0"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
             </div>
           </div>
 
-          {showFilter && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-              <input type="text" placeholder="Filter Tanggal" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.date} onChange={(e) => handleFilterChange("date", e.target.value)} />
-              <input type="text" placeholder="Filter Judul" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.title} onChange={(e) => handleFilterChange("title", e.target.value)} />
-              <input type="text" placeholder="Filter Kategori" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.category} onChange={(e) => handleFilterChange("category", e.target.value)} />
-              <input type="text" placeholder="Filter Status" className="px-4 py-2 border border-gray-400 rounded-md text-sm" value={searchFilters.status} onChange={(e) => handleFilterChange("status", e.target.value)} />
-            </div>
-          )}
+          {/* Tombol status */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 sm:gap-2 mb-2">
+            {STATUS_TABS.map((tab) => {
+              const isActive = activeTab === tab;
+              return (
+                <button
+                  key={tab}
+                  onClick={() => {
+                    if (activeTab !== tab) {
+                      setActiveTab(tab);
+                      setCurrentPage(1);
+                    }
+                  }}
+                  className={`w-full px-2 py-1 sm:px-4 sm:py-2 rounded font-medium transition-colors 
+          truncate text-ellipsis whitespace-nowrap 
+          ${isActive ? ACTIVE_TAB_CLASS[tab] : "bg-gray-300 text-black hover:bg-gray-400"}`}
+                  style={{ fontSize: "clamp(10px, 3vw, 14px)" }}
+                >
+                  {tab}
+                </button>
+              );
+            })}
+          </div>
 
+          {/* tabel */}
           <div className="w-full overflow-x-auto">
             <table className="table-fixed w-full border border-black text-[9px] sm:text-sm md:text-base">
               <thead>
@@ -187,8 +212,8 @@ export default function PengaduanPage() {
                   })
                 ) : (
                   <tr>
-                    <td colSpan={6} className="bg-white text-center text-black py-4">
-                      Anda belum pernah melakukan pengaduan
+                    <td colSpan={colSpan} className="bg-white text-center text-black py-4">
+                      {data.length === 0 ? "Anda belum pernah melakukan pengaduan" : "Hasil Pencarian Tidak Ada"}
                     </td>
                   </tr>
                 )}
@@ -196,7 +221,7 @@ export default function PengaduanPage() {
             </table>
           </div>
 
-          {/* Pagination */}
+          {/* pagination */}
           <div className="flex justify-center mt-6">
             <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
               <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 disabled:opacity-50">
@@ -216,6 +241,7 @@ export default function PengaduanPage() {
           </div>
         </section>
       </div>
+
       {showProfileModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-md text-center w-[300px]">
