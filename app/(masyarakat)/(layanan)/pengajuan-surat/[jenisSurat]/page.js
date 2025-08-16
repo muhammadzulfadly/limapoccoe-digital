@@ -1,6 +1,6 @@
 "use client";
 
-import { FileDown, Search, Plus, Info, SlidersHorizontal, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { FileDown, Search, Plus, Info, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
@@ -238,8 +238,8 @@ export default function Page() {
                 }}
                 className="flex items-center gap-1 px-4 py-2 bg-[#27AE60] text-white rounded-md text-sm hover:bg-green-600 transition w-full sm:w-auto"
               >
-                <Plus className="w-5 h-5" strokeWidth={3} />
-                <span className="block sm:hidden text-xs">Buat</span>
+                <Plus className="w-3 h-3 sm:w-5 sm:h-5" strokeWidth={3} />
+                <span className="block sm:hidden truncate whitespace-nowrap text-ellipsis" style={{ fontSize: "clamp(10px, 3vw, 14px)" }}>Buat Surat</span>
                 <span className="hidden sm:block text-xs sm:text-sm"> Buat Pengajuan Surat</span>
               </button>
 

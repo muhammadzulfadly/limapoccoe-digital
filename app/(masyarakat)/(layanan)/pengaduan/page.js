@@ -134,7 +134,7 @@ export default function PengaduanPage() {
               onClick={() => (profilLengkap ? router.push("/pengaduan/buat") : setShowProfileModal(true))}
             >
               <Plus className="w-5 h-5" strokeWidth={3} />
-              <span className="block sm:hidden text-xs">Buat</span>
+              <span className="block sm:hidden text-xs">Buat Aduan</span>
               <span className="hidden sm:block text-xs sm:text-sm">Buat Pengaduan</span>
             </button>
 
