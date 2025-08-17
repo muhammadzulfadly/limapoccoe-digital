@@ -33,6 +33,7 @@ const ACTIVE_TAB_CLASS = {
 
 export default function PengaduanPage() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("Semua"); // selalu ada satu yang aktif
@@ -45,16 +46,23 @@ export default function PengaduanPage() {
   useEffect(() => {
     const fetchAduanAndProfile = async () => {
       const token = localStorage.getItem("token");
-      const [aduanRes, profilRes] = await Promise.all([fetch("/api/complaint", { headers: { Authorization: `Bearer ${token}` } }), fetch("/api/auth/profile", { headers: { Authorization: `Bearer ${token}` } })]);
+      setLoading(true); // ⬅️ mulai loading
+      try {
+        const [aduanRes, profilRes] = await Promise.all([fetch("/api/complaint", { headers: { Authorization: `Bearer ${token}` } }), fetch("/api/auth/profile", { headers: { Authorization: `Bearer ${token}` } })]);
 
-      const aduanData = await aduanRes.json();
-      const sorted = [...(aduanData.aduan || [])].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      setData(sorted);
+        const aduanData = await aduanRes.json();
+        const sorted = [...(aduanData.aduan || [])].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        setData(sorted);
 
-      const profil = await profilRes.json();
-      const fields = ["alamat", "dusun", "tanggal_lahir", "tempat_lahir", "jenis_kelamin", "pekerjaan"];
-      const isComplete = fields.every((field) => !!profil.profile?.[field]);
-      setProfilLengkap(isComplete);
+        const profil = await profilRes.json();
+        const fields = ["alamat", "dusun", "tanggal_lahir", "tempat_lahir", "jenis_kelamin", "pekerjaan"];
+        const isComplete = fields.every((field) => !!profil.profile?.[field]);
+        setProfilLengkap(isComplete);
+      } catch (e) {
+        console.error("Gagal memuat data:", e);
+      } finally {
+        setLoading(false); // ⬅️ selesai loading
+      }
     };
 
     fetchAduanAndProfile();
@@ -191,7 +199,13 @@ export default function PengaduanPage() {
                 </tr>
               </thead>
               <tbody>
-                {paginatedData.length > 0 ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan={colSpan} className="text-center py-4 italic bg-white">
+                      Memuat data...
+                    </td>
+                  </tr>
+                ) : paginatedData.length > 0 ? (
                   paginatedData.map((item, index) => {
                     const readableStatus = statusMap[item.status] || item.status;
                     return (
