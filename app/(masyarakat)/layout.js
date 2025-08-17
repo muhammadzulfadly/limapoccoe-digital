@@ -53,42 +53,101 @@ export default function BerandaLayout({ children }) {
 
   const isBeranda = pathname.startsWith("/beranda");
 
+  // NAV LINKS KHUSUS DESKTOP
+  const navLinks = [
+    { label: "Beranda", href: "/beranda" },
+    { label: "Profil Desa", href: "/beranda/profil-desa" },
+    { label: "Berita & Informasi", href: "/beranda/berita-informasi" },
+    { label: "Infografis", href: "/beranda/infografis" },
+  ];
+
+  // GANTI fungsi isActive lama dengan ini
+  const normalize = (p) => p.replace(/\/+$/, "") || "/";
+
+  const isActive = (href) => {
+    const current = normalize(pathname);
+    const target = normalize(href);
+
+    // aktif kalau cocok persis atau current berada di bawah target
+    const matches = target === "/" ? current === "/" : current === target || current.startsWith(`${target}/`);
+
+    if (!matches) return false;
+
+    // pastikan HANYA link dengan prefix TERPANJANG yang aktif
+    const hasLongerMatch = navLinks.some((l) => {
+      const t = normalize(l.href);
+      if (t === target) return false;
+      const ok = t === "/" ? current === "/" : current === t || current.startsWith(`${t}/`);
+      return ok && t.length > target.length;
+    });
+
+    return !hasLongerMatch;
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-[#27AE60] fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 md:px-8 py-3 shadow">
-        <Link href="/" className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Logo Desa Limapocoe" width={45} height={45} priority />
-          <span className="text-white font-semibold text-lg md:text-xl">Desa Limapocoe</span>
-        </Link>
+      <header className="bg-[#27AE60] fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-3 shadow">
+        <div className="mx-auto flex items-center justify-between gap-4">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3">
+            <Image src="/logo.png" alt="Logo Desa Limapocoe" width={45} height={45} priority />
+            <span className="text-white font-semibold text-lg md:text-xl">Desa Limapocoe</span>
+          </Link>
 
-        <div className="md:hidden">
-          <button onClick={() => setSidebarOpen(!sidebarOpen)}>{sidebarOpen ? <X size={28} className="text-white" /> : <Menu size={28} className="text-white" />}</button>
-        </div>
+          {/* NAV DESKTOP – hanya tampil di md+ */}
+          {isBeranda && (
+            <nav className="hidden md:flex md:flex-nowrap items-center gap-8 whitespace-nowrap overflow-x-auto">
+              {navLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`inline-flex items-center px-3 py-1 text-sm font-semibold rounded-lg transition
+  ${active ? "bg-white/20 text-white" : "text-white/90 hover:text-white hover:bg-white/10"}`}
+                  >
+                    {link.label}
+                    {active && <span className="sr-only">(halaman saat ini)</span>}
+                  </Link>
+                );
+              })}
+            </nav>
+          )}
 
-        <div className="hidden md:flex items-center gap-4">
-          {userName ? (
-            <>
-              <User size={18} className="text-white" />
-              <Link href="/profil" className="text-white text-sm">
-                {userName}
-              </Link>
-              {isBeranda && (
-                <Link href="/dashboard" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
-                  Dashboard
+          {/* Aksi kanan */}
+          <div className="flex items-center gap-4">
+            {/* Tombol burger hanya di mobile */}
+            <button className="md:hidden" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label={sidebarOpen ? "Tutup menu" : "Buka menu"}>
+              {sidebarOpen ? <X size={28} className="text-white" /> : <Menu size={28} className="text-white" />}
+            </button>
+
+            {/* Aksi kanan di desktop */}
+            <div className="hidden md:flex items-center gap-4">
+              {userName ? (
+                <>
+                  {!isBeranda && (
+                    <>
+                      <User size={18} className="text-white" />
+                      <Link href="/profil" className="text-white text-sm">
+                        {userName}
+                      </Link>
+                    </>
+                  )}
+                  {isBeranda && (
+                    <Link href="/dashboard" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
+                      Dashboard
+                    </Link>
+                  )}
+                </>
+              ) : (
+                <Link href="/auth/masuk" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
+                  Masuk
                 </Link>
               )}
-            </>
-          ) : (
-            <>
-              <Link href="/auth/masuk" className="text-white text-sm hover:underline">
-                Masuk
-              </Link>
-              <Link href="/auth/daftar" className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded hover:bg-gray-200 transition">
-                Daftar
-              </Link>
-            </>
-          )}
+            </div>
+          </div>
         </div>
       </header>
 

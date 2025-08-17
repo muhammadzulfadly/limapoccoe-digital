@@ -8,10 +8,9 @@ import PropTypes from "prop-types";
 
 export default function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
+  const isBeranda = pathname.startsWith("/beranda");
   const router = useRouter();
-
   const isPengajuanSuratActive = useMemo(() => pathname.startsWith("/pengajuan-surat"), [pathname]);
-
   const [isOpenDropdown, setIsOpenDropdown] = useState(isPengajuanSuratActive);
   const [jenisSurat, setJenisSurat] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,6 +62,13 @@ export default function Sidebar({ isOpen, onClose }) {
       });
   }, [router]);
 
+  const navLinksBeranda = [
+    { label: "Beranda", href: "/beranda" },
+    { label: "Profil Desa", href: "/beranda/profil-desa" },
+    { label: "Berita & Informasi", href: "/beranda/berita-informasi" },
+    { label: "Infografis", href: "/beranda/infografis" },
+  ];
+
   const isActive = (path) => pathname === path || pathname.startsWith(`${path}/`);
 
   const linkClass = (path) => `${isActive(path) ? "text-[#27AE60]" : "text-black"} hover:text-green-600 flex items-center gap-2`;
@@ -78,7 +84,7 @@ export default function Sidebar({ isOpen, onClose }) {
         <aside className="p-6 flex-1 overflow-y-auto bg-white pb-44 md:pb-6">
           <h2 className="font-semibold text-base mb-4">PELAYANAN DESA</h2>
 
-          {userLoggedIn ? (
+          {!isBeranda && userLoggedIn ? (
             <ul className="space-y-3 text-sm pl-1">
               <li>
                 <Link href="/profil" onClick={onClose} className={`${linkClass("/profil")} block md:hidden`}>
@@ -138,12 +144,25 @@ export default function Sidebar({ isOpen, onClose }) {
             </ul>
           ) : (
             <div className="space-y-3 text-sm">
-              <Link href="/auth/daftar" className="block w-full border border-[#27AE60] text-[#27AE60] text-center rounded px-4 py-2 font-medium hover:bg-green-50 transition">
-                Daftar
-              </Link>
-              <Link href="/auth/masuk" className="block w-full bg-[#2DB567] text-white text-center rounded px-4 py-2 font-medium hover:bg-green-600 transition">
-                Masuk
-              </Link>
+              {!userLoggedIn && (
+                <Link href="/auth/masuk" className="block w-full border border-[#27AE60] text-[#27AE60] text-center rounded px-4 py-2 font-medium hover:bg-green-50 transition">
+                  Masuk
+                </Link>
+              )}
+              {userLoggedIn && (
+                <Link href="/dashboard" className="block w-full border border-[#27AE60] text-[#27AE60] text-center rounded px-4 py-2 font-medium hover:bg-green-50 transition">
+                  Dashboard
+                </Link>
+              )}
+              {isBeranda && (
+                <nav className="md:hidden mt-6 border-t pt-4 space-y-2">
+                  {navLinksBeranda.map((item) => (
+                    <Link key={item.href} href={item.href} onClick={onClose} className={`block text-sm font-medium px-2 py-1 rounded ${pathname === item.href ? "text-[#27AE60]" : "text-gray-700 hover:text-green-600"}`}>
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              )}
             </div>
           )}
         </aside>
