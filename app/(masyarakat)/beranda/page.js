@@ -121,20 +121,20 @@ export default function HomePage() {
       <section className="bg-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Profil Desa</h2>
-
-          <div className="relative aspect-video w-full rounded-xl overflow-hidden shadow-lg">
+          {/* <div className="relative aspect-video w-full rounded-xl overflow-hidden shadow-lg">
             <video ref={videoRef} controls className="w-full h-full object-cover" poster="/images/cover.png">
               <source src="/images/video-desa.mp4" type="video/mp4" />
               Browser Anda tidak mendukung pemutaran video.
-            </video>
-
-            {!isPlaying && (
+            </video> */}
+          <div className="aspect-w-16 aspect-h-9">
+            <iframe src="https://drive.google.com/file/d/1LiOdyNLYi-SMnZX9tPbJ_7ra_eBNFSwk/preview" width="100%" height="480" allow="autoplay" allowFullScreen="0"></iframe>
+            {/* {!isPlaying && (
               <button onClick={handlePlay} className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 hover:bg-black/40 transition">
                 <div className="bg-[#27AE60] rounded-full p-4 sm:p-8">
                   <Play className="w-10 h-10 sm:w-20 sm:h-20 text-white" />
                 </div>
               </button>
-            )}
+            )} */}
           </div>
         </div>
       </section>
@@ -146,7 +146,7 @@ export default function HomePage() {
 
           <div className="w-full h-[450px] rounded-xl overflow-hidden shadow-lg">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63595.16322478062!2d119.7589252125757!3d-4.989799616488523!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dbe8ab0aeac6a13%3A0x51b73738e9481b09!2sLimpoccoe%2C%20Kec.%20Cenrana%2C%20Kabupaten%20Maros%2C%20Sulawesi%20Selatan!5e0!3m2!1sid!2sid!4v1755436327875!5m2!1sid!2sid"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d42562.03270670231!2d119.7759205396301!3d-4.99527290236073!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dbe8ab0aeac6a13%3A0x51b73738e9481b09!2sLimpoccoe%2C%20Kec.%20Cenrana%2C%20Kabupaten%20Maros%2C%20Sulawesi%20Selatan!5e1!3m2!1sid!2sid!4v1755457831571!5m2!1sid!2sid"
               width="100%"
               height="100%"
               style={{ border: 0 }}
