@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import FloatingButtons from "@/components/FloatingButtons";
-import { useMemo, useState } from "react";
-import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronsLeft, ChevronsRight, Ban } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 function paginate(items, page, perPage) {
   const totalPages = Math.max(1, Math.ceil(items.length / perPage));
@@ -28,42 +30,49 @@ function getPaginationRange(currentPage, totalPages) {
   return range;
 }
 
+// helper untuk gambar aman
+function getImageSrc(gambar) {
+  return gambar ? `/api/information/photo/${gambar.split("/").pop()}` : "/images/no-image.png";
+}
+
 export default function BeritaInformasiPage() {
   const [activeTab, setActiveTab] = useState("berita");
   const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const perPage = 9;
+  const searchParams = useSearchParams();
 
-  const tabBtnClass = (tab) => `px-5 py-2 rounded-lg font-medium shadow transition ${activeTab === tab ? "bg-[#27AE60] text-white hover:bg-[#219653]" : "bg-gray-300 text-gray-800 hover:bg-gray-400"}`;
-
-  const data = useMemo(
-    () => ({
-      berita: Array.from({ length: 100 }).map((_, i) => ({
-        id: `berita-${i}`,
-        title: "Hasil sidang rapat desa",
-        date: "9 Mei 2025",
-        img: "/images/berita-desa.png",
-        excerpt:
-          "Hasil sidang rapat desa yang membahas program kerja tahun anggaran 2025 serta usulan masyarakat terkait pengembangan infrastruktur, pemberdayaan ekonomi lokal, dan digitalisasi pelayanan publik di lingkungan Desa Limapocoe.",
-      })),
-      wisata: Array.from({ length: 8 }).map((_, i) => ({
-        id: `wisata-${i}`,
-        title: "Pemandian air hangat",
-        img: "/images/wisata-desa.png",
-        desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      })),
-      galeri: Array.from({ length: 10 }).map((_, i) => ({ id: `galeri-${i}`, src: i % 2 === 0 ? "/images/galeri1.png" : "/images/galeri2.png" })),
-      produk: Array.from({ length: 12 }).map((_, i) => ({ id: `produk-${i}`, src: "/images/produk/produk3.png", name: "Kripik kaca", price: "Rp. 100.000" })),
-    }),
-    []
-  );
+  // Saat komponen pertama kali mount, cek apakah ada query kategori
+  useEffect(() => {
+    const kategoriQuery = searchParams.get("kategori");
+    if (kategoriQuery && ["berita", "wisata", "galeri", "produk"].includes(kategoriQuery)) {
+      setActiveTab(kategoriQuery);
+    }
+  }, [searchParams]);
 
   const changeTab = (tab) => {
     setActiveTab(tab);
     setCurrentPage(1);
   };
 
-  const items = data[activeTab] || [];
-  const { data: pageItems, totalPages, page } = paginate(items, currentPage, perPage);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/information");
+        const result = await res.json();
+        setData(result.data || []);
+      } catch (error) {
+        console.error("Gagal memuat data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const filteredItems = data.filter((item) => item.kategori === activeTab);
+  const { data: pageItems, totalPages, page } = paginate(filteredItems, currentPage, perPage);
   const paginationRange = getPaginationRange(page, totalPages);
 
   return (
@@ -71,96 +80,137 @@ export default function BeritaInformasiPage() {
       <section className="py-14 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 text-center">Informasi Desa</h2>
-          <p className="text-gray-600 mb-10 text-sm sm:text-base mx-auto text-center">
-            Halaman ini menyajikan informasi terbaru seputar kegiatan, pengumuman, wisata, galeri, produk dan perkembangan di lingkungan Desa Limapocoe, serta menjadi sumber inspirasi dan referensi bagi masyarakat maupun pengunjung.
-          </p>
+          <p className="text-gray-600 mb-10 text-sm sm:text-base mx-auto text-center">Halaman ini menyajikan informasi terbaru seputar kegiatan, pengumuman, wisata, galeri, produk dan perkembangan di lingkungan Desa Limapocoe.</p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             {["berita", "wisata", "galeri", "produk"].map((tab) => (
-              <button key={tab} type="button" className={tabBtnClass(tab)} onClick={() => changeTab(tab)}>
+              <button
+                key={tab}
+                type="button"
+                className={`px-5 py-2 rounded-lg font-medium shadow transition ${activeTab === tab ? "bg-[#27AE60] text-white hover:bg-[#219653]" : "bg-gray-300 text-gray-800 hover:bg-gray-400"}`}
+                onClick={() => changeTab(tab)}
+              >
                 {`${tab.charAt(0).toUpperCase() + tab.slice(1)} Desa`}
               </button>
             ))}
           </div>
 
-          {activeTab === "berita" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {pageItems.map((item) => (
-                <div key={item.id} className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
-                  <div className="relative">
-                    <Image src={item.img} alt="Foto Rapat" width={400} height={250} className="w-full h-52 object-cover" />
-                    <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded shadow">{item.date}</span>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.title}</h3>
-                    <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.excerpt}</p>
-                  </div>
+          {loading ? (
+            <p className="text-center text-gray-500 italic">Memuat data...</p>
+          ) : pageItems.length === 0 ? (
+            <div className="bg-white p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
+              <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
+              Belum ada data
+            </div>
+          ) : (
+            <>
+              {activeTab === "berita" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {pageItems.map((item) => (
+                    <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
+                      <div className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
+                        <div className="relative">
+                          <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
+                          <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded shadow">
+                            {new Date(item.created_at).toLocaleDateString("id-ID", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            })}
+                          </span>
+                        </div>
+                        <div className="p-4">
+                          <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
+                          <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          {activeTab === "wisata" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {pageItems.map((item) => (
-                <div key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border-2 border-[#27AE60]">
-                  <Image src={item.img} alt="Wisata Desa" width={400} height={250} className="w-full h-52 object-cover" />
-                  <div className="p-5">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-700 leading-relaxed">{item.desc}</p>
-                  </div>
+              {activeTab === "wisata" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {pageItems.map((item) => (
+                    <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
+                      <div className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
+                        <div className="relative">
+                          <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
+                        </div>
+                        <div className="p-4">
+                          <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
+                          <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          {activeTab === "galeri" && (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-              {pageItems.map((item) => (
-                <div key={item.id}>
-                  <Image src={item.src} alt="Galeri" width={400} height={250} />
+              {activeTab === "galeri" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {pageItems.map((item) => (
+                    <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
+                      <div className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
+                        <div className="relative">
+                          <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
+                          <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded shadow">
+                            {new Date(item.created_at).toLocaleDateString("id-ID", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          {activeTab === "produk" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {pageItems.map((item) => (
-                <div key={item.id} className="rounded-xl overflow-hidden bg-white shadow-sm">
-                  <Image src={item.src} alt="Produk Desa" width={400} height={250} className="w-full h-48 object-cover rounded-t-xl" />
-                  <div className="flex justify-between items-center bg-[#27AE60] text-white px-4 py-3 text-sm font-semibold rounded-b-xl">
-                    <span>{item.name}</span>
-                    <span>{item.price}</span>
-                  </div>
+              {activeTab === "produk" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {pageItems.map((item) => (
+                    <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
+                      <div className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
+                        <div className="relative">
+                          <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
+                        </div>
+                        <div className="p-4">
+                          <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
+                          <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              ))}
-            </div>
+              )}
+
+              {/* Pagination */}
+              <div className="flex justify-center mt-6">
+                <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
+                  <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 disabled:opacity-50">
+                    <ChevronsLeft className="w-4 h-4" />
+                  </button>
+
+                  {paginationRange.map((pageNum, i) => (
+                    <button
+                      key={i}
+                      onClick={() => typeof pageNum === "number" && setCurrentPage(pageNum)}
+                      disabled={typeof pageNum !== "number"}
+                      className={`px-3 py-1 ${pageNum === currentPage ? "bg-[#27AE60] text-white" : "hover:bg-slate-100"}`}
+                    >
+                      {pageNum === "..." ? "..." : pageNum}
+                    </button>
+                  ))}
+
+                  <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1 disabled:opacity-50">
+                    <ChevronsRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </>
           )}
-
-          {/* Pagination */}
-          <div className="flex justify-center mt-6">
-            <div className="flex border border-slate-800 divide-x divide-slate-800 text-slate-800 text-sm rounded overflow-hidden">
-              <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 disabled:opacity-50">
-                <ChevronsLeft className="w-4 h-4" />
-              </button>
-
-              {paginationRange.map((pageNum, i) => (
-                <button
-                  key={i}
-                  onClick={() => typeof pageNum === "number" && setCurrentPage(pageNum)}
-                  disabled={typeof pageNum !== "number"}
-                  className={`px-3 py-1 ${pageNum === currentPage ? "bg-[#27AE60] text-white" : "hover:bg-slate-100"}`}
-                >
-                  {pageNum === "..." ? "..." : pageNum}
-                </button>
-              ))}
-
-              <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1 disabled:opacity-50">
-                <ChevronsRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
         </div>
       </section>
 

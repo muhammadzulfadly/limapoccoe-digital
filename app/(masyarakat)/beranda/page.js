@@ -2,15 +2,45 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, Phone, User, Ban, Play } from "lucide-react";
+import { Mail, Phone, User, Ban } from "lucide-react";
 import { useRouter } from "next/navigation";
 import FloatingButtons from "@/components/FloatingButtons";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 export default function HomePage() {
   const router = useRouter();
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [beritaTerbaru, setBeritaTerbaru] = useState([]);
+  const [wisataTerbaru, setWisataTerbaru] = useState([]);
+  const [galeriTerbaru, setGaleriTerbaru] = useState([]);
+  const [produkTerbaru, setProdukTerbaru] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/information");
+        const result = await res.json();
+        const data = result.data || [];
+
+        // Pisahkan berdasarkan kategori dan ambil 3 data terbaru
+        const sortByDate = (arr) => [...arr].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3);
+
+        setBeritaTerbaru(sortByDate(data.filter((d) => d.kategori === "berita")));
+        setWisataTerbaru(sortByDate(data.filter((d) => d.kategori === "wisata")));
+        setGaleriTerbaru(sortByDate(data.filter((d) => d.kategori === "galeri")));
+        setProdukTerbaru(sortByDate(data.filter((d) => d.kategori === "produk")));
+      } catch (err) {
+        console.error("Gagal ambil data informasi:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  function getImageSrc(gambar) {
+    return gambar ? `/api/information/photo/${gambar.split("/").pop()}` : "/images/no-image.png";
+  }
 
   const handlePlay = () => {
     if (videoRef.current) {
@@ -240,27 +270,42 @@ export default function HomePage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Berita Desa</h2>
           <p className="text-gray-600 mb-10 text-sm sm:text-base">Berita Desa Limmapocoe menyajikan informasi terbaru seputar kegiatan, pengumuman, dan perkembangan di lingkungan Desa Limmapoccoe.</p>
 
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm">
-
-                <div className="relative">
-                  <Image src="/images/berita-desa.png" alt="Foto Rapat" width={400} height={250} className="w-full h-52 object-cover" />
-                  <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded">9 Mei 2025</span>
-                </div>
-
-
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg text-gray-900 mb-1">Hasil sidang rapat desa</h3>
-                  <p className="text-sm text-gray-700 leading-relaxed">Hasil sidang rapat desa Hasil sidang rapat desa Hasil sidang rapat desa Hasil sidang rapat desa Hasil sidang rapat desa Hasil sidang rapat desa</p>
-                </div>
+          {beritaTerbaru.length === 0 ? (
+            <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
+              <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
+              Belum ada Berita Desa
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {beritaTerbaru.map((item, index) => (
+                  <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
+                    <div className={`rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white ${index > 0 ? "md:block hidden" : ""}`}>
+                      <div className="relative">
+                        <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
+                        <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded shadow">
+                          {new Date(item.created_at).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
+                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            ))}
-          </div> */}
-          <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
-            <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
-            Belum ada Berita Desa
-          </div>
+              <div className="flex justify-end">
+                <Link href={{ pathname: "/beranda/informasi-desa", query: { kategori: "berita" } }} className="text-sm font-medium text-[#27AE60] hover:underline">
+                  Lihat lebih banyak →
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
@@ -270,25 +315,35 @@ export default function HomePage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Wisata Desa</h2>
           <p className="text-gray-700 mb-10 text-sm sm:text-base">Wisata Desa Limmapoccoe menawarkan pesona alam dan budaya lokal yang masih asri, cocok untuk rekreasi dan pengalaman wisata desa yang autentik.</p>
 
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm border-2 border-[#27AE60]">
-
-                <div className="rounded-t-2xl overflow-hidden">
-                  <Image src="/images/wisata-desa.png" alt="Wisata Desa" width={400} height={250} className="w-full h-52 object-cover" />
-                </div>
-
-                <div className="p-5">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Pemandian air hangat</h3>
-                  <p className="text-sm text-gray-700 leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nunc et convallis placerat, ex nisi volutpat sapien, vel eleifend elit libero a erat.</p>
-                </div>
+          {wisataTerbaru.length === 0 ? (
+            <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
+              <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
+              Belum ada Wisata Desa
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {wisataTerbaru.map((item, index) => (
+                  <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
+                    <div key={item.id} className={`rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white ${index > 0 ? "md:block hidden" : ""}`}>
+                      <div className="relative">
+                        <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
+                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            ))}
-          </div> */}
-          <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
-            <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
-            Belum ada Wisata Desa
-          </div>
+              <div className="flex justify-end">
+                <Link href={{ pathname: "/beranda/informasi-desa", query: { kategori: "wisata" } }} className="text-sm font-medium text-[#27AE60] hover:underline">
+                  Lihat lebih banyak →
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
@@ -298,19 +353,38 @@ export default function HomePage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Galeri Desa</h2>
           <p className="text-gray-600 mb-10 text-sm sm:text-base">Galeri Desa Limmapoccoe menampilkan dokumentasi foto kegiatan yang berlangsung di Desa Limapoccoe.</p>
 
-          {/* 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {["/images/galeri1.png", "/images/galeri2.png", "/images/galeri1.png", "/images/galeri2.png", "/images/galeri1.png", "/images/galeri2.png"].map((src, index) => (
-              <div key={index} className="">
-                <Image src={src} alt={`Galeri ${index + 1}`} width={400} height={250} />
+          {galeriTerbaru.length === 0 ? (
+            <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
+              <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
+              Belum ada Berita Desa
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {galeriTerbaru.map((item, index) => (
+                  <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
+                    <div key={item.id} className={`rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white ${index > 0 ? " md:block hidden" : ""}`}>
+                      <div className="relative">
+                        <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
+                        <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded shadow">
+                          {new Date(item.created_at).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            ))}
-          </div>
-           */}
-          <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
-            <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
-            Belum ada Galeri Desa
-          </div>
+              <div className="flex justify-end">
+                <Link href={{ pathname: "/beranda/informasi-desa", query: { kategori: "galeri" } }} className="text-sm font-medium text-[#27AE60] hover:underline">
+                  Lihat lebih banyak →
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
@@ -320,21 +394,35 @@ export default function HomePage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Produk Desa</h2>
           <p className="text-gray-700 mb-10 text-sm sm:text-base">Produk Desa Limapoccoe merupakan hasil karya dan potensi lokal yang mencerminkan kekayaan sumber daya dan keterampilan masyarakat desa.</p>
 
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {["/images/produk/produk1.png", "/images/produk/produk2.png", "/images/produk/produk3.png", "/images/produk/produk3.png", "/images/produk/produk3.png", "/images/produk/produk3.png"].map((src, index) => (
-              <div key={index} className="rounded-xl overflow-hidden bg-white shadow-sm">
-                <Image src={src} alt={`Produk ${index + 1}`} width={400} height={250} className="w-full h-48 object-cover rounded-t-xl" />
-                <div className="flex justify-between items-center bg-[#27AE60] text-white px-4 py-3 text-sm font-semibold rounded-b-xl">
-                  <span>Kripik kaca</span>
-                  <span>Rp. 100.000</span>
-                </div>
+          {produkTerbaru.length === 0 ? (
+            <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
+              <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
+              Belum ada Berita Desa
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {produkTerbaru.map((item, index) => (
+                  <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
+                    <div key={item.id} className={`rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white ${index > 0 ? "md:block hidden" : ""}`}>
+                      <div className="relative">
+                        <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
+                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            ))}
-          </div> */}
-          <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
-            <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
-            Belum ada Produk Desa
-          </div>
+              <div className="flex justify-end">
+                <Link href={{ pathname: "/beranda/informasi-desa", query: { kategori: "produk" } }} className="text-sm font-medium text-[#27AE60] hover:underline">
+                  Lihat lebih banyak →
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
