@@ -92,7 +92,7 @@ export default function BerandaLayout({ children }) {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.png" alt="Logo Desa Limapocoe" width={45} height={45} priority />
-            <span className="text-white font-semibold text-lg md:text-xl">Desa Limapocoe</span>
+            <span className="text-white font-semibold text-lg md:text-xl">Desa Limapoccoe</span>
           </Link>
 
           {/* NAV DESKTOP – hanya tampil di md+ */}
@@ -167,7 +167,7 @@ export default function BerandaLayout({ children }) {
 
       {/* Footer */}
       <footer className="bg-[#1E844A] text-white text-center py-4 px-4 text-xs sm:text-base">
-        <div className="max-w-screen-xl mx-auto">© 2025 Pemerintah Desa Limapocoe - dikelola oleh Tim IT Desa</div>
+        <div className="max-w-screen-xl mx-auto">© 2025 Pemerintah Desa Limapoccoe - dikelola oleh Tim IT Desa</div>
       </footer>
     </div>
   );

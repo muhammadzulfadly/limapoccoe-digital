@@ -35,7 +35,7 @@ export default function HomePage() {
   return (
     <>
       {/* Banner */}
-      <div className="relative w-full aspect-[16/4] overflow-hidden bg-white">
+      <div className="relative w-full aspect-[16/8] overflow-hidden bg-white">
         {/* Gambar background penuh */}
         <Image src="/bg-limapoccoe.png" alt="Banner Limapoccoe" fill className="object-cover" priority />
 
@@ -108,15 +108,15 @@ export default function HomePage() {
               <div className="max-h-[350px] overflow-y-auto pr-2">
                 <div className="text-gray-700 text-sm sm:text-base leading-relaxed space-y-4">
                   <p>
-                    <strong>Assalamualaikum Warahmatullahi Wabarakatuh,</strong>
+                    <strong>Assalamu’alaikum Warahmatullahi Wabarakatuh,</strong>
                   </p>
                   <p>
-                    Dengan penuh rasa syukur kita panjatkan ke hadirat Allah SWT, karena atas limpahan rahmat-Nya kita semua masih diberikan kesehatan dan kesempatan untuk terus berbuat yang terbaik bagi desa tercinta, Desa Limapocoe.
+                    Dengan penuh rasa syukur, kita panjatkan ke hadirat Allah SWT karena atas limpahan rahmat-Nya, kita semua masih diberikan kesehatan dan kesempatan untuk terus berbuat yang terbaik bagi desa tercinta, Desa Limapoccoe.
                     Website ini kami hadirkan bukan sekadar sebagai media informasi, tetapi juga sebagai jembatan komunikasi antara pemerintah desa dengan seluruh warga. Melalui platform digital ini, kita dapat bersama-sama membangun
-                    keterbukaan, memperkuat pelayanan publik, serta memperkenalkan potensi Desa Limapocoe kepada dunia luar.
+                    keterbukaan, memperkuat pelayanan publik, serta memperkenalkan potensi Desa Limapoccoe kepada dunia luar.
                   </p>
                   <p>
-                    Kami percaya, pembangunan desa tidak akan berhasil tanpa kebersamaan dan partisipasi aktif masyarakat. Dengan adanya teknologi, kita punya peluang besar untuk menjadikan pelayanan lebih cepat, transparan, dan mudah
+                    Kami percaya, pembangunan desa tidak akan berhasil tanpa kebersamaan dan partisipasi aktif masyarakat. Dengan adanya teknologi, kita memiliki peluang besar untuk menjadikan pelayanan lebih cepat, transparan, dan mudah
                     dijangkau.
                   </p>
                   <p>Harapan saya, website ini menjadi wadah yang hidup:</p>
@@ -125,9 +125,9 @@ export default function HomePage() {
                     <li>Ruang bagi warga untuk menyampaikan aspirasi, kritik, maupun saran.</li>
                     <li>Sarana promosi potensi desa, baik di bidang pertanian, ekonomi kreatif, maupun budaya.</li>
                   </ul>
-                  <p>Mari kita jadikan Desa Limapocoe sebagai desa yang maju, sejahtera, dan tetap berpegang pada nilai kebersamaan. Semoga Allah SWT senantiasa meridhoi langkah kita.</p>
+                  <p>Mari kita jadikan Desa Limapoccoe sebagai desa yang maju, sejahtera, dan tetap berpegang pada nilai kebersamaan. Semoga Allah SWT senantiasa meridai langkah kita.</p>
                   <p>
-                    <strong>Wassalamualaikum Warahmatullahi Wabarakatuh.</strong>
+                    <strong>Wassalamu’alaikum Warahmatullahi Wabarakatuh.</strong>
                   </p>
                 </div>
               </div>
@@ -238,7 +238,7 @@ export default function HomePage() {
       <section className="bg-[#F0FFF6] py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Berita Desa</h2>
-          <p className="text-gray-600 mb-10 text-sm sm:text-base">Berita Desa Limmapocoe menyajikan informasi terbaru seputar kegiatan, pengumuman, dan perkembangan di lingkungan Desa Limmapocoe.</p>
+          <p className="text-gray-600 mb-10 text-sm sm:text-base">Berita Desa Limmapocoe menyajikan informasi terbaru seputar kegiatan, pengumuman, dan perkembangan di lingkungan Desa Limmapoccoe.</p>
 
           {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -296,7 +296,7 @@ export default function HomePage() {
       <section className="bg-[#F0FFF6] py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Galeri Desa</h2>
-          <p className="text-gray-600 mb-10 text-sm sm:text-base">Galeri Desa Limmapocoe menampilkan dokumentasi foto kegiatan yang berlangsung di desa Limapoccoe.</p>
+          <p className="text-gray-600 mb-10 text-sm sm:text-base">Galeri Desa Limmapoccoe menampilkan dokumentasi foto kegiatan yang berlangsung di Desa Limapoccoe.</p>
 
           {/* 
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
@@ -345,9 +345,9 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-start gap-4">
             <Image src="/logo.png" alt="Logo Desa" width={95} height={95} />
             <div>
-              <h4 className="text-lg font-semibold mb-2">Desa Limapocoe</h4>
+              <h4 className="text-lg font-semibold mb-2">Desa Limapoccoe</h4>
               <p className="text-base leading-relaxed">
-                Dusun Wt. Bengo, Desa Limapocoe,
+                Dusun Wt. Bengo, Desa Limapoccoe,
                 <br />
                 Kec. Cenrana, Kab. Maros 90562
               </p>
@@ -363,7 +363,7 @@ export default function HomePage() {
             </div>
             <div className="flex items-start gap-2">
               <Phone className="w-5 h-5 mt-1" />
-              <span className="text-base hover:underline">0881080268674</span>
+              <span className="text-base hover:underline">085338807929</span>
             </div>
           </div>
 
