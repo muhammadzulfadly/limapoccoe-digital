@@ -85,31 +85,61 @@ export default function HomePage() {
 
       {/* Sambutan Kepala Desa */}
       <section className="bg-[#F0FFF6] py-12 px-4">
-        <div className="max-w-7xl mx-auto ">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Sambutan Kepala Desa</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            {/* Kiri: Gambar */}
-            <div className="">
-              <Image src="/images/tentang-desa.png" alt="Tentang Desa Limmapocoe" width={700} height={400} className="w-full h-auto object-cover" />
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center sm:text-left">Sambutan Kepala Desa</h2>
+
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
+            {/* Foto Kepala Desa */}
+            <div className="flex justify-center lg:w-[40%]">
+              <div className="rounded-full p-2 shadow-md">
+                <Image
+                  src="/images/kepdes.png"
+                  alt="Kepala Desa"
+                  width={300}
+                  height={300} // Ubah jadi square agar bundar sempurna
+                  className="rounded-full object-cover"
+                />
+              </div>
             </div>
 
             {/* Kanan: Teks */}
-            <div>
-              <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6">
-                Sekilas tentang desa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nunc et convallis placerat, ex nisi volutpat sapien, vel eleifend elit libero a erat. Sed nec augue at urna vehicula pretium sit
-                amet vel odio. Praesent ac orci eu tortor vehicula.
-              </p>
+            <div className="lg:w-[60%]">
+              {/* Scrollable Sambutan - Batasi tinggi agar tampak pendek di awal */}
+              <div className="max-h-[350px] overflow-y-auto pr-2">
+                <div className="text-gray-700 text-sm sm:text-base leading-relaxed space-y-4">
+                  <p>
+                    <strong>Assalamualaikum Warahmatullahi Wabarakatuh,</strong>
+                  </p>
+                  <p>
+                    Dengan penuh rasa syukur kita panjatkan ke hadirat Allah SWT, karena atas limpahan rahmat-Nya kita semua masih diberikan kesehatan dan kesempatan untuk terus berbuat yang terbaik bagi desa tercinta, Desa Limapocoe.
+                    Website ini kami hadirkan bukan sekadar sebagai media informasi, tetapi juga sebagai jembatan komunikasi antara pemerintah desa dengan seluruh warga. Melalui platform digital ini, kita dapat bersama-sama membangun
+                    keterbukaan, memperkuat pelayanan publik, serta memperkenalkan potensi Desa Limapocoe kepada dunia luar.
+                  </p>
+                  <p>
+                    Kami percaya, pembangunan desa tidak akan berhasil tanpa kebersamaan dan partisipasi aktif masyarakat. Dengan adanya teknologi, kita punya peluang besar untuk menjadikan pelayanan lebih cepat, transparan, dan mudah
+                    dijangkau.
+                  </p>
+                  <p>Harapan saya, website ini menjadi wadah yang hidup:</p>
+                  <ul className="list-disc list-inside">
+                    <li>Tempat masyarakat mendapatkan informasi resmi desa.</li>
+                    <li>Ruang bagi warga untuk menyampaikan aspirasi, kritik, maupun saran.</li>
+                    <li>Sarana promosi potensi desa, baik di bidang pertanian, ekonomi kreatif, maupun budaya.</li>
+                  </ul>
+                  <p>Mari kita jadikan Desa Limapocoe sebagai desa yang maju, sejahtera, dan tetap berpegang pada nilai kebersamaan. Semoga Allah SWT senantiasa meridhoi langkah kita.</p>
+                  <p>
+                    <strong>Wassalamualaikum Warahmatullahi Wabarakatuh.</strong>
+                  </p>
+                </div>
+              </div>
 
-              <div className="space-y-5">
-                {/* Kepala Desa */}
-                <div className="flex items-center gap-4">
-                  <div className="bg-[#27AE60] text-white p-3 rounded-full">
-                    <User className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-900">H A Abu Bakri</p>
-                    <p className="text-sm text-gray-600">Kepala Desa Limmapocoe</p>
-                  </div>
+              {/* Informasi Kepala Desa - Tetap terlihat */}
+              <div className="flex items-center gap-4 mt-6">
+                <div className="bg-[#27AE60] text-white p-3 rounded-full">
+                  <User className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-bold text-gray-900">H. A. ABU BAKRI</p>
+                  <p className="text-sm text-gray-600">Kepala Desa Limmapocoe</p>
                 </div>
               </div>
             </div>
@@ -146,7 +176,7 @@ export default function HomePage() {
 
           <div className="w-full h-[450px] rounded-xl overflow-hidden shadow-lg">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d42562.03270670231!2d119.7759205396301!3d-4.99527290236073!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dbe8ab0aeac6a13%3A0x51b73738e9481b09!2sLimpoccoe%2C%20Kec.%20Cenrana%2C%20Kabupaten%20Maros%2C%20Sulawesi%20Selatan!5e1!3m2!1sid!2sid!4v1755457831571!5m2!1sid!2sid"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d83238.12680236783!2d119.76345437124547!3d-4.9913258515696635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dbe8ab0aeac6a13%3A0x51b73738e9481b09!2sLimpoccoe%2C%20Kec.%20Cenrana%2C%20Kabupaten%20Maros%2C%20Sulawesi%20Selatan!5e1!3m2!1sid!2sid!4v1755491659447!5m2!1sid!2sid"
               width="100%"
               height="100%"
               style={{ border: 0 }}
