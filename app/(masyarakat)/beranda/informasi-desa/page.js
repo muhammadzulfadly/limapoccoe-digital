@@ -30,12 +30,11 @@ function getPaginationRange(currentPage, totalPages) {
   return range;
 }
 
-// helper untuk gambar aman
 function getImageSrc(gambar) {
   return gambar ? `/api/information/photo/${gambar.split("/").pop()}` : "/images/no-image.png";
 }
 
-export default function BeritaInformasiPage() {
+export default function InnerBeritaInformasiPage() {
   const [activeTab, setActiveTab] = useState("berita");
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
@@ -43,7 +42,6 @@ export default function BeritaInformasiPage() {
   const perPage = 9;
   const searchParams = useSearchParams();
 
-  // Saat komponen pertama kali mount, cek apakah ada query kategori
   useEffect(() => {
     const kategoriQuery = searchParams.get("kategori");
     if (kategoriQuery && ["berita", "wisata", "galeri", "produk"].includes(kategoriQuery)) {
@@ -104,82 +102,35 @@ export default function BeritaInformasiPage() {
             </div>
           ) : (
             <>
-              {activeTab === "berita" && (
+              {["berita", "wisata", "galeri", "produk"].includes(activeTab) && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                   {pageItems.map((item) => (
                     <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
                       <div className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
                         <div className="relative">
-                          <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
-                          <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded shadow">
-                            {new Date(item.created_at).toLocaleDateString("id-ID", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            })}
-                          </span>
+                          <Image
+                            src={getImageSrc(item.gambar)}
+                            alt={item.judul}
+                            width={400}
+                            height={250}
+                            className="w-full h-52 object-cover"
+                          />
+                          {(activeTab === "berita" || activeTab === "galeri") && (
+                            <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded shadow">
+                              {new Date(item.created_at).toLocaleDateString("id-ID", {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              })}
+                            </span>
+                          )}
                         </div>
-                        <div className="p-4">
-                          <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
-                          <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-
-              {activeTab === "wisata" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {pageItems.map((item) => (
-                    <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
-                      <div className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
-                        <div className="relative">
-                          <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
-                        </div>
-                        <div className="p-4">
-                          <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
-                          <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-
-              {activeTab === "galeri" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {pageItems.map((item) => (
-                    <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
-                      <div className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
-                        <div className="relative">
-                          <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
-                          <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded shadow">
-                            {new Date(item.created_at).toLocaleDateString("id-ID", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            })}
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-
-              {activeTab === "produk" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {pageItems.map((item) => (
-                    <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
-                      <div className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
-                        <div className="relative">
-                          <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
-                        </div>
-                        <div className="p-4">
-                          <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
-                          <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
-                        </div>
+                        {activeTab !== "galeri" && (
+                          <div className="p-4">
+                            <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
+                            <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                          </div>
+                        )}
                       </div>
                     </Link>
                   ))}
