@@ -96,8 +96,8 @@ export default function InfografisPage() {
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">Infografis</h2>
-        <p className="max-w-2xl mx-auto text-gray-600 mb-10 text-sm sm:text-base text-center">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">Infografis Desa</h2>
+        <p className="mx-auto text-gray-600 mb-10 text-sm sm:text-base text-center">
           Halaman ini menyajikan data demografis Desa Limapoccoe dalam bentuk visual yang mudah dipahami. Informasi meliputi jumlah penduduk, pendidikan, status perkawinan, agama, dan distribusi dusun. Data ini berguna sebagai dasar
           perencanaan dan pengambilan keputusan di tingkat desa.
         </p>

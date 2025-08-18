@@ -377,13 +377,13 @@ export default function HomePage() {
                 </Link>
               </li>
               <li>
-                <Link className="hover:underline" href="/beranda/berita-informasi">
-                  Berita & Informasi
+                <Link className="hover:underline" href="/beranda/informasi-desa">
+                  Informasi Desa
                 </Link>
               </li>
               <li>
-                <Link className="hover:underline" href="/beranda/infografis">
-                  Infografis
+                <Link className="hover:underline" href="/beranda/infografis-desa">
+                  Infografis Desa
                 </Link>
               </li>
             </ul>

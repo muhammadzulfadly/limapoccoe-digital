@@ -65,8 +65,8 @@ export default function Sidebar({ isOpen, onClose }) {
   const navLinksBeranda = [
     { label: "Beranda", href: "/beranda" },
     { label: "Profil Desa", href: "/beranda/profil-desa" },
-    { label: "Berita & Informasi", href: "/beranda/berita-informasi" },
-    { label: "Infografis", href: "/beranda/infografis" },
+    { label: "Informasi Desa", href: "/beranda/informasi-desa" },
+    { label: "Infografis Desa", href: "/beranda/infografis-desa" },
   ];
 
   const isActive = (path) => pathname === path || pathname.startsWith(`${path}/`);
