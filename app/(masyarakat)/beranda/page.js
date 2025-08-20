@@ -16,6 +16,51 @@ export default function HomePage() {
   const [galeriTerbaru, setGaleriTerbaru] = useState([]);
   const [produkTerbaru, setProdukTerbaru] = useState([]);
 
+  const [infoPenduduk, setInfoPenduduk] = useState({
+    total: "...",
+    keluarga: "...",
+    perempuan: "...",
+    laki: "...",
+  });
+
+  useEffect(() => {
+    const fetchStatistik = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const [resPenduduk, resKeluarga, resKelamin] = await Promise.all([
+          fetch("/api/population/jumlah-penduduk", {
+            headers: { Authorization: token },
+          }),
+          fetch("/api/population/jumlah-keluarga", {
+            headers: { Authorization: token },
+          }),
+          fetch("/api/population/jenis-kelamin", {
+            headers: { Authorization: token },
+          }),
+        ]);
+
+        const penduduk = await resPenduduk.json();
+        const keluarga = await resKeluarga.json();
+        const kelamin = await resKelamin.json();
+
+        const jumlahL = kelamin.find((item) => item.jenis_kelamin === "Laki-laki")?.total ?? 0;
+        const jumlahP = kelamin.find((item) => item.jenis_kelamin === "Perempuan")?.total ?? 0;
+
+        setInfoPenduduk({
+          total: penduduk?.jumlah_penduduk ?? 0,
+          keluarga: keluarga?.jumlah_keluarga ?? 0,
+          perempuan: jumlahP,
+          laki: jumlahL,
+        });
+      } catch (err) {
+        console.error("Gagal memuat data statistik penduduk:", err);
+      }
+    };
+
+    fetchStatistik();
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -230,7 +275,9 @@ export default function HomePage() {
               <Image src="/images/penduduk/total.png" alt="Total Penduduk" width={60} height={60} />
               <div>
                 <p className="text-sm sm:text-lg  text-gray-600">TOTAL PENDUDUK</p>
-                <p className="text-sm sm:text-lg  text-gray-600">0 Jiwa</p>
+                <p className="text-sm sm:text-lg text-gray-600">
+                  {infoPenduduk.total} {infoPenduduk.total !== "..." ? "Jiwa" : ""}
+                </p>
               </div>
             </div>
 
@@ -239,7 +286,9 @@ export default function HomePage() {
               <Image src="/images/penduduk/kepala-keluarga.png" alt="Kepala Keluarga" width={60} height={60} />
               <div>
                 <p className="text-sm sm:text-lg  text-gray-600">KEPALA KELUARGA</p>
-                <p className="text-sm sm:text-lg  text-gray-600">0 Jiwa</p>
+                <p className="text-sm sm:text-lg text-gray-600">
+                  {infoPenduduk.keluarga} {infoPenduduk.keluarga !== "..." ? "KK" : ""}
+                </p>
               </div>
             </div>
 
@@ -248,7 +297,9 @@ export default function HomePage() {
               <Image src="/images/penduduk/perempuan.png" alt="Perempuan" width={60} height={60} />
               <div>
                 <p className="text-sm sm:text-lg  text-gray-600">PEREMPUAN</p>
-                <p className="text-sm sm:text-lg text-gray-600">0 Jiwa</p>
+                <p className="text-sm sm:text-lg text-gray-600">
+                  {infoPenduduk.perempuan} {infoPenduduk.perempuan !== "..." ? "Jiwa" : ""}
+                </p>
               </div>
             </div>
 
@@ -257,7 +308,9 @@ export default function HomePage() {
               <Image src="/images/penduduk/laki-laki.png" alt="Laki-Laki" width={60} height={60} />
               <div>
                 <p className="text-sm sm:text-lg  text-gray-600">LAKI-LAKI</p>
-                <p className="text-sm sm:text-lg  text-gray-600">0 Jiwa</p>
+                <p className="text-sm sm:text-lg text-gray-600">
+                  {infoPenduduk.laki} {infoPenduduk.laki !== "..." ? "Jiwa" : ""}
+                </p>
               </div>
             </div>
           </div>
