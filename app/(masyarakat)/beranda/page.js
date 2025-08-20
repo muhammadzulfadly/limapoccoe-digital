@@ -169,7 +169,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <p className="font-bold text-gray-900">H. A. ABU BAKRI</p>
-                  <p className="text-sm text-gray-600">Kepala Desa Limmapocoe</p>
+                  <p className="text-sm text-gray-600">Kepala Desa Limmapoccoe</p>
                 </div>
               </div>
             </div>
