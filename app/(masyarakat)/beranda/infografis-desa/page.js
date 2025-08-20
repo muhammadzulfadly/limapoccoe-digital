@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import FloatingButtons from "@/components/FloatingButtons";
+import { useEffect, useState } from "react";
 
 // ✅ Custom Tick untuk XAxis
 const CustomXAxisTick = ({ x, y, payload }) => {
@@ -27,44 +28,58 @@ const CustomXAxisTick = ({ x, y, payload }) => {
 };
 
 export default function InfografisPage() {
-  const dataPenduduk = [
-    {
-      label: "TOTAL PENDUDUK",
-      value: "0 Jiwa",
-      icon: "/images/penduduk/total.png",
-    },
-    {
-      label: "KEPALA KELUARGA",
-      value: "0 KK",
-      icon: "/images/penduduk/kepala-keluarga.png",
-    },
-    {
-      label: "PEREMPUAN",
-      value: "0 Jiwa",
-      icon: "/images/penduduk/perempuan.png",
-    },
-    {
-      label: "LAKI-LAKI",
-      value: "0 Jiwa",
-      icon: "/images/penduduk/laki-laki.png",
-    },
-  ];
+  const [dataPenduduk, setDataPenduduk] = useState([
+    { label: "TOTAL PENDUDUK", value: "...", icon: "/images/penduduk/total.png" },
+    { label: "KEPALA KELUARGA", value: "...", icon: "/images/penduduk/kepala-keluarga.png" },
+    { label: "PEREMPUAN", value: "...", icon: "/images/penduduk/perempuan.png" },
+    { label: "LAKI-LAKI", value: "...", icon: "/images/penduduk/laki-laki.png" },
+  ]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const [resPenduduk, resKeluarga] = await Promise.all([
+          fetch("/api/population/jumlah-penduduk", {
+            headers: { Authorization: token },
+          }),
+          fetch("/api/population/jumlah-keluarga", {
+            headers: { Authorization: token },
+          }),
+        ]);
+
+        const penduduk = await resPenduduk.json();
+        const keluarga = await resKeluarga.json();
+
+        setDataPenduduk((prev) => {
+          const updated = [...prev];
+          updated[0].value = penduduk?.jumlah_penduduk ? `${penduduk.jumlah_penduduk} Jiwa` : "...";
+          updated[1].value = keluarga?.jumlah_keluarga ? `${keluarga.jumlah_keluarga} KK` : "...";
+          return updated;
+        });
+      } catch (error) {
+        console.error("Gagal mengambil data penduduk:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const dataPerkawinan = [
-    { label: "Belum Kawin", value: "0 Jiwa", icon: "/images/penduduk/belum-kawin.png" },
-    { label: "Kawin", value: "0 Jiwa", icon: "/images/penduduk/kawin.png" },
-    { label: "Cerai Mati", value: "0 Jiwa", icon: "/images/penduduk/cerai-mati.png" },
-    { label: "Cerai Hidup", value: "0 Jiwa", icon: "/images/penduduk/cerai-hidup.png" },
+    { label: "Belum Kawin", value: "...", icon: "/images/penduduk/belum-kawin.png" },
+    { label: "Kawin", value: "...", icon: "/images/penduduk/kawin.png" },
+    { label: "Cerai Mati", value: "...", icon: "/images/penduduk/cerai-mati.png" },
+    { label: "Cerai Hidup", value: "...", icon: "/images/penduduk/cerai-hidup.png" },
   ];
 
   const dataAgama = [
-    { label: "Islam", value: "0 Jiwa", icon: "/images/penduduk/islam.png" },
-    { label: "Hindu", value: "0 Jiwa", icon: "/images/penduduk/hindu.png" },
-    { label: "Budha", value: "0 Jiwa", icon: "/images/penduduk/buddha.png" },
-    { label: "Konghucu", value: "0 Jiwa", icon: "/images/penduduk/konghucu.png" },
-    { label: "Kristen", value: "0 Jiwa", icon: "/images/penduduk/kristen.png" },
-    { label: "Katolik", value: "0 Jiwa", icon: "/images/penduduk/katolik.png" },
-    { label: "Kepercayaan lainnya", value: "0 Jiwa", icon: "/images/penduduk/agama-lainnya.png" },
+    { label: "Islam", value: "...", icon: "/images/penduduk/islam.png" },
+    { label: "Hindu", value: "...", icon: "/images/penduduk/hindu.png" },
+    { label: "Budha", value: "...", icon: "/images/penduduk/buddha.png" },
+    { label: "Konghucu", value: "...", icon: "/images/penduduk/konghucu.png" },
+    { label: "Kristen", value: "...", icon: "/images/penduduk/kristen.png" },
+    { label: "Katolik", value: "...", icon: "/images/penduduk/katolik.png" },
+    { label: "Kepercayaan lainnya", value: "...", icon: "/images/penduduk/agama-lainnya.png" },
   ];
 
   const dataDusun = [
