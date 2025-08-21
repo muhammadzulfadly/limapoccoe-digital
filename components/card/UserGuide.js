@@ -14,7 +14,9 @@ export default function UserGuideCard() {
         const data = json.data || [];
 
         const panduanItem = data.find(
-          (item) => item.kategori === "pengumuman" && item.judul === "Tautan Panduan Pengguna"
+          (item) =>
+            item.kategori === "pengumuman" &&
+            item.judul === "Tautan Panduan Pengguna Masyarakat"
         );
 
         setLinkPanduan(panduanItem?.konten || null);
@@ -37,8 +39,12 @@ export default function UserGuideCard() {
     >
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm w-full p-4 flex items-center justify-between">
         <div>
-          <div className="text-sm md:text-sm font-semibold text-[#00171F]">User Guide</div>
-          <div className="text-xs md:text-sm text-[#00171F]">Lihat panduan</div>
+          <div className="text-sm md:text-sm font-semibold text-[#00171F]">
+            Panduan Masyarakat
+          </div>
+          <div className="text-xs md:text-sm text-[#00171F]">
+            Lihat panduan pengguna masyarakat
+          </div>
         </div>
         <FileText
           size={32}
