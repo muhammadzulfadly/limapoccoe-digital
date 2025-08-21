@@ -15,6 +15,7 @@ export default function HomePage() {
   const [wisataTerbaru, setWisataTerbaru] = useState([]);
   const [galeriTerbaru, setGaleriTerbaru] = useState([]);
   const [produkTerbaru, setProdukTerbaru] = useState([]);
+  const [videoProfilDesa, setVideoProfilDesa] = useState(null);
 
   const [infoPenduduk, setInfoPenduduk] = useState({
     total: "...",
@@ -22,6 +23,50 @@ export default function HomePage() {
     perempuan: "...",
     laki: "...",
   });
+
+  function convertToYouTubeEmbed(url) {
+    try {
+      const yt = new URL(url);
+      if (yt.hostname.includes("youtube.com") && yt.searchParams.has("v")) {
+        return `https://www.youtube.com/embed/${yt.searchParams.get("v")}`;
+      }
+
+      if (yt.hostname === "youtu.be") {
+        return `https://www.youtube.com/embed/${yt.pathname.slice(1)}`;
+      }
+
+      return url; // fallback
+    } catch {
+      return url;
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/information");
+        const result = await res.json();
+        const data = result.data || [];
+
+        // Pisahkan berdasarkan kategori dan ambil 3 data terbaru
+        const sortByDate = (arr) => [...arr].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3);
+
+        setBeritaTerbaru(sortByDate(data.filter((d) => d.kategori === "berita")));
+        setWisataTerbaru(sortByDate(data.filter((d) => d.kategori === "wisata")));
+        setGaleriTerbaru(sortByDate(data.filter((d) => d.kategori === "galeri")));
+        setProdukTerbaru(sortByDate(data.filter((d) => d.kategori === "produk")));
+
+        // Ambil video profil desa
+        const videoItem = data.find((d) => d.kategori === "pengumuman" && d.judul === "Tautan Video Profil Desa");
+        const youtubeEmbed = videoItem?.konten ? convertToYouTubeEmbed(videoItem.konten) : null;
+        setVideoProfilDesa(youtubeEmbed);
+      } catch (err) {
+        console.error("Gagal ambil data informasi:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchStatistik = async () => {
@@ -226,20 +271,12 @@ export default function HomePage() {
       <section className="bg-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Profil Desa</h2>
-          {/* <div className="relative aspect-video w-full rounded-xl overflow-hidden shadow-lg">
-            <video ref={videoRef} controls className="w-full h-full object-cover" poster="/images/cover.png">
-              <source src="/images/video-desa.mp4" type="video/mp4" />
-              Browser Anda tidak mendukung pemutaran video.
-            </video> */}
           <div className="aspect-w-16 aspect-h-9">
-            <iframe src="https://drive.google.com/file/d/1LiOdyNLYi-SMnZX9tPbJ_7ra_eBNFSwk/preview" width="100%" height="480" allow="autoplay" allowFullScreen="0"></iframe>
-            {/* {!isPlaying && (
-              <button onClick={handlePlay} className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 hover:bg-black/40 transition">
-                <div className="bg-[#27AE60] rounded-full p-4 sm:p-8">
-                  <Play className="w-10 h-10 sm:w-20 sm:h-20 text-white" />
-                </div>
-              </button>
-            )} */}
+            {videoProfilDesa ? (
+              <iframe src={videoProfilDesa} width="100%" height="480" allow="autoplay" allowFullScreen className="rounded-xl"></iframe>
+            ) : (
+              <div className="w-full h-[300px] bg-gray-100 flex items-center justify-center rounded-xl text-gray-500 italic text-center">Belum ada Profil Desa.</div>
+            )}
           </div>
         </div>
       </section>

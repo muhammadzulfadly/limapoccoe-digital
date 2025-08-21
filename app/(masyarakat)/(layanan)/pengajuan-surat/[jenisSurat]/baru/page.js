@@ -17,6 +17,7 @@ import RTRW, { validateRTRW } from "@/components/forms/RTRW";
 import StatusHubungan, { validateStatusHubungan } from "@/components/forms/StatusHubungan";
 import StatusPerkawinan, { validateStatusPerkawinan } from "@/components/forms/StatusPerkawinan";
 import Tanggal, { validateTanggal } from "@/components/forms/Tanggal";
+import Jam, { validateJam } from "@/components/forms/Jam";
 
 Agama.validate = validateAgama;
 Angka.validate = validateAngka;
@@ -31,6 +32,7 @@ RTRW.validate = validateRTRW;
 StatusHubungan.validate = validateStatusHubungan;
 StatusPerkawinan.validate = validateStatusPerkawinan;
 Tanggal.validate = validateTanggal;
+Jam.validate = validateJam;
 
 const formSchemaBySuratKode = {
   SKTM: [
@@ -243,7 +245,7 @@ const formSchemaBySuratKode = {
     },
     {
       name: "pukul",
-      Component: Angka,
+      Component: Jam,
       props: {
         label: "Pukul Kelahiran (WITA)",
       },
