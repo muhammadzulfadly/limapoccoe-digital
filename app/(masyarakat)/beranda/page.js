@@ -409,7 +409,7 @@ export default function HomePage() {
           {galeriTerbaru.length === 0 ? (
             <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
               <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
-              Belum ada Berita Desa
+              Belum ada Galeri Desa
             </div>
           ) : (
             <>
@@ -450,7 +450,7 @@ export default function HomePage() {
           {produkTerbaru.length === 0 ? (
             <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
               <Ban className="w-6 h-6 text-gray-600 mr-2 shrink-0" />
-              Belum ada Berita Desa
+              Belum ada Produk Desa
             </div>
           ) : (
             <>
