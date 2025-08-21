@@ -110,13 +110,7 @@ function InformasiDesaClient() {
                 <Link href={`/beranda/informasi-desa/${item.slug}`} key={item.id}>
                   <div className="rounded-xl overflow-hidden border border-[#27AE60] shadow-sm bg-white">
                     <div className="relative">
-                      <Image
-                        src={getImageSrc(item.gambar)}
-                        alt={item.judul}
-                        width={400}
-                        height={250}
-                        className="w-full h-52 object-cover"
-                      />
+                      <Image src={getImageSrc(item.gambar)} alt={item.judul} width={400} height={250} className="w-full h-52 object-cover" />
                       {(activeTab === "berita" || activeTab === "galeri") && (
                         <span className="absolute bottom-2 right-2 bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded shadow">
                           {new Date(item.created_at).toLocaleDateString("id-ID", {
@@ -130,7 +124,7 @@ function InformasiDesaClient() {
                     {activeTab !== "galeri" && (
                       <div className="p-4">
                         <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
-                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3 whitespace-pre-line">{item.konten || "Tidak ada konten."}</p>
                       </div>
                     )}
                   </div>

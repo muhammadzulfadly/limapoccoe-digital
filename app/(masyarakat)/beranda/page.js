@@ -424,7 +424,7 @@ export default function HomePage() {
                       </div>
                       <div className="p-4">
                         <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
-                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3 whitespace-pre-line">{item.konten || "Tidak ada konten."}</p>
                       </div>
                     </div>
                   </Link>
@@ -462,7 +462,7 @@ export default function HomePage() {
                       </div>
                       <div className="p-4">
                         <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
-                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3 whitespace-pre-line">{item.konten || "Tidak ada konten."}</p>
                       </div>
                     </div>
                   </Link>
@@ -541,7 +541,7 @@ export default function HomePage() {
                       </div>
                       <div className="p-4">
                         <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
-                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3">{item.konten || "Tidak ada konten."}</p>
+                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3 whitespace-pre-line">{item.konten || "Tidak ada konten."}</p>
                       </div>
                     </div>
                   </Link>

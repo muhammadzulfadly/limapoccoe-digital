@@ -51,18 +51,12 @@ export default function DetailInformasiPage() {
       <div className="bg-white border border-gray-200 shadow rounded-xl p-6 md:p-10">
         {/* Atas: Tombol Kembali kiri, Info kanan */}
         <div className="flex items-start justify-between mb-6 flex-wrap gap-y-2">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="flex items-center text-sm text-gray-500 hover:text-gray-700 transition"
-          >
+          <button type="button" onClick={() => router.back()} className="flex items-center text-sm text-gray-500 hover:text-gray-700 transition">
             <ChevronLeft size={20} className="mr-1" /> Kembali
           </button>
 
           <div className="text-right">
-            <span className="inline-block bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded-full mb-1">
-              {data.kategori?.toUpperCase() || "INFORMASI"}
-            </span>
+            <span className="inline-block bg-[#27AE60] text-white text-xs font-medium px-3 py-1 rounded-full mb-1">{data.kategori?.toUpperCase() || "INFORMASI"}</span>
             <p className="text-sm text-gray-500">
               {new Date(data.created_at).toLocaleDateString("id-ID", {
                 day: "numeric",
@@ -76,17 +70,10 @@ export default function DetailInformasiPage() {
         <h1 className="text-3xl font-bold text-gray-800 mb-6 leading-snug">{data.judul}</h1>
 
         <div className="rounded-xl overflow-hidden mb-8">
-          <img
-            src={getImageSrc(data.gambar)}
-            alt={data.judul}
-            className="w-full object-cover aspect-video"
-            loading="lazy"
-          />
+          <img src={getImageSrc(data.gambar)} alt={data.judul} className="w-full object-cover aspect-video" loading="lazy" />
         </div>
 
-        <article className="prose prose-sm sm:prose lg:prose-lg prose-p:text-gray-700 max-w-none">
-          <p>{data.konten}</p>
-        </article>
+        <article className="prose prose-sm sm:prose lg:prose-lg prose-p:text-gray-700 whitespace-pre-line max-w-none">{data.konten}</article>
       </div>
     </section>
   );
