@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, Phone, User, Ban } from "lucide-react";
+import { Mail, Phone, User, Ban, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import FloatingButtons from "@/components/FloatingButtons";
 import { useRef, useState, useEffect } from "react";
@@ -16,6 +16,8 @@ export default function HomePage() {
   const [galeriTerbaru, setGaleriTerbaru] = useState([]);
   const [produkTerbaru, setProdukTerbaru] = useState([]);
   const [videoProfilDesa, setVideoProfilDesa] = useState(null);
+  const [banners, setBanners] = useState([]);
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   const [infoPenduduk, setInfoPenduduk] = useState({
     total: "...",
@@ -23,6 +25,14 @@ export default function HomePage() {
     perempuan: "...",
     laki: "...",
   });
+
+  const nextBanner = () => {
+    setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % banners.length);
+  };
+
+  const prevBanner = () => {
+    setCurrentBannerIndex((prevIndex) => (prevIndex - 1 + banners.length) % banners.length);
+  };
 
   function convertToYouTubeEmbed(url) {
     try {
@@ -50,11 +60,19 @@ export default function HomePage() {
 
         // Pisahkan berdasarkan kategori dan ambil 3 data terbaru
         const sortByDate = (arr) => [...arr].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3);
+        const sortByDateAsc = (arr) => [...arr].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
         setBeritaTerbaru(sortByDate(data.filter((d) => d.kategori === "berita")));
         setWisataTerbaru(sortByDate(data.filter((d) => d.kategori === "wisata")));
         setGaleriTerbaru(sortByDate(data.filter((d) => d.kategori === "galeri")));
         setProdukTerbaru(sortByDate(data.filter((d) => d.kategori === "produk")));
+
+        const defaultSlide = {
+          isDefault: true, // penanda khusus untuk slide pertama
+        };
+
+        const bannerData = sortByDateAsc(data.filter((d) => d.kategori === "banner"));
+        setBanners([defaultSlide, ...bannerData]);
 
         // Ambil video profil desa
         const videoItem = data.find((d) => d.kategori === "pengumuman" && d.judul === "Tautan Video Profil Desa");
@@ -155,18 +173,41 @@ export default function HomePage() {
   return (
     <>
       {/* Banner */}
-      <div className="relative w-full aspect-[16/8] overflow-hidden bg-white">
-        {/* Gambar background penuh */}
-        <Image src="/bg-limapoccoe.png" alt="Banner Limapoccoe" fill className="object-cover" priority />
+      <div className="relative w-full aspect-[16/9] overflow-hidden bg-white">
+        {banners.length > 0 && (
+          <>
+            {banners[currentBannerIndex].isDefault ? (
+              // Slide default
+              <>
+                <div className="absolute inset-0 bg-[url('/bg-limapoccoe.png')] bg-cover bg-center" />
+                <div className="absolute inset-0 bg-black bg-opacity-30 z-10" />
+                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4">
+                  <p className="text-white text-sm sm:text-base font-medium mb-2">SELAMAT DATANG DI WEBSITE RESMI</p>
+                  <h1 className="text-white text-3xl sm:text-5xl font-bold mb-2">DESA LIMAPOCCOE</h1>
+                </div>
+              </>
+            ) : (
+              // Slide dari kategori "banner"
+              <>
+                <Image src={`/api/information/photo/${banners[currentBannerIndex].gambar.split("/").pop()}`} alt={`Banner ${currentBannerIndex}`} fill className="object-cover" />
+                <div className="absolute inset-0 bg-black bg-opacity-30 z-10" />
+                {/* Tidak ada tulisan di sini */}
+              </>
+            )}
 
-        {/* Overlay gelap tipis */}
-        <div className="absolute inset-0 bg-black bg-opacity-30 z-10" />
-
-        {/* Konten teks selamat datang */}
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4">
-          <p className="text-white text-sm sm:text-base font-medium mb-2">SELAMAT DATANG DI WEBSITE RESMI</p>
-          <h1 className="text-white text-3xl sm:text-5xl font-bold mb-2">DESA LIMAPOCCOE</h1>
-        </div>
+            {/* Tombol navigasi */}
+            {banners.length > 1 && (
+              <>
+                <button onClick={prevBanner} className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 bg-black bg-opacity-50 p-2 rounded-full text-white">
+                  <ChevronLeft size={24} />
+                </button>
+                <button onClick={nextBanner} className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 bg-black bg-opacity-50 p-2 rounded-full text-white">
+                  <ChevronRight size={24} />
+                </button>
+              </>
+            )}
+          </>
+        )}
       </div>
 
       {/* LAYANAN KAMI */}
