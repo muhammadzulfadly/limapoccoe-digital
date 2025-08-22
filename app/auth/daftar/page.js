@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import NIK, { validateNIK } from "@/components/forms/NIK";
-import Huruf, { validateHuruf } from "@/components/forms/Huruf";
 import NomorTelepon, { validateNomorTelepon } from "@/components/forms/NomorTelepon";
 import KataSandi, { validateKataSandi } from "@/components/forms/KataSandi";
+import Nama, { validateNama} from "@/components/forms/Nama";
 
 export default function Page() {
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function Page() {
 
     let errorMessage = "";
     if (name === "nik") errorMessage = validateNIK(value);
-    else if (name === "name") errorMessage = validateHuruf(value);
+    else if (name === "name") errorMessage = validateNama(value);
     else if (name === "no_whatsapp") errorMessage = validateNomorTelepon(value);
     else if (name === "password") errorMessage = validateKataSandi(value);
     else if (name === "password_confirmation" && value !== form.password) {
@@ -43,7 +43,7 @@ export default function Page() {
   const validateAll = () => {
     const newErrors = {
       nik: validateNIK(form.nik),
-      name: validateHuruf(form.name),
+      name: validateNama(form.name),
       no_whatsapp: validateNomorTelepon(form.no_whatsapp),
       password: validateKataSandi(form.password),
     };
@@ -112,7 +112,7 @@ export default function Page() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <NIK name="nik" value={form.nik} onChange={handleFieldChange} error={errors.nik} label="NIK" />
-        <Huruf name="name" value={form.name} onChange={handleFieldChange} error={errors.name} label="Nama Lengkap" />
+        <Nama name="name" value={form.name} onChange={handleFieldChange} error={errors.name} label="Nama Lengkap" />
         <NomorTelepon name="no_whatsapp" value={form.no_whatsapp} onChange={handleFieldChange} error={errors.no_whatsapp} label="Nomor Telepon" />
         <div className="hidden md:block border-y border-gray-400 my-10" />
         <KataSandi name="password" value={form.password} onChange={handleFieldChange} error={errors.password} label="Kata Sandi" />

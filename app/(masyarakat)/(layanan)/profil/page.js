@@ -11,6 +11,7 @@ import RTRW from "@/components/forms/RTRW";
 import Dusun from "@/components/forms/Dusun";
 import AngkaHuruf from "@/components/forms/AngkaHuruf";
 import JenisKelamin from "@/components/forms/JenisKelamin";
+import Nama from "@/components/forms/Nama";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -152,7 +153,7 @@ export default function ProfilePage() {
 
         <form className="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
           <NIK name="nik" value={form.nik} onChange={handleChange} error={""} disabled={true} label="NIK" />
-          <Huruf name="name" value={form.name} onChange={handleChange} error={""} disabled={true} label="Nama Lengkap" />
+          <Nama name="name" value={form.name} onChange={handleChange} error={""} disabled={true} label="Nama Lengkap" />
           <Huruf name="tempat_lahir" value={form.tempat_lahir} onChange={handleChange} disabled={!isEditable} label="Tempat lahir" />
           <Tanggal name="tanggal_lahir" value={form.tanggal_lahir} onChange={handleChange} disabled={!isEditable} label="Tanggal Lahir" />
           <JenisKelamin name="jenis_kelamin" value={form.jenis_kelamin} onChange={handleChange} disabled={!isEditable} label="Jenis Kelamin" />

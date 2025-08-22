@@ -18,6 +18,7 @@ import StatusHubungan, { validateStatusHubungan } from "@/components/forms/Statu
 import StatusPerkawinan, { validateStatusPerkawinan } from "@/components/forms/StatusPerkawinan";
 import Tanggal, { validateTanggal } from "@/components/forms/Tanggal";
 import Jam, { validateJam } from "@/components/forms/Jam";
+import Nama, { validateNama} from "@/components/forms/Nama";
 
 Agama.validate = validateAgama;
 Angka.validate = validateAngka;
@@ -33,13 +34,14 @@ StatusHubungan.validate = validateStatusHubungan;
 StatusPerkawinan.validate = validateStatusPerkawinan;
 Tanggal.validate = validateTanggal;
 Jam.validate = validateJam;
+Nama.validate = validateNama;
 
 const formSchemaBySuratKode = {
   SKTM: [
     { type: "separator", label: "Informasi Orang Tua" },
     {
       name: "nama_ayah",
-      Component: Huruf,
+      Component: Nama,
       props: {
         label: "Nama Ayah",
       },
@@ -53,7 +55,7 @@ const formSchemaBySuratKode = {
     },
     {
       name: "nama_ibu",
-      Component: Huruf,
+      Component: Nama,
       props: {
         label: "Nama Ibu",
       },
@@ -134,7 +136,7 @@ const formSchemaBySuratKode = {
     { type: "separator", label: "Informasi Orang Tua" },
     {
       name: "nama_ayah",
-      Component: Huruf,
+      Component: Nama,
       props: {
         label: "Nama Ayah",
       },
@@ -162,7 +164,7 @@ const formSchemaBySuratKode = {
     },
     {
       name: "nama_ibu",
-      Component: Huruf,
+      Component: Nama,
       props: {
         label: "Nama Ibu",
       },
@@ -224,7 +226,7 @@ const formSchemaBySuratKode = {
     { type: "separator", label: "Informasi Anak" },
     {
       name: "nama_anak",
-      Component: Huruf,
+      Component: Nama,
       props: {
         label: "Nama Anak",
       },
@@ -281,7 +283,7 @@ const formSchemaBySuratKode = {
     { type: "separator", label: "Informasi Orang Tua" },
     {
       name: "nama_ayah",
-      Component: Huruf,
+      Component: Nama,
       props: {
         label: "Nama Ayah",
       },
@@ -295,7 +297,7 @@ const formSchemaBySuratKode = {
     },
     {
       name: "nama_ibu",
-      Component: Huruf,
+      Component: Nama,
       props: {
         label: "Nama Ibu",
       },
@@ -333,7 +335,7 @@ const formSchemaBySuratKode = {
     },
     {
       name: "nama_orang_tua",
-      Component: Huruf,
+      Component: Nama,
       props: {
         label: "Nama Orang Tua",
       },
@@ -519,7 +521,7 @@ export default function BuatSuratBaru() {
               <legend className="text-xl text-start font-semibold text-gray-700">Data Pribadi</legend>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
                 <NIK value={profileInfo.nik ?? ""} disabled />
-                <Huruf value={profileInfo.name ?? ""} label="Nama Lengkap" disabled />
+                <Nama value={profileInfo.name ?? ""} label="Nama Lengkap" disabled />
                 <Huruf value={profileInfo.tempat_lahir ?? ""} label="Tempat Lahir" disabled />
                 <Tanggal value={profileInfo.tanggal_lahir ?? ""} label="Tanggal Lahir" disabled />
                 <JenisKelamin value={profileInfo.jenis_kelamin ?? ""} disabled />

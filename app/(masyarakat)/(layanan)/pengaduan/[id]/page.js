@@ -10,6 +10,7 @@ import Date from "@/components/forms/Date";
 import AngkaHuruf from "@/components/forms/AngkaHuruf";
 import KategoriPengaduan from "@/components/forms/KategoriPengaduan";
 import Deskripsi from "@/components/forms/Deskripsi";
+import Nama from "@/components/forms/Nama";
 
 export default function DetailPengaduanPage() {
   const router = useRouter();
@@ -73,7 +74,7 @@ export default function DetailPengaduanPage() {
           )}
           <NIK value={pengaduan.user?.nik || pengaduan.nik} onChange={() => {}} disabled />
           <Date value={pengaduan.created_at} onChange={() => {}} disabled />
-          <Huruf value={pengaduan.user?.name || pengaduan.name} onChange={() => {}} disabled label="Nama Lengkap" />
+          <Nama value={pengaduan.user?.name || pengaduan.name} onChange={() => {}} disabled label="Nama Lengkap" />
           <KategoriPengaduan value={pengaduan.category} onChange={() => {}} disabled />
           <Huruf value={pengaduan.title} onChange={() => {}} disabled label="Judul Pengaduan" />
           <AngkaHuruf value={pengaduan.location} onChange={() => {}} disabled label="Lokasi Pengaduan" />

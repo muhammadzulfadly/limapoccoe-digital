@@ -8,6 +8,7 @@ import Huruf, { validateHuruf } from "@/components/forms/Huruf";
 import AngkaHuruf, { validateAngkaHuruf } from "@/components/forms/AngkaHuruf";
 import KategoriPengaduan, { validateKategoriPengaduan } from "@/components/forms/KategoriPengaduan";
 import Deskripsi, { validateDeskripsi } from "@/components/forms/Deskripsi";
+import Nama, { validateNama} from "@/components/forms/Nama";
 
 export default function BuatPengaduanPage() {
   const router = useRouter();
@@ -75,7 +76,7 @@ export default function BuatPengaduanPage() {
 
   const validate = () => {
     const newErrors = {
-      name: validateHuruf(form.name),
+      name: validateNama(form.name),
       title: validateHuruf(form.title),
       location: validateAngkaHuruf(form.location),
       category: validateKategoriPengaduan(form.category),
@@ -163,7 +164,7 @@ export default function BuatPengaduanPage() {
         </button>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Huruf name="name" value={form.name} onChange={handleChange} error={errors.name} disabled={true} label="Nama Lengkap" />
+          <Nama name="name" value={form.name} onChange={handleChange} error={errors.name} disabled={true} label="Nama Lengkap" />
           <KategoriPengaduan name="category" value={form.category} onChange={handleChange} error={errors.category} />
           <Huruf name="title" value={form.title} onChange={handleChange} error={errors.title} label="Judul Pengaduan" />
           <AngkaHuruf name="location" value={form.location} onChange={handleChange} error={errors.location} label="Lokasi Pengaduan" />
