@@ -73,7 +73,10 @@ export default function DetailInformasiPage() {
           <img src={getImageSrc(data.gambar)} alt={data.judul} className="w-full object-cover aspect-video" loading="lazy" />
         </div>
 
-        <article className="prose prose-sm sm:prose lg:prose-lg prose-p:text-gray-700 whitespace-pre-line max-w-none">{data.konten}</article>
+<article
+  className="prose prose-sm sm:prose lg:prose-lg prose-p:text-gray-700 max-w-none"
+  dangerouslySetInnerHTML={{ __html: data.konten }}
+/>
       </div>
     </section>
   );

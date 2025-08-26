@@ -73,7 +73,8 @@ function InformasiDesaClient() {
     fetchData();
   }, []);
 
-  const filteredItems = data.filter((item) => item.kategori === activeTab);
+  const filteredItems = data.filter((item) => item.kategori === activeTab).sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // sort by terbaru ke terlama
+
   const { data: pageItems, totalPages, page } = paginate(filteredItems, currentPage, perPage);
   const paginationRange = getPaginationRange(page, totalPages);
 
@@ -124,7 +125,7 @@ function InformasiDesaClient() {
                     {activeTab !== "galeri" && (
                       <div className="p-4">
                         <h3 className="font-semibold text-lg text-gray-900 mb-1">{item.judul}</h3>
-                        <p className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3 whitespace-pre-line">{item.konten || "Tidak ada konten."}</p>
+                        <div className="text-sm text-gray-700 leading-relaxed text-justify line-clamp-3" dangerouslySetInnerHTML={{ __html: item.konten || "Tidak ada konten." }} />
                       </div>
                     )}
                   </div>
