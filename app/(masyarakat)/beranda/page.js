@@ -173,7 +173,7 @@ export default function HomePage() {
   return (
     <>
       {/* Banner */}
-      <div className="relative w-full aspect-[16/9] overflow-hidden bg-white">
+      <div className="relative w-full aspect-[16/9] sm:aspect-[16/8] overflow-hidden bg-white">
         {banners.length > 0 && (
           <>
             {banners[currentBannerIndex].isDefault ? (
