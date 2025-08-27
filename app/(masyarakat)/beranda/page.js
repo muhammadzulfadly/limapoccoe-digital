@@ -172,6 +172,9 @@ export default function HomePage() {
 
   return (
     <>
+      {/* SEO Text - membantu Google menampilkan deskripsi dari meta */}
+      <h1 className="hidden">LimapoccoeDigital - Website Resmi Desa Limapoccoe</h1>
+      <p className="hidden">Website Resmi Desa Limapoccoe, Kec. Cenrana, Kab. Maros. Layanan digital desa: pengajuan surat, pengaduan, informasi kegiatan, dan potensi masyarakat.</p>
       {/* Banner */}
       <div className="relative w-full aspect-[16/9] sm:aspect-[16/7] overflow-hidden bg-white">
         {banners.length > 0 && (
@@ -399,7 +402,7 @@ export default function HomePage() {
       <section className="bg-[#F0FFF6] py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Berita Desa</h2>
-          <p className="text-gray-600 mb-10 text-sm sm:text-base">Berita Desa Limapoccoe menyajikan informasi terbaru seputar kegiatan, pengumuman, dan perkembangan di lingkungan Desa Limapoccoe.</p>
+          <p className="text-gray-600 mb-10 text-sm sm:text-base">Berita Desa menyajikan informasi terbaru seputar kegiatan, pengumuman, dan perkembangan di lingkungan Desa Limapoccoe.</p>
 
           {beritaTerbaru.length === 0 ? (
             <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
@@ -444,7 +447,7 @@ export default function HomePage() {
       <section className="bg-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Wisata Desa</h2>
-          <p className="text-gray-700 mb-10 text-sm sm:text-base">Wisata Desa Limapoccoe menawarkan pesona alam dan budaya lokal yang masih asri, cocok untuk rekreasi dan pengalaman wisata desa yang autentik.</p>
+          <p className="text-gray-700 mb-10 text-sm sm:text-base">Wisata Desa menawarkan pesona alam dan budaya lokal yang masih asri, cocok untuk rekreasi dan pengalaman wisata desa yang autentik.</p>
 
           {wisataTerbaru.length === 0 ? (
             <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
@@ -482,7 +485,7 @@ export default function HomePage() {
       <section className="bg-[#F0FFF6] py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Galeri Desa</h2>
-          <p className="text-gray-600 mb-10 text-sm sm:text-base">Galeri Desa Limapoccoe menampilkan dokumentasi foto kegiatan yang berlangsung di Desa Limapoccoe.</p>
+          <p className="text-gray-600 mb-10 text-sm sm:text-base">Galeri Desa menampilkan dokumentasi foto kegiatan yang berlangsung di Desa Limapoccoe.</p>
 
           {galeriTerbaru.length === 0 ? (
             <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">
@@ -523,7 +526,7 @@ export default function HomePage() {
       <section className="bg-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Produk Desa</h2>
-          <p className="text-gray-700 mb-10 text-sm sm:text-base">Produk Desa Limapoccoe merupakan hasil karya dan potensi lokal yang mencerminkan kekayaan sumber daya dan keterampilan masyarakat desa.</p>
+          <p className="text-gray-700 mb-10 text-sm sm:text-base">Produk Desa merupakan hasil karya dan potensi lokal yang mencerminkan kekayaan sumber daya dan keterampilan masyarakat desa.</p>
 
           {produkTerbaru.length === 0 ? (
             <div className="bg-gray-100 p-6 rounded-xl flex items-center justify-center text-gray-600 italic text-center">

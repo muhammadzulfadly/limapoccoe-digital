@@ -1,8 +1,7 @@
 // app/beranda/head.js
 export default function Head() {
-  const title = "LimapoccoeDigital";
-  const description =
-    "Selamat Datang. Website ini merupakan website resmi Pemerintahan Desa Limapoccoe. Adapun layanan yang dimiliki yaitu Pengajuan surat, Pengaduan, Berita desa, dan Informasi desa";
+  const title = "LimapoccoeDigital - Website Resmi Desa Limapoccoe";
+  const description = "Website resmi Desa Limapoccoe, Kec. Cenrana, Kab. Maros. Layanan digital desa: pengajuan surat, pengaduan, informasi kegiatan, dan potensi masyarakat.";
   const url = "https://limapoccoedigital.id";
   const image = "https://limapoccoedigital.id/logo.png";
   const siteName = "LimapoccoeDigital";
@@ -12,10 +11,7 @@ export default function Head() {
       {/* Basic */}
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta
-        name="keywords"
-        content="limapoccoe, website limapoccoe, aplikasi limapoccoe, desa limapoccoe, maros, website maros, limapoccoe digital, limapoccoe"
-      />
+      <meta name="keywords" content="limapoccoe, website limapoccoe, aplikasi limapoccoe, desa limapoccoe, maros, website maros, limapoccoe digital, limapoccoe" />
       <meta name="author" content="LimapoccoeDigital" />
       <meta name="robots" content="index,follow" />
       <link rel="canonical" href={url} />
@@ -35,6 +31,19 @@ export default function Head() {
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="LimapoccoeDigital" />
       <meta property="og:locale" content="id_ID" />
+      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "LimapoccoeDigital",
+            url: "https://limapoccoedigital.id",
+            logo: "https://limapoccoedigital.id/logo.png",
+          }),
+        }}
+      />
     </>
   );
 }
