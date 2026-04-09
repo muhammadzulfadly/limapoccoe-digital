@@ -7,11 +7,6 @@ import { useRouter } from "next/navigation";
 import FloatingButtons from "@/components/FloatingButtons";
 import { useRef, useState, useEffect } from "react";
 
-export const metadata = {
-  title: "Beranda | LimapoccoeDigital",
-  description: "Website Resmi Desa Limapoccoe",
-};
-
 export default function HomePage() {
   const router = useRouter();
   const videoRef = useRef(null);
@@ -30,6 +25,10 @@ export default function HomePage() {
     perempuan: "...",
     laki: "...",
   });
+
+  useEffect(() => {
+    document.title = "Beranda | LimapoccoeDigital";
+  }, []);
 
   const nextBanner = () => {
     setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % banners.length);
