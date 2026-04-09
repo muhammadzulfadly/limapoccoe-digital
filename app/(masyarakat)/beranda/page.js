@@ -7,6 +7,11 @@ import { useRouter } from "next/navigation";
 import FloatingButtons from "@/components/FloatingButtons";
 import { useRef, useState, useEffect } from "react";
 
+export const metadata = {
+  title: "Beranda | LimapoccoeDigital",
+  description: "Website Resmi Desa Limapoccoe",
+};
+
 export default function HomePage() {
   const router = useRouter();
   const videoRef = useRef(null);
