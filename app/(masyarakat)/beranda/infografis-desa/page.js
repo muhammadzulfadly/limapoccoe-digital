@@ -27,11 +27,6 @@ const CustomXAxisTick = ({ x, y, payload }) => {
   );
 };
 
-export const metadata = {
-  title: "Infografis Desa | LimapoccoeDigital",
-  description: "Website Resmi Desa Limapoccoe",
-};
-
 export default function InfografisPage() {
   const [dataPenduduk, setDataPenduduk] = useState([
     { label: "TOTAL PENDUDUK", value: "...", icon: "/images/penduduk/total.png" },
@@ -39,6 +34,10 @@ export default function InfografisPage() {
     { label: "PEREMPUAN", value: "...", icon: "/images/penduduk/perempuan.png" },
     { label: "LAKI-LAKI", value: "...", icon: "/images/penduduk/laki-laki.png" },
   ]);
+
+  useEffect(() => {
+    document.title = "Infografis Desa | LimapoccoeDigital";
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
