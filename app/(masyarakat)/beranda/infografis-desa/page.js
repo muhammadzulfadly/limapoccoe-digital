@@ -27,6 +27,11 @@ const CustomXAxisTick = ({ x, y, payload }) => {
   );
 };
 
+export const metadata = {
+  title: "Infografis Desa | LimapoccoeDigital",
+  description: "Website Resmi Desa Limapoccoe",
+};
+
 export default function InfografisPage() {
   const [dataPenduduk, setDataPenduduk] = useState([
     { label: "TOTAL PENDUDUK", value: "...", icon: "/images/penduduk/total.png" },
