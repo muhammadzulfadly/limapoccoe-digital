@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import FloatingButtons from "@/components/FloatingButtons";
 import { ChevronsLeft, ChevronsRight, Ban } from "lucide-react";
-import Head from "next/head";
 
 // helper dan fungsi tambahan
 function paginate(items, page, perPage) {
@@ -46,6 +45,10 @@ function InformasiDesaClient() {
   const [loading, setLoading] = useState(true);
   const perPage = 9;
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    document.title = "Informasi Desa | LimapoccoeDigital";
+  }, []);
 
   useEffect(() => {
     const kategoriQuery = searchParams.get("kategori");
@@ -167,9 +170,6 @@ function InformasiDesaClient() {
 export default function Page() {
   return (
     <>
-      <Head>
-        <title>Informasi Desa | LimapoccoeDigital</title>
-      </Head>
       <Suspense fallback={<div className="text-center py-10">Memuat halaman...</div>}>
         <InformasiDesaClient />
       </Suspense>
